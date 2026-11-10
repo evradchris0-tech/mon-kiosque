@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: moki
+      POSTGRES_PASSWORD: moki
+      POSTGRES_DB: moki
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    env_file: ../.env
+    environment:
+      MOKI_DATABASE_URL: postgresql+psycopg://moki:moki@postgres:5432/moki
+    depends_on: [postgres]
+    ports: ["8000:8000"]
+volumes:
+  pgdata:

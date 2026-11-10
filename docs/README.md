@@ -10,3 +10,4 @@
 Dossiers à créer au fil du projet : `specs/` (une spec par fonctionnalité), `adr/` (décisions), `pilote/` (fiches PME, rapports hebdomadaires), `guide-pme/`.
 
 Ordre de lecture conseillé : `01` (30 min) → décisions D1 à D10 → `02` §0 à §4 → `03` → lancer la première tâche.
+| `04-connexion-whatsapp-meta.md` | Procédure rapide pour connecter Moki à WhatsApp avec le numéro de test Meta | Le duo |

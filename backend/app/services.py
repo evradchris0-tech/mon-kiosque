@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import Parametres
 from app.core.horloge import Horloge, HorlogeSysteme
 from app.db.modeles import Message
+from app.domaine.pme import pme_par_numero
 from app.integrations.llm.factice import InterpreteRegles
 from app.integrations.llm.interface import ContexteInterpretation, Interprete, ResultatInterpretation
 from app.integrations.stt.interface import Transcripteur, TranscripteurFactice
@@ -82,5 +83,6 @@ def _envoyer(fabrique: sessionmaker[Session], deps: pipeline.Dependances, numero
         wamid = None
     with fabrique() as session:
         maintenant = deps.horloge.maintenant()
-        session.add(Message(numero=numero, direction="sortant", wamid=wamid, type="document" if document else "texte", texte=texte or document, heure_envoi=maintenant, heure_reception=maintenant))
+        pme = pme_par_numero(session, numero)
+        session.add(Message(pme_id=pme.id if pme else None, numero=numero, direction="sortant", wamid=wamid, type="document" if document else "texte", texte=texte or document, heure_envoi=maintenant, heure_reception=maintenant))
         session.commit()

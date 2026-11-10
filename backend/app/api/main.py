@@ -4,20 +4,30 @@ from __future__ import annotations
 
 import json
 import secrets
+from datetime import timedelta
 from html import escape
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app import services
+from app.api import ui
 from app.core.config import Parametres, parametres
+from app.core.horloge import en_local
 from app.db.base import Base, creer_moteur, fabrique_sessions
 from app.db.modeles import CasAVerifier, Journal, Message, Pme, Vente
 from app.integrations.whatsapp import webhook as wh
+from app.integrations.whatsapp.interface import MessageEntrant
 from app.moki import pipeline
+
+
+class EntreeSimulation(BaseModel):
+    pme_id: int
+    texte: str
 
 
 def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | None = None, deps: pipeline.Dependances | None = None) -> FastAPI:
@@ -67,14 +77,25 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
     @app.get("/console", response_class=HTMLResponse)
     def tableau(_: str = Depends(console)) -> str:
         with fabrique() as s:
-            pmes = s.scalars(select(Pme).order_by(Pme.id)).all()
-            lignes = ""
-            for pme in pmes:
+            debut = deps.horloge.maintenant() - timedelta(hours=24)
+            nb_pme = s.scalar(select(func.count(Pme.id)))
+            ventes_24h = s.scalar(select(func.count(Vente.id)).where(Vente.statut == "active", Vente.heure_reception >= debut))
+            msgs_24h = s.scalar(select(func.count(Message.id)).where(Message.direction == "entrant", Message.heure_reception >= debut))
+            ouverts = s.scalars(select(CasAVerifier).where(CasAVerifier.traite_a.is_(None)).order_by(CasAVerifier.id.desc()).limit(50)).all()
+            lignes = []
+            for pme in s.scalars(select(Pme).order_by(Pme.id)).all():
                 nb = s.scalar(select(func.count(Vente.id)).where(Vente.pme_id == pme.id, Vente.statut == "active"))
-                lignes += f"<tr><td>{pme.id}</td><td>{escape(pme.nom_commerce)}</td><td>{escape(pme.numero_whatsapp)}</td><td>{nb}</td><td><a href='/console/pme/{pme.id}'>conversations</a></td></tr>"
-            cas = s.scalars(select(CasAVerifier).where(CasAVerifier.traite_a.is_(None)).order_by(CasAVerifier.id.desc()).limit(50)).all()
-            liste = "".join(f"<li>#{c.id} {escape(c.motif)} (pme {c.pme_id}) : {escape(str((c.details or {}).get('texte', '')))}</li>" for c in cas)
-        return f"<h1>Moki · console</h1><h2>PME</h2><table border=1 cellpadding=6><tr><th>id</th><th>commerce</th><th>numéro</th><th>ventes</th><th></th></tr>{lignes}</table><h2>À vérifier</h2><ul>{liste or '<li>rien</li>'}</ul>"
+                lignes.append([escape(pme.nom_commerce), escape(pme.numero_whatsapp), escape(pme.quartier or "-"), str(nb), ui.pastille(pme.statut, "vert" if pme.statut == "actif" else "ambre"), f'<a href="/console/pme/{pme.id}">Voir →</a>'])
+            cas = [[f"#{c.id}", ui.pastille(c.motif, "rouge" if c.gravite == "grave" else "ambre"), str(c.pme_id or "-"), escape(str((c.details or {}).get("texte", ""))[:90])] for c in ouverts]
+        corps = (
+            "<h1>Tableau de bord</h1><p class='sous'>Activité des dernières 24 heures</p>"
+            + '<div class="grille">'
+            + ui.stat(nb_pme, "PME inscrites") + ui.stat(msgs_24h, "messages reçus") + ui.stat(ventes_24h, "ventes notées", "ok")
+            + ui.stat(len(ouverts), "cas à vérifier", "alerte" if ouverts else "ok") + "</div>"
+            + "<h2>PME</h2>" + ui.tableau(["Commerce", "WhatsApp", "Quartier", "Ventes", "Statut", ""], lignes, "Aucune PME inscrite.")
+            + "<h2>À vérifier</h2>" + ui.tableau(["N°", "Motif", "PME", "Message"], cas, "Rien à vérifier. 👍")
+        )
+        return ui.page("Tableau de bord", corps, "tableau")
 
     @app.get("/console/pme/{pme_id}", response_class=HTMLResponse)
     def conversations(pme_id: int, _: str = Depends(console)) -> str:
@@ -82,10 +103,41 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
             pme = s.get(Pme, pme_id)
             if pme is None:
                 raise HTTPException(status_code=404)
-            msgs = s.scalars(select(Message).where(Message.pme_id == pme_id).order_by(Message.id.desc()).limit(100)).all()
-            lignes = "".join(f"<tr><td>{m.heure_reception:%d/%m %H:%M}</td><td>{m.direction}</td><td>{escape(m.texte or m.transcription or '')}</td></tr>" for m in msgs)
-            etapes = s.scalars(select(Journal).where(Journal.pme_id == pme_id).order_by(Journal.id.desc()).limit(30)).all()
-            j = "".join(f"<li>{e.etape} {e.duree_ms} ms {escape(e.erreur or '')}</li>" for e in etapes)
-        return f"<h1>{escape(pme.nom_commerce)}</h1><table border=1 cellpadding=4>{lignes}</table><h3>Journal</h3><ul>{j}</ul>"
+            msgs = list(reversed(s.scalars(select(Message).where(Message.pme_id == pme_id).order_by(Message.id.desc()).limit(100)).all()))
+            bulles = "".join(ui.bulle(m.texte or m.transcription or "(média)", m.direction == "entrant", f"{en_local(m.heure_reception, pme.fuseau):%d/%m %H:%M}") for m in msgs)
+            etapes = s.scalars(select(Journal).where(Journal.pme_id == pme_id).order_by(Journal.id.desc()).limit(40)).all()
+            journal = "".join(f"<li>{e.etape} · {e.duree_ms} ms{(' · ERREUR ' + escape(e.erreur)) if e.erreur else ''}</li>" for e in etapes)
+        corps = (
+            f"<p><a href='/console'>← Retour</a></p><h1>{escape(pme.nom_commerce)}</h1><p class='sous'>{escape(pme.numero_whatsapp)} · {escape(pme.quartier or '')} {escape(pme.ville or '')}</p>"
+            f'<div class="deux"><div><div class="chat">{bulles or "<div class=vide>Aucun message.</div>"}</div></div>'
+            f'<div class="carte"><b>Journal du pipeline</b><ul class="journal" style="padding-left:16px">{journal or "<li>vide</li>"}</ul></div></div>'
+        )
+        return ui.page(pme.nom_commerce, corps)
+
+    @app.get("/console/simulateur", response_class=HTMLResponse)
+    def simulateur(_: str = Depends(console)) -> str:
+        with fabrique() as s:
+            options = "".join(f'<option value="{p.id}">{escape(p.nom_commerce)}</option>' for p in s.scalars(select(Pme).order_by(Pme.id)).all())
+        if not options:
+            return ui.page("Simulateur", "<h1>Simulateur</h1><div class='carte vide'>Crée d'abord une PME.</div>", "simulateur")
+        puces = "".join(f'<button type="button" data-t="{escape(t)}">{escape(t)}</button>' for t in ["j'ai vendu 3 paires à 5000", "j'ai fait combien aujourd'hui ?", "qui me doit ?", "tu peux faire quoi ?", "annule"])
+        corps = (
+            "<h1>Simulateur</h1><p class='sous'>Parle à Moki comme une PME, sans WhatsApp. Les actions sont réelles dans la base.</p>"
+            '<div class="chat" id="chat"></div>'
+            f'<form class="saisie" id="formulaire"><select id="pme">{options}</select><input id="texte" autocomplete="off" placeholder="Écris à Moki…" autofocus><button id="envoyer">Envoyer</button></form>'
+            f'<div class="puces">{puces}</div><script>{ui.SCRIPT_SIMULATEUR}</script>'
+        )
+        return ui.page("Simulateur", corps, "simulateur")
+
+    @app.post("/console/simuler")
+    def simuler(entree: EntreeSimulation, _: str = Depends(console)) -> dict:
+        with fabrique() as s:
+            pme = s.get(Pme, entree.pme_id)
+            if pme is None:
+                raise HTTPException(status_code=404, detail="PME inconnue")
+            numero = pme.numero_whatsapp
+        compteur = f"sim.{secrets.token_hex(6)}"
+        entrant = MessageEntrant(wamid=compteur, numero=numero, type="texte", heure_envoi=deps.horloge.maintenant(), texte=entree.texte[:2000])
+        return {"reponses": services.traiter_entrant(fabrique, deps, entrant)}
 
     return app

@@ -80,3 +80,23 @@ def test_resume_du_soir_une_seule_fois(banc):
 def test_resume_pas_avant_19h(banc):
     banc.horloge.fixer(datetime(2026, 11, 10, 15, 0))  # 16h locale
     assert resume_du_soir.executer(banc.fabrique, banc.canal, banc.horloge) == 0
+
+
+def test_simulateur_console_repond_et_agit(banc):
+    c = client_api(banc)
+    assert c.post("/console/simuler", json={"pme_id": banc.pme_a, "texte": "x"}).status_code == 401
+    r = c.post("/console/simuler", json={"pme_id": banc.pme_a, "texte": "j'ai vendu 3 paires à 5000 cash"}, auth=("u", "m"))
+    assert r.status_code == 200 and "15" in r.json()["reponses"][0]
+    page = c.get("/console/simulateur", auth=("u", "m"))
+    assert page.status_code == 200 and "Chez Marie" in page.text
+    assert "bulle" in c.get(f"/console/pme/{banc.pme_a}", auth=("u", "m")).text
+    assert c.post("/console/simuler", json={"pme_id": 999, "texte": "x"}, auth=("u", "m")).status_code == 404
+
+
+def test_reponses_de_moki_rattachees_a_la_pme(banc):
+    from app.integrations.whatsapp.interface import MessageEntrant
+    from app.services import traiter_entrant
+    traiter_entrant(banc.fabrique, banc.deps, MessageEntrant(wamid="w1", numero=NUM_A, type="texte", heure_envoi=banc.horloge.maintenant(), texte="j'ai vendu 3 paires à 5000 cash"))
+    with banc.session() as s:
+        sortants = s.scalars(select(Message).where(Message.direction == "sortant")).all()
+        assert sortants and all(m.pme_id == banc.pme_a for m in sortants)

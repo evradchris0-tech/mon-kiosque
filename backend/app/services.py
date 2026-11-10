@@ -29,6 +29,10 @@ def construire_dependances(p: Parametres, horloge: Horloge | None = None, canal:
         from app.integrations.llm.claude import InterpreteClaude
 
         interprete = InterpreteClaude(p.modele, p.effort)
+    elif p.interprete == "gemini":
+        from app.integrations.llm.gemini import InterpreteGemini
+
+        interprete = InterpreteGemini(p.gemini_cle, p.modele_gemini)
     else:
         interprete = _InterpreteRegles()
     if canal is None:

@@ -38,6 +38,11 @@ def construire_interprete():
         from app.integrations.llm.claude import InterpreteClaude
 
         return InterpreteClaude(os.environ.get("MOKI_MODELE", "claude-haiku-5-5"), os.environ.get("MOKI_EFFORT", "low")), os.environ.get("MOKI_MODELE", "claude-haiku-5-5")
+    if os.environ.get("MOKI_INTERPRETE") == "gemini":
+        from app.integrations.llm.gemini import InterpreteGemini
+
+        m = os.environ.get("MOKI_MODELE_GEMINI", "gemini-flash-lite-latest")
+        return InterpreteGemini(os.environ["MOKI_GEMINI_CLE"], m), m
     return InterpreteRegles(), "regles (sans modèle)"
 
 

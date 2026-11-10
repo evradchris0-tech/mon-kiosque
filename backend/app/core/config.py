@@ -14,7 +14,9 @@ class Parametres(BaseSettings):
     # Modèle de langage
     modele: str = "claude-opus-5-5"
     effort: str = "low"
-    interprete: str = "factice"  # factice | claude
+    interprete: str = "factice"  # factice | claude | gemini
+    gemini_cle: str = ""
+    modele_gemini: str = "gemini-flash-lite-latest"
 
     # WhatsApp Cloud API
     whatsapp_jeton: str = ""

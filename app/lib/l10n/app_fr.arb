@@ -1,0 +1,50 @@
+{
+  "@@locale": "fr",
+  "appName": "Mon Kiosque",
+  "appTagline": "Le 3-en-1 de la PME camerounaise",
+  "poweredByMoki": "Propulsé par Moki",
+
+  "onboardingStartCta": "Commencer",
+  "onboardingNextCta": "Suivant",
+  "onboardingSkipCta": "Passer",
+  "onboardingTitle1": "Encaisse, sans te prendre la tête",
+  "onboardingBody1": "Cash, Orange Money, ou les deux en même temps. Moki enregistre tout automatiquement.",
+  "onboardingTitle2": "Moki travaille pour toi 24/7",
+  "onboardingBody2": "Ton assistant en Camfranglais : factures, relances clients, rapports du soir. Toi, tu valides.",
+  "onboardingTitle3": "Vois clair sur ton business",
+  "onboardingBody3": "Ton chiffre d'affaires, tes top clients, tes impayés — en temps réel. Crédit dès le 6e mois.",
+
+  "tabChat": "Chat",
+  "tabMoki": "Moki",
+  "tabDashboard": "Tableau",
+  "tabProfile": "Profil",
+
+  "chatEmptyTitle": "Tes conversations WhatsApp",
+  "chatEmptyBody": "Branche ton WhatsApp Business pour que Moki t'aide à répondre et à relancer.",
+
+  "mokiEmptyTitle": "Salut, moi c'est Moki 👋",
+  "mokiEmptyBody": "Demande-moi de faire une facture, de relancer un client, ou de regarder tes ventes.",
+  "mokiSuggestionInvoice": "Fais-moi une facture",
+  "mokiSuggestionRelance": "Relance Mme Biya",
+  "mokiSuggestionReport": "Comment était hier ?",
+
+  "dashboardTodayRevenue": "Chiffre d'affaires du jour",
+  "dashboardDigitalRate": "Taux de digitalisation",
+  "dashboardTopClients": "Top clients",
+  "dashboardUnpaid": "Impayés",
+  "dashboardCreditScore": "Score crédit",
+
+  "profileLanguage": "Langue",
+  "profileSubscription": "Abonnement",
+  "profileSecurity": "Sécurité",
+  "profileSupport": "Support",
+  "profileAbout": "À propos",
+  "profileSignOut": "Se déconnecter",
+  "languageFrench": "Français",
+  "languageEnglish": "Anglais",
+
+  "planStarter": "Starter",
+  "planPlus": "Plus",
+  "planPro": "Pro",
+  "planEmpire": "Empire"
+}

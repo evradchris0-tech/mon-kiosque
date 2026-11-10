@@ -1,0 +1,50 @@
+{
+  "@@locale": "en",
+  "appName": "Mon Kiosque",
+  "appTagline": "The 3-in-1 for Cameroonian SMEs",
+  "poweredByMoki": "Powered by Moki",
+
+  "onboardingStartCta": "Get started",
+  "onboardingNextCta": "Next",
+  "onboardingSkipCta": "Skip",
+  "onboardingTitle1": "Get paid, hassle-free",
+  "onboardingBody1": "Cash, Orange Money, or both at once. Moki tracks every sale automatically.",
+  "onboardingTitle2": "Moki works for you 24/7",
+  "onboardingBody2": "Your Camfranglais assistant: invoices, customer follow-ups, daily reports. You approve, Moki acts.",
+  "onboardingTitle3": "See your business clearly",
+  "onboardingBody3": "Revenue, top customers, unpaid invoices — live. Credit access from month 6.",
+
+  "tabChat": "Chat",
+  "tabMoki": "Moki",
+  "tabDashboard": "Dashboard",
+  "tabProfile": "Profile",
+
+  "chatEmptyTitle": "Your WhatsApp conversations",
+  "chatEmptyBody": "Connect your WhatsApp Business so Moki can help you reply and follow up.",
+
+  "mokiEmptyTitle": "Hi, I'm Moki 👋",
+  "mokiEmptyBody": "Ask me to make an invoice, follow up with a customer, or review your sales.",
+  "mokiSuggestionInvoice": "Make me an invoice",
+  "mokiSuggestionRelance": "Follow up with Ms. Biya",
+  "mokiSuggestionReport": "How was yesterday?",
+
+  "dashboardTodayRevenue": "Today's revenue",
+  "dashboardDigitalRate": "Digital tracking rate",
+  "dashboardTopClients": "Top customers",
+  "dashboardUnpaid": "Unpaid invoices",
+  "dashboardCreditScore": "Credit score",
+
+  "profileLanguage": "Language",
+  "profileSubscription": "Subscription",
+  "profileSecurity": "Security",
+  "profileSupport": "Support",
+  "profileAbout": "About",
+  "profileSignOut": "Sign out",
+  "languageFrench": "French",
+  "languageEnglish": "English",
+
+  "planStarter": "Starter",
+  "planPlus": "Plus",
+  "planPro": "Pro",
+  "planEmpire": "Empire"
+}

@@ -1,0 +1,11 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Forme principale - hexagone -->
+  <path d="M120 50L180 85V155L120 190L60 155V85L120 50Z" fill="#FF7900"/>
+
+  <!-- Couches intérieures -->
+  <path d="M120 70L165 95V145L120 170L75 145V95L120 70Z" fill="#1A1A1A"/>
+  <path d="M120 90L150 107.5V132.5L120 150L90 132.5V107.5L120 90Z" fill="white"/>
+
+  <!-- Symbole K stylisé au centre -->
+  <path d="M115 110V130M115 120L125 110M115 120L125 130" stroke="#FF7900" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

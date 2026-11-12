@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.horloge import Horloge
-from app.db.modeles import Job, Pme
+from app.db.modeles import Job, Message, Pme
 from app.domaine import finances
 from app.integrations.whatsapp.interface import CanalMessages, MessageSortant
 from app.moki import reponses
@@ -27,7 +27,10 @@ def executer(fabrique: sessionmaker[Session], canal: CanalMessages, horloge: Hor
                 s.add(Job(type="rappel_fiscal", charge={"pme_id": pme.id}, cle_idempotence=cle, etat="fait", cree_a=horloge.maintenant(), execute_a=horloge.maintenant()))
                 s.commit()  # clé posée avant l'envoi : jamais de doublon
                 try:
-                    canal.envoyer(MessageSortant(numero=pme.numero_whatsapp, texte=reponses.rappel_fiscal(e["libelle"], e["jours"], e["date"])))
+                    contenu = reponses.rappel_fiscal(e["libelle"], e["jours"], e["date"])
+                    canal.envoyer(MessageSortant(numero=pme.numero_whatsapp, texte=contenu))  # hors fenêtre 24 h : message à modèle en réel
+                    s.add(Message(pme_id=pme.id, numero=pme.numero_whatsapp, direction="sortant", type="notification", texte=contenu, heure_envoi=horloge.maintenant(), heure_reception=horloge.maintenant()))
+                    s.commit()
                     envoyes += 1
                 except Exception:  # noqa: BLE001
                     pass

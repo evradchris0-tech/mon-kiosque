@@ -16,8 +16,10 @@ from app.db.modeles import Client, Pme
 from app.domaine import clients as dom_clients
 from app.domaine import factures as dom_factures
 from app.domaine import paiements as dom_paiements
+from app.domaine import produits as dom_produits
 from app.domaine import relances as dom_relances
 from app.domaine import ventes as dom_ventes
+from app.domaine.texte import normaliser, singulier
 from app.moki import reponses
 from app.moki.schemas import Decision, Intention, Interpretation, ModePaiement
 
@@ -85,6 +87,8 @@ def evaluer(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge
     if i == Intention.RESUME:
         periode = interp.periode.model_dump(mode="json") if interp.periode else None
         return Verdict(Decision.EXECUTER, action={"type": "RESUME", "periode": periode})
+    if i == Intention.FACTURES:
+        return Verdict(Decision.EXECUTER, action={"type": "FACTURES"})
     if i == Intention.BILAN:
         return Verdict(Decision.EXECUTER, action={"type": "BILAN"})
     if i == Intention.DOSSIER_CREDIT:
@@ -196,6 +200,11 @@ def _vente(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge)
         "total": total,
         "recap": recap,
     }
+    inconnus = _produits_inconnus(session, pme, interp)
+    if inconnus:
+        action["nouveaux_produits"] = [{"nom": n, "prix": pu} for n, pu in inconnus]
+        noms = ", ".join(f"« {n} »" for n, _ in inconnus)
+        return Verdict(Decision.DEMANDER_CONFIRMATION, message=reponses.produit_inconnu(recap, total, noms), action=action, motif="produit_inconnu")
     if dom_ventes.doublon_probable(session, pme, horloge, lignes, total):
         return Verdict(Decision.DEMANDER_CONFIRMATION, message=reponses.doublon_possible(recap, total), action=action, motif="doublon")
     if total > pme.seuil_confirmation_renforcee:
@@ -204,6 +213,27 @@ def _vente(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge)
     if nb >= MIN_VENTES_POUR_MOYENNE and moyenne > 0 and total > FACTEUR_INHABITUEL * moyenne:
         return Verdict(Decision.DEMANDER_CONFIRMATION, message=f"{recap}\n{reponses.montant_inhabituel(total, moyenne)}", action=action, motif="montant_inhabituel")
     return Verdict(Decision.EXECUTER, action=action)
+
+
+def _jetons_produit(nom: str) -> set[str]:
+    return {singulier(m) for m in normaliser(nom).split()}
+
+
+def _produits_inconnus(session: Session, pme: Pme, interp: Interpretation) -> list[tuple[str, int]]:
+    """Produits cités absents du catalogue (seulement si la PME a déjà un catalogue à comparer)."""
+    catalogue = dom_produits.tous(session, pme)
+    if not catalogue:
+        return []
+    connus = [_jetons_produit(n) for p in catalogue for n in [p.nom, *(p.alias or [])]]
+    inconnus: dict[str, tuple[str, int]] = {}
+    for ligne in interp.lignes:
+        if not ligne.produit or not ligne.prix_unitaire:
+            continue
+        jetons = _jetons_produit(ligne.produit)
+        if not jetons or any(jetons <= c or c <= jetons for c in connus):
+            continue
+        inconnus.setdefault(" ".join(sorted(jetons)), (ligne.produit.strip(), ligne.prix_unitaire))
+    return list(inconnus.values())
 
 
 def _facture(session: Session, pme: Pme, interp: Interpretation) -> Verdict:

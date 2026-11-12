@@ -124,6 +124,8 @@ class InterpreteRegles:
             return Interpretation(intention=Intention.HUMAIN, confiance=0.9)
         if re.search(r"\b(aide|tu peux faire quoi|tu sais faire quoi|comment ca marche)\b", t):
             return Interpretation(intention=Intention.AIDE, confiance=0.9)
+        if re.search(r"\b(mes factures|mes dernieres factures|etat (de mes |des )?factures|liste (de mes |des )?factures|factures? (?:sont )?(?:en retard|impayees))\b", t):
+            return Interpretation(intention=Intention.FACTURES, confiance=0.95)
         if re.search(r"dossier (de |du )?credit|dossier bancaire|\bmon dossier\b", t):
             return Interpretation(intention=Intention.DOSSIER_CREDIT, confiance=0.95)
         if re.search(r"\b(echeances?|prochaine declaration|date limite)\b", t):

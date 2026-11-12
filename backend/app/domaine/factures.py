@@ -179,3 +179,21 @@ def libelle_echeance(facture: Facture) -> str:
 
 def date_du_jour_locale(horloge: Horloge, fuseau: str) -> datetime:
     return en_local(horloge.maintenant(), fuseau)
+
+
+SEUIL_RETARD_JOURS = 7
+
+
+def etat(session: Session, pme: Pme, horloge: Horloge, limite: int = 12) -> list[tuple[int, str, int, str]]:
+    """(numéro, client, total, état lisible) des factures, la plus récente d'abord."""
+    lignes = []
+    factures = session.scalars(select(Facture).where(Facture.pme_id == pme.id, Facture.statut != "annulee").order_by(Facture.numero.desc()).limit(limite))
+    for f in factures:
+        client = session.get(Client, f.client_id)
+        if f.statut == "payee":
+            libelle = "payée ✅"
+        else:
+            retard = jours_de_retard(f, horloge)
+            libelle = f"en retard ({retard} j) ⚠️" if retard > SEUIL_RETARD_JOURS else "envoyée"
+        lignes.append((f.numero, client.nom if client else "?", f.total, libelle))
+    return lignes

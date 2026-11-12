@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
 import secrets
 from datetime import timedelta
@@ -23,6 +25,7 @@ from app.db.modeles import CasAVerifier, Journal, Message, Pme, Vente
 from app.integrations.whatsapp import webhook as wh
 from app.integrations.whatsapp.interface import MessageEntrant
 from app.moki import pipeline
+from app.workers import rappels_fiscaux, resume_du_soir
 
 
 class EntreeSimulation(BaseModel):
@@ -37,7 +40,22 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
         Base.metadata.create_all(moteur)  # en prod : migrations Alembic
         fabrique = fabrique_sessions(moteur)
     deps = deps or services.construire_dependances(p)
-    app = FastAPI(title="Moki", version="0.1.0")
+    async def boucle_planifiee() -> None:
+        """Toutes les minutes : résumé de 19 h et rappels fiscaux (chacun une seule fois, idempotents)."""
+        while True:
+            await asyncio.sleep(60)
+            with contextlib.suppress(Exception):
+                await asyncio.to_thread(resume_du_soir.executer, fabrique, deps.canal, deps.horloge, p.heure_resume)
+                await asyncio.to_thread(rappels_fiscaux.executer, fabrique, deps.canal, deps.horloge)
+
+    @contextlib.asynccontextmanager
+    async def cycle(_: FastAPI):
+        tache = asyncio.create_task(boucle_planifiee()) if p.planificateur else None
+        yield
+        if tache:
+            tache.cancel()
+
+    app = FastAPI(title="Moki", version="0.1.0", lifespan=cycle)
     if p.demo_seed:
         with fabrique() as s_demo:
             if not demo.deja_peuple(s_demo):
@@ -118,6 +136,15 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
             f'<div class="carte"><b>Journal du pipeline</b><ul class="journal" style="padding-left:16px">{journal or "<li>vide</li>"}</ul></div></div>'
         )
         return ui.page(pme.nom_commerce, corps)
+
+    @app.post("/console/declencher/{quoi}")
+    def declencher(quoi: str, _: str = Depends(console)) -> dict:
+        """Déclenche à la main, pour la démo : `resume` (ignore l'heure) ou `rappels`."""
+        if quoi == "resume":
+            return {"envoyes": resume_du_soir.executer(fabrique, deps.canal, deps.horloge, 0)}
+        if quoi == "rappels":
+            return {"envoyes": rappels_fiscaux.executer(fabrique, deps.canal, deps.horloge)}
+        raise HTTPException(status_code=404)
 
     @app.get("/console/simulateur", response_class=HTMLResponse)
     def simulateur(_: str = Depends(console)) -> str:

@@ -275,6 +275,8 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
     horloge = deps.horloge
 
     if genre in ("VENTE", "LIEN_PAIEMENT_CREDIT"):
+        for np_ in action.get("nouveaux_produits", []):
+            dom_produits.ajouter_ou_mettre_a_jour(session, pme, np_["nom"], np_["prix"])
         client = _client_de(session, pme, action.get("client_id"))
         if client is None and action.get("client_nom_cite") and action["mode"] == "credit":
             client = dom_clients.ajouter(session, pme, action["client_nom_cite"])
@@ -373,6 +375,9 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
         est = finances.impot_estime(session, pme, horloge)
         ech = finances.prochaine_echeance(horloge, pme.fuseau)
         return Resultat(textes=[reponses.impot(est["estimation"], est["ca_annuel"], ech["libelle"], ech["jours"])])
+
+    if genre == "FACTURES":
+        return Resultat(textes=[reponses.factures_etat(dom_factures.etat(session, pme, horloge))])
 
     if genre == "ECHEANCES":
         return Resultat(textes=[reponses.echeances(finances.echeances(horloge, pme.fuseau))])

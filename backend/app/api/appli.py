@@ -152,6 +152,21 @@ def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Depen
                 "historique_mois": finances.historique_mois(s, pme, h),
             }
 
+    @r.get("/api/notifications")
+    def notifications(apres: int | None = None, numero: str = Depends(numero_courant)) -> dict:
+        """Messages envoyés par Moki sans demande (résumé de 19 h, rappels fiscaux). Sans `apres`, renvoie seulement le curseur."""
+        from sqlalchemy import func, select
+
+        from app.db.modeles import Message
+
+        with fabrique() as s:
+            pme = _pme(s, numero)
+            dernier = s.scalar(select(func.max(Message.id)).where(Message.pme_id == pme.id)) or 0
+            if apres is None:
+                return {"notifications": [], "dernier": dernier}
+            lignes = s.scalars(select(Message).where(Message.pme_id == pme.id, Message.type == "notification", Message.id > apres).order_by(Message.id)).all()
+            return {"notifications": [{"id": m.id, "texte": m.texte} for m in lignes], "dernier": max([dernier, *[m.id for m in lignes]])}
+
     @r.get("/api/dossier")
     def dossier(numero: str = Depends(numero_courant), jeton: str = Depends(jeton_courant)) -> dict:
         with fabrique() as s:

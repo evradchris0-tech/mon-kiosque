@@ -39,6 +39,7 @@ class Parametres(BaseSettings):
     url_publique: str = ""
     port: int = 8000
     demo_seed: bool = False
+    planificateur: bool = False
 
 
 @lru_cache

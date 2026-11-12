@@ -32,7 +32,7 @@ class InterpreteAvecRepli:
         self.secours = secours
         self.nb_replis = 0
 
-    INTENTIONS_RAPIDES = ("QUI_DOIT", "RESUME", "BILAN", "DOSSIER_CREDIT", "IMPOT", "ECHEANCES", "ANNULER", "AIDE", "HUMAIN")
+    INTENTIONS_RAPIDES = ("QUI_DOIT", "RESUME", "BILAN", "DOSSIER_CREDIT", "IMPOT", "ECHEANCES", "ANNULER", "AIDE", "HUMAIN", "FACTURES")
 
     def interpreter(self, contexte: ContexteInterpretation, texte: str) -> ResultatInterpretation:
         # Voie rapide : les demandes simples et sans ambiguïté sont reconnues localement (instantané, gratuit, sans réseau).

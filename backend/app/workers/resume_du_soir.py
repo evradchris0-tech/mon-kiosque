@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.horloge import Horloge, en_local
-from app.db.modeles import Job, Pme
+from app.db.modeles import Job, Message, Pme
 from app.domaine import resumes as dom_resumes
 from app.integrations.whatsapp.interface import CanalMessages, MessageSortant
 from app.moki import reponses
@@ -28,7 +28,10 @@ def executer(fabrique: sessionmaker[Session], canal: CanalMessages, horloge: Hor
             s.add(Job(type="resume_du_soir", charge={"pme_id": pme.id}, cle_idempotence=cle, etat="fait", cree_a=horloge.maintenant(), execute_a=horloge.maintenant()))
             s.commit()  # la clé est posée avant l'envoi : pas de doublon en cas de relance du worker
             try:
-                canal.envoyer(MessageSortant(numero=pme.numero_whatsapp, texte=texte))  # hors fenêtre 24 h : message à modèle en réel
+                contenu = texte
+                canal.envoyer(MessageSortant(numero=pme.numero_whatsapp, texte=contenu))  # hors fenêtre 24 h : message à modèle en réel
+                s.add(Message(pme_id=pme.id, numero=pme.numero_whatsapp, direction="sortant", type="notification", texte=contenu, heure_envoi=horloge.maintenant(), heure_reception=horloge.maintenant()))
+                s.commit()
                 envoyes += 1
             except Exception:  # noqa: BLE001
                 pass

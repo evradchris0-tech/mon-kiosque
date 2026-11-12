@@ -14,3 +14,4 @@
 {"message": "prépare mon dossier de crédit", "interpretation": {"intention": "DOSSIER_CREDIT", "confiance": 0.98}}
 {"message": "combien d'impôt je dois payer ?", "interpretation": {"intention": "IMPOT", "confiance": 0.95}}
 {"message": "supprime sandales rouges", "interpretation": {"intention": "PRODUIT", "confiance": 0.9, "action_produit": "supprimer", "lignes": [{"produit": "sandales rouges", "quantite": null, "prix_unitaire": null, "produit_connu": true}]}}
+{"message": "mes factures", "interpretation": {"intention": "FACTURES", "confiance": 0.95}}

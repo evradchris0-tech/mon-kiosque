@@ -419,3 +419,15 @@ def inscription_ecrire() -> str:
 
 def inscription_ok(nom: str) -> str:
     return f"C'est bon, ton compte « {nom} » est ouvert ! 🎉 Commence par m'ajouter un produit, par exemple « ajoute sandales rouges 7500 », ou dis-moi « j'ai vendu 3 paires à 5000 ». Dis « aide » pour voir tout ce que je sais faire."
+
+
+def factures_etat(lignes: Sequence[tuple[int, str, int, str]]) -> str:
+    """lignes : (numéro, client, total, état)."""
+    if not lignes:
+        return "Tu n'as pas encore de facture. Dis par exemple « facture pour Mme Fouda, 4 plats à 3000 »."
+    corps = "\n".join(f"• n° {n:03d} · {client} · {format_fcfa(total)} · {etat}" for n, client, total, etat in lignes)
+    return f"Tes factures :\n{corps}"
+
+
+def produit_inconnu(recap: str, total: int, noms: str) -> str:
+    return f"{recap}\n{total_ligne(total)}\nJe ne connais pas encore {noms} dans ton catalogue. Je l'ajoute et j'enregistre la vente ?"

@@ -625,6 +625,18 @@ nav button.actif::before{content:"";position:absolute;top:0;width:34px;height:3p
   $("tableau").addEventListener("click", function (e) { var b = e.target.closest("button[data-p]"); if (b) { state.periode = b.getAttribute("data-p"); renderTableau(); } });
   $("dossier").addEventListener("click", function (e) { if (e.target.closest("#btn-dossier")) genererDossier(); });
 
+  /* ---------- notifications de Moki (résumé de 19 h, rappels fiscaux) ---------- */
+  var curseurNotif = null;
+  function sonderNotifications() {
+    if (MOCK || !state.token) return;
+    var chemin = "/api/notifications" + (curseurNotif == null ? "" : "?apres=" + curseurNotif);
+    api(chemin).then(function (r) {
+      (r.notifications || []).forEach(function (n) { ajouterBulle(n.texte, "moki"); });
+      curseurNotif = r.dernier;
+    }).catch(function () { /* réseau instable : on réessaiera */ });
+  }
+  setInterval(sonderNotifications, 8000);
+
   /* ---------- démarrage ---------- */
   var tokenSauve = MOCK ? "mock" : lire("moki_token");
   if (MOCK && params.get("login") === "1") { afficherLogin(""); }

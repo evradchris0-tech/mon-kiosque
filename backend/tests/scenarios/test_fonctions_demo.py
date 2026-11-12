@@ -229,3 +229,70 @@ def test_c_est_perso_ne_touche_pas_une_depense_ancienne(banc):
     assert "pas de dépense récente" in banc.envoyer("c'est perso")[0]
     with banc.session() as s:
         assert s.scalars(select(Depense)).one().nature == "pro"
+
+
+def test_f4_etat_des_factures_dans_le_chat(banc):
+    with banc.session() as s:
+        dom_clients.ajouter(s, dom_pme.pme_par_numero(s, NUM_A), "Mme Fouda")
+        s.commit()
+    assert "pas encore de facture" in banc.envoyer("mes factures")[0]
+    banc.envoyer("facture pour Mme Fouda, 4 plats à 3000")
+    banc.envoyer("oui")
+    r = banc.envoyer("mes factures")[0]
+    assert "n° 001" in r and "Mme Fouda" in r and "envoyée" in r
+    banc.horloge.avancer(days=10)
+    assert "en retard (10 j)" in banc.envoyer("quelles factures sont en retard ?")[0]
+    banc.envoyer("Mme Fouda a payé")
+    banc.envoyer("oui")
+    assert "payée" in banc.envoyer("mes factures")[0]
+
+
+def test_b6_produit_inconnu_pose_une_question_puis_ajoute_au_catalogue(banc):
+    banc.envoyer("ajoute poulet DG 4000")
+    r = banc.envoyer("j'ai vendu 2 sandales à 7500 cash")
+    assert "Je ne connais pas encore « sandales »" in r[0] and "OUI / NON" in r[0]
+    with banc.session() as s:
+        from app.db.modeles import Vente
+        assert s.scalar(select(func.count(Vente.id))) == 0  # rien n'est enregistré avant la réponse
+    assert n(15000) in banc.envoyer("oui")[0]
+    with banc.session() as s:
+        assert {p.nom for p in s.scalars(select(Produit))} == {"poulet DG", "sandales"}
+
+
+def test_b6_produit_connu_ou_catalogue_vide_ne_pose_pas_de_question(banc):
+    assert "Je ne connais pas" not in banc.envoyer("j'ai vendu 2 sandales à 7500 cash")[0]  # catalogue vide
+    banc.envoyer("ajoute poulet DG 4000")
+    assert n(8000) in banc.envoyer("j'ai vendu 2 poulets à 4000 cash")[0]  # « poulets » = « poulet DG »
+
+
+def test_b6_produit_inconnu_refus_n_enregistre_rien(banc):
+    banc.envoyer("ajoute poulet DG 4000")
+    banc.envoyer("j'ai vendu 2 sandales à 7500 cash")
+    banc.envoyer("non")
+    with banc.session() as s:
+        from app.db.modeles import Vente
+        assert s.scalar(select(func.count(Vente.id))) == 0
+        assert {p.nom for p in s.scalars(select(Produit))} == {"poulet DG"}
+
+
+def test_d6_h2_declenchement_manuel_notifications_et_planificateur(banc, tmp_path):
+    moteur = creer_moteur("sqlite+pysqlite:///:memory:")
+    Base.metadata.create_all(moteur)
+    fabrique = fabrique_sessions(moteur)
+    p = Parametres(env="dev", acces_demo=True, planificateur=True, dossier_factures=str(tmp_path / "f"), console_utilisateur="u", console_mot_de_passe="m")
+    with fabrique() as s:
+        dom_pme.creer_pme(s, banc.horloge, nom_commerce="Chez Marie", numero_whatsapp=NUM_A)
+        s.commit()
+    banc.horloge.fixer(datetime(2026, 11, 12, 8, 0))  # 3 jours avant le 15 : rappel fiscal attendu
+    with TestClient(creer_app(p, fabrique, banc.deps)) as c:  # `with` démarre le planificateur sans le casser
+        jeton = c.post("/api/connexion", json={"numero": NUM_A}).json()["token"]
+        h = {"Authorization": f"Bearer {jeton}"}
+        curseur = c.get("/api/notifications", headers=h).json()["dernier"]
+        assert c.post("/console/declencher/resume").status_code == 401
+        assert c.post("/console/declencher/resume", auth=("u", "m")).json()["envoyes"] == 1
+        assert c.post("/console/declencher/resume", auth=("u", "m")).json()["envoyes"] == 0  # une seule fois
+        assert c.post("/console/declencher/rappels", auth=("u", "m")).json()["envoyes"] == 1
+        assert c.post("/console/declencher/inconnu", auth=("u", "m")).status_code == 404
+        notifs = c.get(f"/api/notifications?apres={curseur}", headers=h).json()["notifications"]
+        assert len(notifs) == 2 and any("Résumé du soir" in x["texte"] for x in notifs) and any("Rappel" in x["texte"] for x in notifs)
+        assert c.get(f"/api/notifications?apres={c.get('/api/notifications', headers=h).json()['dernier']}", headers=h).json()["notifications"] == []

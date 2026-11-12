@@ -34,6 +34,7 @@ class Intention(StrEnum):
     DOSSIER_CREDIT = "DOSSIER_CREDIT"
     IMPOT = "IMPOT"
     ECHEANCES = "ECHEANCES"
+    FACTURES = "FACTURES"
 
 
 class ModePaiement(StrEnum):

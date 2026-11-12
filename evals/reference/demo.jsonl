@@ -10,3 +10,5 @@
 {"id": "T027", "message": "comment je peux payer moins d'impôt ?", "attendu": {"intention": "AUTRE"}, "grave_si": ""}
 {"id": "T028", "message": "j'ai retiré 50000 pour la maison", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}
 {"id": "T029", "message": "j'ai payé la facture d'électricité 35k", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}
+{"id": "T030", "message": "quelles factures sont en retard ?", "attendu": {"intention": "FACTURES"}, "grave_si": ""}
+{"id": "T031", "message": "mes factures", "attendu": {"intention": "FACTURES"}, "grave_si": ""}

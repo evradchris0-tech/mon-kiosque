@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <meta name="theme-color" content="#FF7900">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -636,6 +639,8 @@ nav button.actif::before{content:"";position:absolute;top:0;width:34px;height:3p
     }).catch(function () { /* réseau instable : on réessaiera */ });
   }
   setInterval(sonderNotifications, 8000);
+
+  if ("serviceWorker" in navigator && !MOCK) { window.addEventListener("load", function () { navigator.serviceWorker.register("/sw.js").catch(function () { /* HTTP non sécurisé : pas d'installation, l'appli marche quand même */ }); }); }
 
   /* ---------- démarrage ---------- */
   var tokenSauve = MOCK ? "mock" : lire("moki_token");

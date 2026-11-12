@@ -20,3 +20,5 @@ evals/rapports/*.tmp.md
 evals/rapports/rapport-*.md
 moki_demo.db
 serveur.log
+deploy_vercel/
+deploy_vercel_secrets.txt

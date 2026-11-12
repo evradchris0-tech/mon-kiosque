@@ -296,3 +296,22 @@ def test_d6_h2_declenchement_manuel_notifications_et_planificateur(banc, tmp_pat
         notifs = c.get(f"/api/notifications?apres={curseur}", headers=h).json()["notifications"]
         assert len(notifs) == 2 and any("Résumé du soir" in x["texte"] for x in notifs) and any("Rappel" in x["texte"] for x in notifs)
         assert c.get(f"/api/notifications?apres={c.get('/api/notifications', headers=h).json()['dernier']}", headers=h).json()["notifications"] == []
+
+
+def test_pwa_manifeste_service_worker_icones_et_jeton_sans_etat(banc, tmp_path):
+    def appli():
+        moteur = creer_moteur("sqlite+pysqlite:///:memory:")
+        Base.metadata.create_all(moteur)
+        p = Parametres(env="dev", acces_demo=True, demo_seed=True, secret_jeton="secret-fixe", dossier_factures=str(tmp_path / "f"))
+        return TestClient(creer_app(p, fabrique_sessions(moteur), banc.deps))
+
+    a, b = appli(), appli()  # deux « instances » distinctes
+    m = a.get("/manifest.webmanifest")
+    assert m.status_code == 200 and m.json()["display"] == "standalone" and len(m.json()["icons"]) == 3
+    assert "serviceWorker" not in a.get("/sw.js").text and "mon-kiosque" in a.get("/sw.js").text
+    assert a.get("/icons/icon-512.png").content[:4] == b"\x89PNG" and a.get("/icons/../x.png").status_code in (404, 422)
+    assert 'rel="manifest"' in a.get("/app").text
+    jeton = a.post("/api/connexion", json={"numero": demo.NUMERO_DEMO}).json()["token"]
+    assert b.get("/api/tableau", headers={"Authorization": f"Bearer {jeton}"}).status_code == 200  # jeton valable partout
+    assert b.get("/api/tableau", headers={"Authorization": "Bearer " + jeton[:-2] + "00"}).status_code == 401  # jeton falsifié refusé
+    assert b.get("/qr.png", headers={"host": "mon-kiosque.vercel.app"}).content[:4] == b"\x89PNG"

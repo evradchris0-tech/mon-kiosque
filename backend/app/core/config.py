@@ -40,6 +40,7 @@ class Parametres(BaseSettings):
     port: int = 8000
     demo_seed: bool = False
     planificateur: bool = False
+    secret_jeton: str = ""
 
 
 @lru_cache

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import io
 import secrets
 import socket
@@ -48,16 +50,32 @@ def ip_locale() -> str:
 def url_appli(p: Parametres, request: Request | None = None) -> str:
     if p.url_publique:
         return p.url_publique.rstrip("/") + "/app"
+    if request is not None:
+        hote = request.headers.get("x-forwarded-host") or request.headers.get("host", "")
+        if hote and not hote.startswith(("localhost", "127.")):
+            proto = request.headers.get("x-forwarded-proto") or ("https" if ".vercel.app" in hote else request.url.scheme)
+            return f"{proto}://{hote}/app"
     return f"http://{ip_locale()}:{p.port}/app"
 
 
 def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Dependances) -> APIRouter:
     r = APIRouter()
-    sessions: dict[str, str] = {}  # jeton -> numéro (mémoire : démo)
+    secret = (p.secret_jeton or secrets.token_hex(16)).encode()
+
+    def signer(numero: str) -> str:
+        """Jeton sans état : valable sur toutes les instances (hébergement serverless)."""
+        return f"{numero}." + hmac.new(secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
+
+    def verifier(jeton: str) -> str | None:
+        numero, _, mac = jeton.partition(".")
+        if not numero.isdigit():
+            return None
+        attendu = hmac.new(secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
+        return numero if hmac.compare_digest(mac, attendu) else None
 
     def numero_courant(authorization: str | None = Header(default=None), token: str | None = Query(default=None)) -> str:
         jeton = (authorization or "").removeprefix("Bearer ").strip() or (token or "")
-        numero = sessions.get(jeton)
+        numero = verifier(jeton)
         if numero is None:
             raise HTTPException(status_code=401, detail="session invalide")
         return numero
@@ -68,6 +86,20 @@ def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Depen
     @r.get("/")
     def accueil() -> RedirectResponse:
         return RedirectResponse("/app")
+
+    @r.get("/manifest.webmanifest")
+    def manifeste() -> Response:
+        return Response((STATIC / "manifest.webmanifest").read_text(encoding="utf-8"), media_type="application/manifest+json")
+
+    @r.get("/sw.js")
+    def service_worker() -> Response:
+        return Response((STATIC / "sw.js").read_text(encoding="utf-8"), media_type="text/javascript", headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"})
+
+    @r.get("/icons/{nom}")
+    def icone(nom: str) -> FileResponse:
+        if nom != Path(nom).name or not nom.endswith(".png") or not (STATIC / "icons" / nom).is_file():
+            raise HTTPException(status_code=404)
+        return FileResponse(STATIC / "icons" / nom, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
 
     @r.get("/app", response_class=HTMLResponse)
     def appli() -> HTMLResponse:
@@ -80,8 +112,7 @@ def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Depen
         numero = "".join(ch for ch in c.numero if ch.isdigit())
         if not (8 <= len(numero) <= 15):
             raise HTTPException(status_code=422, detail="numéro invalide")
-        jeton = secrets.token_urlsafe(24)
-        sessions[jeton] = numero
+        jeton = signer(numero)
         with fabrique() as s:
             pme = pme_par_numero(s, numero)
             infos = {"nom_commerce": pme.nom_commerce, "ville": pme.ville} if pme else None

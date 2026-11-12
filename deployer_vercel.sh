@@ -1,17 +1,17 @@
 #!/bin/sh
-# Prépare le dossier deploy_vercel/ (code backend + appli + config) puis, avec "prod", déploie sur Vercel.
+# Prépare le dossier deploy_vercel/ (code backend + appli + config), prêt pour `vercel deploy --prod`.
 set -e
 cd "$(dirname "$0")"
-rm -rf deploy_vercel/backend deploy_vercel/prompts deploy_vercel/api
-mkdir -p deploy_vercel/api deploy_vercel/backend
+rm -rf deploy_vercel/backend deploy_vercel/prompts deploy_vercel/api deploy_vercel/index.py deploy_vercel/vercel.json
+mkdir -p deploy_vercel/backend
 cp -r backend/app deploy_vercel/backend/app
 cp -r prompts deploy_vercel/prompts
 find deploy_vercel -name __pycache__ -type d -prune -exec rm -rf {} +
-cat > deploy_vercel/api/index.py <<'PY'
+cat > deploy_vercel/index.py <<'PY'
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "backend"))
 
 from app.api.main import creer_app  # noqa: E402
 
@@ -31,8 +31,7 @@ REQ
 echo "3.12" > deploy_vercel/.python-version
 cat > deploy_vercel/vercel.json <<'JSON'
 {
-  "functions": { "api/index.py": { "maxDuration": 60, "includeFiles": "{backend,prompts}/**" } },
-  "rewrites": [ { "source": "/(.*)", "destination": "/api/index" } ]
+  "functions": { "index.py": { "maxDuration": 60, "includeFiles": "{backend,prompts}/**" } }
 }
 JSON
 echo "deploy_vercel/ prêt"

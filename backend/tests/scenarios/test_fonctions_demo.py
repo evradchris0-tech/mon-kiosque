@@ -315,3 +315,11 @@ def test_pwa_manifeste_service_worker_icones_et_jeton_sans_etat(banc, tmp_path):
     assert b.get("/api/tableau", headers={"Authorization": f"Bearer {jeton}"}).status_code == 200  # jeton valable partout
     assert b.get("/api/tableau", headers={"Authorization": "Bearer " + jeton[:-2] + "00"}).status_code == 401  # jeton falsifié refusé
     assert b.get("/qr.png", headers={"host": "mon-kiosque.vercel.app"}).content[:4] == b"\x89PNG"
+
+
+def test_facture_sans_le_mot_pour_est_comprise_par_l_analyseur_local(banc):
+    with banc.session() as s:
+        dom_clients.ajouter(s, dom_pme.pme_par_numero(s, NUM_A), "Bureau Essos")
+        s.commit()
+    r = banc.envoyer("facture Bureau Essos, 10 repas à 2500")[0]
+    assert "Voici la facture pour Bureau Essos" in r and n(25000) in r

@@ -226,6 +226,11 @@ class InterpreteRegles:
             return ClientCite(nom_cite=m.group(1))
         return None
 
+    def _client_facture(self, texte: str) -> ClientCite | None:
+        """« facture Bureau Essos, 10 repas à 2500 » : le nom (en majuscules initiales) suit le mot facture."""
+        m = re.search(r"(?i:facture)\s+(?:pour\s+|à\s+)?((?:(?:le|la|l')\s*)?[A-ZÀ-Ý][\wà-ÿ'-]*(?:\s+[A-ZÀ-Ý][\wà-ÿ'-]*)*)", texte)
+        return ClientCite(nom_cite=m.group(1).strip()) if m else None
+
     def _vente(self, texte: str, t: str) -> Interpretation:
         lignes, ambiguites = self._lignes(texte)
         paiement = ModePaiement.INCONNU
@@ -263,7 +268,7 @@ class InterpreteRegles:
             confiance=0.85 if lignes else 0.5,
             lignes=lignes,
             frais=frais,
-            client=self._client(texte),
+            client=self._client(texte) or self._client_facture(texte),
             ambiguites=ambiguites,
             question_a_poser="Pour quel client, et quelles lignes ?" if not lignes else None,
         )

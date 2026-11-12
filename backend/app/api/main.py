@@ -8,16 +8,18 @@ import json
 import secrets
 from datetime import timedelta
 from html import escape
+from pathlib import Path
 
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app import demo, services
-from app.api import appli, ui
+from app.api import appli, ecrans, ui
 from app.core.config import Parametres, parametres
 from app.core.horloge import en_local
 from app.db.base import Base, creer_moteur, fabrique_sessions
@@ -60,7 +62,10 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
         with fabrique() as s_demo:
             if not demo.deja_peuple(s_demo):
                 demo.peupler(s_demo, deps.horloge)
-    app.include_router(appli.routeur(p, fabrique, deps))
+    auth = appli.Authentification(p)
+    app.include_router(appli.routeur(p, fabrique, deps, auth))
+    app.include_router(ecrans.routeur_ecrans(p, fabrique, deps, auth.numero_courant, auth.jeton_courant))
+    app.mount("/ui", StaticFiles(directory=Path(__file__).resolve().parent.parent / "static" / "ui", html=True), name="ui")  # nouvelle interface (v2)
     securite = HTTPBasic()
 
     def console(creds: HTTPBasicCredentials = Depends(securite)) -> str:

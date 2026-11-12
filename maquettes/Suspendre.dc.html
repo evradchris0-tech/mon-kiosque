@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Suspendre les envois</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px}
+.box h2{margin:0 0 10px;font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+.box li{margin-bottom:6px}
+.box ul{margin:0;padding-left:20px;font-size:15px;line-height:1.45;color:#3A4743}
+.btn{display:inline-flex;align-items:center;height:52px;padding:0 22px;border-radius:10px;border:1px solid #1B4B40;font:600 16px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.ln{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #E6EAE8;font-size:15px}
+.ln:last-child{border-bottom:0}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="suspendre" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top" style="max-width: 1000px">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Suspendre les envois</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Main.dc.html">Suivi des envois</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<sc-if value="{{paused}}" hint-placeholder-val="{{false}}">
+<div role="alert" class="oc-in" style="background: #9B1C1C; color: #FFFFFF; border-radius: 14px; padding: 18px 22px; display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center">
+<div style="flex: 1 1 320px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600">Les envois sont suspendus</div><div style="font-size: 15px; margin-top: 2px">Aucun message ne part chez vos clients. Ce bandeau reste affiché sur tous les écrans.</div></div>
+<button type="button" class="btn" onClick="{{resume}}" style="background: #FFFFFF; border-color: #FFFFFF; color: #7A1414">Reprendre les envois</button>
+</div>
+</sc-if>
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Arrêt d'urgence</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">{{title}}</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">À utiliser si un texte est faux, si un client a reçu un message par erreur, ou en cas de doute.</div>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">
+<div class="box"><h2>Ce qui s'arrête</h2><ul><li>Les cinq messages automatiques, sur WhatsApp et par e-mail</li><li>Les messages de rattrapage des réservations de dernière minute</li><li>Les relances automatiques des envois bloqués</li></ul></div>
+<div class="box"><h2>Ce qui continue</h2><ul><li>La lecture des réservations dans eviivo</li><li>Les alertes qui vous sont envoyées</li><li>L'historique, qui note la suspension et la reprise</li></ul></div>
+</div>
+
+<sc-if value="{{idle}}" hint-placeholder-val="{{true}}">
+<div class="box" style="display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: center; justify-content: space-between">
+<div style="flex: 1 1 320px; font-size: 15px; color: #3A4743">3 messages doivent encore partir aujourd'hui. Ils resteront en attente jusqu'à la reprise.</div>
+<button type="button" class="btn" onClick="{{ask}}" style="background: #9B1C1C; border-color: #9B1C1C; color: #FFFFFF">Suspendre tous les envois</button>
+</div>
+</sc-if>
+
+<sc-if value="{{asking}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Confirmer la suspension" class="box oc-in" style="border-color: #9B1C1C; border-width: 2px; display: flex; flex-direction: column; gap: 14px">
+<div><h2 style="margin-bottom: 4px">Suspendre tous les envois maintenant ?</h2><div style="font-size: 15px; color: #3A4743">Plus aucun message ne partira tant que vous n'aurez pas cliqué sur « Reprendre les envois ». Vous pouvez reprendre à tout moment.</div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" class="btn" onClick="{{cancel}}" style="background: #FFFFFF; color: #1B4B40">Annuler</button>
+<button type="button" class="btn" onClick="{{confirm}}" style="background: #9B1C1C; border-color: #9B1C1C; color: #FFFFFF">Oui, suspendre</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{paused}}" hint-placeholder-val="{{false}}">
+<div class="box" style="padding: 12px 22px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #55635F; padding: 8px 0">En attente de la reprise · 3 messages</div>
+<div class="ln"><span><strong>Mrs Clarke</strong> · Restaurants</span><span class="oc-chip oc-today">En attente</span></div>
+<div class="ln"><span><strong>M. Lefèvre</strong> · Petit-déjeuner</span><span class="oc-chip oc-today">En attente</span></div>
+<div class="ln"><span><strong>Mr Jansen</strong> · Parking</span><span class="oc-chip oc-today">En attente</span></div>
+</div>
+<div style="font-size: 14px; color: #55635F">À la reprise, les messages en attente partent tout de suite, entre 8 h et 21 h. Ceux dont la date d'arrivée est dépassée ne partent pas.</div>
+</sc-if>
+
+<sc-if value="{{resumed}}" hint-placeholder-val="{{false}}">
+<div role="status" class="oc-in" style="padding: 14px 18px; border-radius: 10px; background: #E2EFEA; color: #1B4B40; font-size: 15px; font-weight: 600">Les envois ont repris. Les 3 messages en attente sont partis.</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+const step = (this.state && this.state.step) || 'idle';
+return {
+idle: step === 'idle' || step === 'resumed',
+asking: step === 'asking',
+paused: step === 'paused',
+resumed: step === 'resumed',
+title: step === 'paused' ? 'Rien ne part tant que vous ne reprenez pas' : 'Un seul bouton pour tout arrêter',
+ask: () => this.setState({ step: 'asking' }),
+cancel: () => this.setState({ step: 'idle' }),
+confirm: () => this.setState({ step: 'paused' }),
+resume: () => this.setState({ step: 'resumed' })
+};
+}
+}
+</script>
+</body>
+</html>

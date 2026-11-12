@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Charte graphique, fondations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:600}
+h3{margin:0;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F}
+.sec{display:flex;flex-direction:column;gap:18px;padding-top:32px;border-top:1px solid #D9DFDC}
+.lead{font-size:16px;line-height:1.5;color:#3A4743;max-width:760px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.sw{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;overflow:hidden}
+.sw i{display:block;height:72px;border-bottom:1px solid #D9DFDC}
+.sw div{padding:12px 14px;display:flex;flex-direction:column;gap:3px}
+.sw b{font-size:15px}
+.sw code,.tk{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#3A4743}
+.sw span{font-size:13px;color:#55635F;line-height:1.35}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px}
+.trow{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:20px;align-items:baseline;padding:14px 0;border-bottom:1px solid #E6EAE8}
+.trow:last-child{border-bottom:0}
+.sp{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:13px;color:#55635F}
+.sp i{display:block;height:28px;background:#1B4B40;border-radius:3px}
+.rd{width:96px;height:64px;background:#E2EFEA;border:1px solid #1B4B40}
+li{margin-bottom:6px}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 48px 32px 64px">
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH · Charte graphique</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.1">Fondations</h1>
+<p class="lead" style="margin-top: 12px">Une interface calme, lisible d'un coup d'œil, pour une personne qui n'est pas technicienne. Un seul vert profond porte la marque et les actions ; les couleurs vives sont réservées aux états.</p>
+</div>
+<span class="tk" style="padding: 6px 12px; border: 1px solid #B9C6C1; border-radius: 999px; background: #FFFFFF">v0.2 · 11 octobre 2026 · logo D, icônes, menu rétractable</span>
+</header>
+
+<section class="sec">
+<h2>Couleurs</h2>
+<h3>Marque et texte</h3>
+<div class="grid">
+<div class="sw"><i style="background: #1B4B40"></i><div><b>Vert profond</b><code>--color-brand · #1B4B40</code><span>Actions principales, menu, liens, barres « vous ». Blanc dessus : 9,9:1</span></div></div>
+<div class="sw"><i style="background: #245B4E"></i><div><b>Vert survol</b><code>--color-brand-hover · #245B4E</code><span>Survol des boutons et du menu</span></div></div>
+<div class="sw"><i style="background: #12211D"></i><div><b>Encre</b><code>--color-text · #12211D</code><span>Titres et texte courant. Sur blanc : 16,7:1</span></div></div>
+<div class="sw"><i style="background: #3A4743"></i><div><b>Texte secondaire</b><code>--color-text-2 · #3A4743</code><span>Paragraphes dans les cartes. Sur blanc : 9,7:1</span></div></div>
+<div class="sw"><i style="background: #55635F"></i><div><b>Texte discret</b><code>--color-text-muted · #55635F</code><span>Légendes, en-têtes de tableau. Sur blanc : 6,3:1</span></div></div>
+</div>
+<h3>Fonds et traits</h3>
+<div class="grid">
+<div class="sw"><i style="background: #F3F5F4"></i><div><b>Fond de page</b><code>--color-ground · #F3F5F4</code><span>Arrière-plan de tous les écrans</span></div></div>
+<div class="sw"><i style="background: #FFFFFF"></i><div><b>Surface</b><code>--color-surface · #FFFFFF</code><span>Cartes, tableaux, champs</span></div></div>
+<div class="sw"><i style="background: #EEF1F0"></i><div><b>Remplissage neutre</b><code>--color-fill · #EEF1F0</code><span>Rails de barres, pastille « prévu », désactivé</span></div></div>
+<div class="sw"><i style="background: #D9DFDC"></i><div><b>Bordure</b><code>--color-border · #D9DFDC</code><span>Contour des cartes (décoratif)</span></div></div>
+<div class="sw"><i style="background: #74827D"></i><div><b>Bordure de champ</b><code>--color-border-field · #74827D</code><span>Contour des champs et barres « marché ». Sur blanc : 3:1 minimum requis, respecté</span></div></div>
+</div>
+<h3>États</h3>
+<div class="grid">
+<div class="sw"><i style="background: #E2EFEA"></i><div><b>Réussi</b><code>--color-ok-bg · #E2EFEA</code><span>Avec texte #1B4B40 : 8,4:1. « Envoyé »</span></div></div>
+<div class="sw"><i style="background: #FFF1D6"></i><div><b>Aujourd'hui</b><code>--color-warn-bg · #FFF1D6</code><span>Avec texte #7A4E00 : 6,4:1. « Part aujourd'hui »</span></div></div>
+<div class="sw"><i style="background: #8A5A00"></i><div><b>Repère ambre</b><code>--color-warn-mark · #8A5A00</code><span>Repère « prix du marché » sur les barres</span></div></div>
+<div class="sw"><i style="background: #FDE8E6"></i><div><b>Bloqué, fond</b><code>--color-danger-bg · #FDE8E6</code><span>Avec texte #9B1C1C : 6,9:1. Bordure #E9B8B3</span></div></div>
+<div class="sw"><i style="background: #9B1C1C"></i><div><b>Bloqué</b><code>--color-danger · #9B1C1C</code><span>Chiffre d'alerte, bouton d'alerte. Blanc dessus : 8,2:1</span></div></div>
+</div>
+<p class="lead">Règle : un état n'est jamais indiqué par la couleur seule. Il est toujours écrit en toutes lettres (« Envoyé », « Bloqué »).</p>
+</section>
+
+<section class="sec">
+<h2>Typographie</h2>
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))">
+<div class="box"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1">Bricolage Grotesque</div><p class="lead" style="margin-top: 10px; font-size: 14px">Titres et chiffres. Graisses 600 et 700. Google Fonts, licence libre.</p></div>
+<div class="box"><div style="font-size: 40px; font-weight: 500; line-height: 1.1">Instrument Sans</div><p class="lead" style="margin-top: 10px; font-size: 14px">Texte, libellés, boutons. Graisses 400, 500 et 600. Google Fonts, licence libre.</p></div>
+</div>
+<div class="box" style="padding: 8px 22px">
+<div class="trow"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.1">Ce que reçoit un client</div><div class="tk">display · 44 / 1,1 · 600</div></div>
+<div class="trow"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Voici vos envois du jour</div><div class="tk">h1 · 34 / 1,15 · 600</div></div>
+<div class="trow"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600">Clé numérique</div><div class="tk">h2 · 22 / 1,25 · 600</div></div>
+<div class="trow"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600">Arrivées à venir</div><div class="tk">h3 · 20 / 1,3 · 600</div></div>
+<div class="trow"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1">165 €</div><div class="tk">kpi · 40 / 1,1 · 600</div></div>
+<div class="trow"><div style="font-size: 16px; line-height: 1.5">Le lien d'accès n'est pas encore disponible pour cette réservation.</div><div class="tk">body · 16 / 1,5 · 400</div></div>
+<div class="trow"><div style="font-size: 14px; line-height: 1.45; color: #55635F">Son numéro n'a pas WhatsApp. Rien à faire de votre côté.</div><div class="tk">body-s · 14 / 1,45 · 400</div></div>
+<div class="trow"><div style="font-size: 13px; color: #55635F">Source : vos chiffres viennent d'eviivo</div><div class="tk">caption · 13 / 1,4 · 400</div></div>
+<div class="trow"><div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Messages aux clients</div><div class="tk">overline · 13 · 600 · +0,08em</div></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Espacements, rayons et traits</h2>
+<h3>Échelle d'espacement (base 4 px)</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end">
+<div class="sp"><i style="width: 4px"></i>space-1 · 4</div>
+<div class="sp"><i style="width: 8px"></i>space-2 · 8</div>
+<div class="sp"><i style="width: 12px"></i>space-3 · 12</div>
+<div class="sp"><i style="width: 16px"></i>space-4 · 16</div>
+<div class="sp"><i style="width: 20px"></i>space-5 · 20</div>
+<div class="sp"><i style="width: 24px"></i>space-6 · 24</div>
+<div class="sp"><i style="width: 32px"></i>space-8 · 32</div>
+<div class="sp"><i style="width: 48px"></i>space-12 · 48</div>
+</div>
+<h3>Rayons</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 24px">
+<div class="sp"><div class="rd" style="border-radius: 6px"></div>radius-s · 6 · barres</div>
+<div class="sp"><div class="rd" style="border-radius: 10px"></div>radius-m · 10 · boutons, champs</div>
+<div class="sp"><div class="rd" style="border-radius: 14px"></div>radius-l · 14 · cartes</div>
+<div class="sp"><div class="rd" style="border-radius: 18px"></div>radius-xl · 18 · bulles</div>
+<div class="sp"><div class="rd" style="border-radius: 999px"></div>radius-pill · pastilles</div>
+</div>
+<p class="lead">Traits de 1 px. Aucune ombre portée : la profondeur vient du contraste entre le fond de page et les surfaces blanches.</p>
+</section>
+
+<section class="sec">
+<h2>Mise en page et accessibilité</h2>
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))">
+<div class="box"><h3>Grille</h3><ul style="margin: 12px 0 0; padding-left: 20px; font-size: 15px; line-height: 1.45"><li>Contenu : 1240 px maximum, centré</li><li>Marges de page : 32 px en haut, 24 px sur les côtés</li><li>Menu latéral : 250 px ; il passe au-dessus du contenu sous 810 px de large</li><li>Cartes en grille fluide, 16 à 20 px d'écart</li><li>Tableaux larges : défilement horizontal dans leur cadre</li></ul></div>
+<div class="box"><h3>Accessibilité</h3><ul style="margin: 12px 0 0; padding-left: 20px; font-size: 15px; line-height: 1.45"><li>Texte : contraste 4,5:1 au minimum</li><li>Zones cliquables : 44 px de haut au minimum</li><li>Focus clavier : contour 2 px vert profond, décalé de 2 px</li><li>Taille de texte minimale : 13 px</li><li>Icônes au trait de 2 px, toujours accompagnées d'un libellé</li></ul></div>
+<div class="box"><h3>Ton et formats</h3><ul style="margin: 12px 0 0; padding-left: 20px; font-size: 15px; line-height: 1.45"><li>Vouvoiement, phrases courtes, aucun jargon technique</li><li>Le titre d'un écran énonce la conclusion</li><li>Dates : « Jeu. 15 oct. » · heures : « 8 h 02 »</li><li>Montants : « 165 € » · taux : « 78 % »</li><li>Une erreur dit ce qui s'est passé, puis quoi faire</li></ul></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Jetons pour le développement</h2>
+<p class="lead">À copier tel quel dans la feuille de style globale de l'application.</p>
+<pre style="margin: 0; background: #12211D; color: #E2EFEA; border-radius: 14px; padding: 24px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13.5px; line-height: 1.6; overflow-x: auto">:root {
+  /* Couleurs */
+  --color-brand: #1B4B40;        --color-brand-hover: #245B4E;
+  --color-text: #12211D;         --color-text-2: #3A4743;       --color-text-muted: #55635F;
+  --color-ground: #F3F5F4;       --color-surface: #FFFFFF;      --color-fill: #EEF1F0;
+  --color-border: #D9DFDC;       --color-border-field: #74827D; --color-divider: #E6EAE8;
+  --color-ok-bg: #E2EFEA;        --color-ok-text: #1B4B40;
+  --color-warn-bg: #FFF1D6;      --color-warn-text: #7A4E00;    --color-warn-mark: #8A5A00;
+  --color-danger-bg: #FDE8E6;    --color-danger: #9B1C1C;       --color-danger-border: #E9B8B3;
+
+  /* Typographie */
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --text-display: 600 44px/1.1 var(--font-display);
+  --text-h1: 600 34px/1.15 var(--font-display);
+  --text-h2: 600 22px/1.25 var(--font-display);
+  --text-h3: 600 20px/1.3 var(--font-display);
+  --text-kpi: 600 40px/1.1 var(--font-display);
+  --text-body: 400 16px/1.5 var(--font-body);
+  --text-body-s: 400 14px/1.45 var(--font-body);
+  --text-caption: 400 13px/1.4 var(--font-body);
+
+  /* Espacements, rayons, mise en page */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-s: 6px; --radius-m: 10px; --radius-l: 14px; --radius-xl: 18px; --radius-pill: 999px;
+  --container: 1240px; --sidebar: 250px; --touch: 44px;
+  --focus-ring: 2px solid var(--color-brand); --focus-offset: 2px;
+}</pre>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3580}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

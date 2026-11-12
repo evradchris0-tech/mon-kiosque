@@ -323,3 +323,15 @@ def test_facture_sans_le_mot_pour_est_comprise_par_l_analyseur_local(banc):
         s.commit()
     r = banc.envoyer("facture Bureau Essos, 10 repas à 2500")[0]
     assert "Voici la facture pour Bureau Essos" in r and n(25000) in r
+
+
+def test_racine_et_qr_menent_a_la_nouvelle_interface_et_l_ancienne_reste_disponible(banc, tmp_path):
+    moteur = creer_moteur("sqlite+pysqlite:///:memory:")
+    Base.metadata.create_all(moteur)
+    c = TestClient(creer_app(Parametres(env="dev", dossier_factures=str(tmp_path)), fabrique_sessions(moteur), banc.deps), follow_redirects=False)
+    assert c.get("/").headers["location"] == "/ui/"
+    assert c.get("/qr", headers={"host": "mon-kiosque.vercel.app"}).text.count("mon-kiosque.vercel.app/ui/") == 1
+    assert c.get("/app").status_code == 200  # version précédente conservée comme secours
+    ui = c.get("/ui/")
+    assert ui.status_code == 200 and "manifest.webmanifest" in ui.text and "ecr-accueil.js" in ui.text
+    assert c.get("/ui/icones/vh-accueil-clair.png").content[:4] == b"\x89PNG" and c.get("/ui/sw.js").status_code == 200

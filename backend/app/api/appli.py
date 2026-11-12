@@ -49,43 +49,51 @@ def ip_locale() -> str:
 
 def url_appli(p: Parametres, request: Request | None = None) -> str:
     if p.url_publique:
-        return p.url_publique.rstrip("/") + "/app"
+        return p.url_publique.rstrip("/") + "/ui/"
     if request is not None:
         hote = request.headers.get("x-forwarded-host") or request.headers.get("host", "")
         if hote and not hote.startswith(("localhost", "127.")):
             proto = request.headers.get("x-forwarded-proto") or ("https" if ".vercel.app" in hote else request.url.scheme)
-            return f"{proto}://{hote}/app"
-    return f"http://{ip_locale()}:{p.port}/app"
+            return f"{proto}://{hote}/ui/"
+    return f"http://{ip_locale()}:{p.port}/ui/"
 
 
-def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Dependances) -> APIRouter:
-    r = APIRouter()
-    secret = (p.secret_jeton or secrets.token_hex(16)).encode()
+class Authentification:
+    """Jetons de session sans état (signature HMAC du numéro), partagés par tous les routeurs /api."""
 
-    def signer(numero: str) -> str:
+    def __init__(self, p: Parametres) -> None:
+        self._secret = (p.secret_jeton or secrets.token_hex(16)).encode()
+
+    def signer(self, numero: str) -> str:
         """Jeton sans état : valable sur toutes les instances (hébergement serverless)."""
-        return f"{numero}." + hmac.new(secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
+        return f"{numero}." + hmac.new(self._secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
 
-    def verifier(jeton: str) -> str | None:
+    def verifier(self, jeton: str) -> str | None:
         numero, _, mac = jeton.partition(".")
         if not numero.isdigit():
             return None
-        attendu = hmac.new(secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
+        attendu = hmac.new(self._secret, numero.encode(), hashlib.sha256).hexdigest()[:40]
         return numero if hmac.compare_digest(mac, attendu) else None
 
-    def numero_courant(authorization: str | None = Header(default=None), token: str | None = Query(default=None)) -> str:
+    def numero_courant(self, authorization: str | None = Header(default=None), token: str | None = Query(default=None)) -> str:
         jeton = (authorization or "").removeprefix("Bearer ").strip() or (token or "")
-        numero = verifier(jeton)
+        numero = self.verifier(jeton)
         if numero is None:
             raise HTTPException(status_code=401, detail="session invalide")
         return numero
 
-    def jeton_courant(authorization: str | None = Header(default=None), token: str | None = Query(default=None)) -> str:
+    def jeton_courant(self, authorization: str | None = Header(default=None), token: str | None = Query(default=None)) -> str:
         return (authorization or "").removeprefix("Bearer ").strip() or (token or "")
+
+
+def routeur(p: Parametres, fabrique: sessionmaker[Session], deps: pipeline.Dependances, auth: Authentification | None = None) -> APIRouter:
+    r = APIRouter()
+    auth = auth or Authentification(p)
+    signer, numero_courant, jeton_courant = auth.signer, auth.numero_courant, auth.jeton_courant
 
     @r.get("/")
     def accueil() -> RedirectResponse:
-        return RedirectResponse("/app")
+        return RedirectResponse("/ui/")
 
     @r.get("/manifest.webmanifest")
     def manifeste() -> Response:

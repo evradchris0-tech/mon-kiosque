@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Envoyer un message ponctuel</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.box h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+.fd{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+.fd select{height:48px;box-sizing:border-box;width:100%;padding:0 12px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 16px 'Instrument Sans',sans-serif;color:#12211D}
+.fd small{font-size:13px;font-weight:400;color:#55635F}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #E6EAE8;font-size:15px}
+.kv:last-child{border-bottom:0}
+.kv span{color:#55635F}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="suivi" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Main.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Suivi des envois</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="Main.dc.html">Suivi des envois</a> › <b>Envoyer un message</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Modeles.dc.html">Modèles de messages</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Envoi ponctuel</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Envoyer un message à un client, hors calendrier</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Pour un changement d'appartement, une clé à renvoyer, ou une demande du client.</div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section class="box" style="flex: 1 1 380px">
+<h2>1 · Choisir</h2>
+<label class="fd">Client
+<select value="{{client}}" onChange="{{onClient}}">
+<option value="moreau">Mme Moreau — Le 1904 — arrivée jeu. 15 oct.</option>
+<option value="clarke">Mrs Clarke — Sous les Étoiles — arrivée dim. 11 oct.</option>
+<option value="lefevre">M. Lefèvre — Le Voyageur — arrivée lun. 12 oct.</option>
+<option value="jansen">Mr Jansen — Jeanne + Victor — arrivée mar. 13 oct.</option>
+<option value="brown">Mr Brown — Victor — arrivée ce soir</option>
+</select>
+</label>
+<label class="fd">Message
+<select value="{{model}}" onChange="{{onModel}}">
+<option value="cle">Clé numérique</option>
+<option value="enr">Enregistrement en ligne</option>
+<option value="parking">Parking</option>
+<option value="dej">Petit-déjeuner</option>
+<option value="resto">Restaurants</option>
+</select>
+<small>Seuls les modèles validés peuvent être envoyés.</small>
+</label>
+</section>
+
+<section class="box" style="flex: 1 1 420px">
+<h2>2 · Vérifier</h2>
+<div>
+<div class="kv"><span>Destinataire</span><strong>{{c.name}}</strong></div>
+<div class="kv"><span>Appartement</span><strong>{{c.apt}}</strong></div>
+<div class="kv"><span>Message</span><strong>{{m}}</strong></div>
+<div class="kv"><span>Langue</span><strong>{{c.lang}}</strong></div>
+<div class="kv"><span>Canal</span><strong>{{c.canal}}</strong></div>
+<div class="kv"><span>Déjà envoyé à ce client</span><strong>{{already}}</strong></div>
+</div>
+<a href="Apercu.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 15px">Voir le message tel que le client le recevra →</a>
+</section>
+
+</div>
+
+<section class="box">
+<h2>3 · Envoyer</h2>
+<sc-if value="{{idle}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between">
+<div style="flex: 1 1 320px; font-size: 15px; color: #3A4743">Le message part tout de suite, sans attendre le calendrier. Il apparaîtra dans l'historique comme « envoi manuel ».</div>
+<button type="button" class="btn" onClick="{{ask}}" style="background: #1B4B40; color: #FFFFFF">Envoyer maintenant</button>
+</div>
+</sc-if>
+<sc-if value="{{asking}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Confirmer l'envoi" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<span style="flex: 1 1 280px; font-size: 15px; font-weight: 600">Envoyer « {{m}} » à {{c.name}} maintenant ?</span>
+<button type="button" class="btn" onClick="{{cancel}}" style="background: #FFFFFF; color: #1B4B40">Annuler</button>
+<button type="button" class="btn" onClick="{{confirm}}" style="background: #1B4B40; color: #FFFFFF">Oui, envoyer</button>
+</div>
+</sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{false}}">
+<div role="status" class="oc-in" style="display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 14px 18px; border-radius: 10px; background: #E2EFEA; color: #1B4B40; font-size: 15px; font-weight: 600"><span style="flex: 1 1 280px">Message envoyé à {{c.name}}.</span><a href="Historique.dc.html">Voir dans l'historique</a><button type="button" onClick="{{cancel}}" style="min-height: 44px; padding: 0 8px; border: 0; background: transparent; color: #1B4B40; font: 600 15px 'Instrument Sans', sans-serif; text-decoration: underline; cursor: pointer">Envoyer un autre message</button></div>
+</sc-if>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1000}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const client = st.client || 'moreau';
+const model = st.model || 'cle';
+const step = st.step || 'idle';
+const C = {
+moreau: { name: 'Mme Moreau', apt: 'Le 1904', lang: 'Français (indicatif +33)', canal: 'WhatsApp', sent: ['enr'] },
+clarke: { name: 'Mrs Clarke', apt: 'Sous les Étoiles', lang: 'Anglais (indicatif +44)', canal: 'WhatsApp', sent: ['enr', 'cle', 'parking', 'dej'] },
+lefevre: { name: 'M. Lefèvre', apt: 'Le Voyageur', lang: 'Français (indicatif +33)', canal: 'E-mail, pas de WhatsApp', sent: ['enr', 'cle', 'parking'] },
+jansen: { name: 'Mr Jansen', apt: 'Jeanne + Victor', lang: 'Anglais (indicatif +31)', canal: 'WhatsApp', sent: ['enr', 'cle'] },
+brown: { name: 'Mr Brown', apt: 'Victor', lang: 'Anglais (indicatif +1)', canal: 'WhatsApp', sent: ['enr', 'cle', 'parking', 'dej', 'resto'] }
+};
+const M = { cle: 'Clé numérique', enr: 'Enregistrement en ligne', parking: 'Parking', dej: 'Petit-déjeuner', resto: 'Restaurants' };
+const c = C[client];
+return {
+client, model, c,
+m: M[model],
+already: c.sent.indexOf(model) !== -1 ? 'Oui, ce sera un second envoi' : 'Non',
+idle: step === 'idle',
+asking: step === 'asking',
+done: step === 'done',
+onClient: (e) => this.setState({ client: e.target.value, step: 'idle' }),
+onModel: (e) => this.setState({ model: e.target.value, step: 'idle' }),
+ask: () => this.setState({ step: 'asking' }),
+cancel: () => this.setState({ step: 'idle' }),
+confirm: () => this.setState({ step: 'done' })
+};
+}
+}
+</script>
+</body>
+</html>

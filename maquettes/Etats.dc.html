@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — États du suivi des envois</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.lab{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F;margin-bottom:10px}
+.pn{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;min-height:300px;box-sizing:border-box;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.pn h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600}
+.pn p{margin:0;font-size:15px;line-height:1.5;color:#3A4743;max-width:440px}
+.btn{align-self:flex-start;display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;background:#1B4B40;color:#FFFFFF;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.toast{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:10px;font-size:15px;font-weight:600}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 40px 32px 56px">
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · Suivi des envois</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Ce que l'écran affiche quand il n'y a rien à montrer</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Quatre états de la liste des arrivées, et les deux messages de confirmation.</div>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px">
+
+<div>
+<div class="lab">1 · Chargement</div>
+<div class="pn" aria-busy="true" style="justify-content: flex-start">
+<div style="font-size: 15px; color: #55635F">Lecture des réservations dans eviivo…</div>
+<div class="oc-sk" style="height: 18px; width: 100%"></div>
+<div class="oc-sk" style="height: 46px; width: 100%"></div>
+<div class="oc-sk" style="height: 46px; width: 100%"></div>
+<div class="oc-sk" style="height: 46px; width: 82%"></div>
+<div class="oc-sk" style="height: 46px; width: 64%"></div>
+</div>
+</div>
+
+<div>
+<div class="lab">2 · Aucune arrivée</div>
+<div class="pn">
+<img alt="" src="/_blob/037e6547a28fb224845eeae02f9b575f" style="width: 44px; height: 44px">
+<h2>Aucune arrivée dans les 5 prochains jours</h2>
+<p>Rien à envoyer pour l'instant. OCTAVE reprendra tout seul dès la prochaine réservation.</p>
+<a class="btn" href="Parcours.dc.html" style="background: #FFFFFF; color: #1B4B40">Revoir le parcours des messages</a>
+</div>
+</div>
+
+<div>
+<div class="lab">3 · Filtre « À traiter » sans résultat</div>
+<div class="pn">
+<svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></svg>
+<h2>Rien à traiter, tout est en ordre</h2>
+<p>Aucun envoi n'est bloqué. Vous serez prévenue par une alerte si cela change.</p>
+<a class="btn" href="Main.dc.html" style="background: #FFFFFF; color: #1B4B40">Voir toutes les arrivées</a>
+</div>
+</div>
+
+<div>
+<div class="lab">4 · eviivo ne répond pas</div>
+<div class="pn" style="background: #FDE8E6; border-color: #E9B8B3">
+<svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9B1C1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+<h2 style="color: #7A1414">Impossible de lire les réservations</h2>
+<p style="color: #5E1C1C">eviivo ne répond pas. OCTAVE réessaie automatiquement ; la liste ci-dessous date de la dernière lecture réussie, à [HEURE].</p>
+<button type="button" class="btn" style="background: #9B1C1C; border-color: #9B1C1C">Réessayer maintenant</button>
+</div>
+</div>
+
+</div>
+
+<div>
+<div class="lab">Messages de confirmation</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px">
+<div role="status" class="toast" style="background: #E2EFEA; color: #1B4B40"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7"/></svg>Texte validé. Il sera utilisé dès le prochain envoi.</div>
+<div role="alert" class="toast" style="background: #FDE8E6; color: #9B1C1C"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>Vos changements n'ont pas été enregistrés. Réessayez.</div>
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

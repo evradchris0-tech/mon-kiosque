@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Assistant concurrence</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.lbl{font-size:14px;color:#12211D}
+.track{height:26px;background:#EEF1F0;border-radius:6px;overflow:hidden}
+.val{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:600;text-align:right;white-space:nowrap}
+.row{display:grid;grid-template-columns:minmax(120px,220px) minmax(0,1fr) 64px;gap:14px;align-items:center}
+.sug{padding:11px 16px;min-height:44px;border-radius:999px;border:1px solid #74827D;background:#FFFFFF;color:#12211D;transition:border-color .15s ease,background .15s ease;font:500 14px 'Instrument Sans',sans-serif;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="assistant" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 40px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Concurrence.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Concurrence</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="Concurrence.dc.html">Concurrence</a> › <b>Assistant</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Concurrence.dc.html">Tableau de bord</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; font-weight: 600; line-height: 1.15">Votre assistant concurrence</h1>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Chiffres fictifs, pour l'exemple</span>
+</header>
+
+<div style="align-self: flex-end; max-width: 78%; background: #1B4B40; color: #FFFFFF; padding: 14px 18px; border-radius: 18px 18px 4px 18px; font-size: 16px; line-height: 1.4">Mes prix d'octobre sont-ils dans le marché ?</div>
+
+<div style="align-self: flex-start; width: 100%; max-width: 760px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 18px 18px 18px 4px; padding: 22px; display: flex; flex-direction: column; gap: 18px">
+<div style="font-size: 16px; line-height: 1.5">Vous êtes au-dessus du marché troyen : <strong>27 € de plus par nuit</strong> que les appartements comparables, et 16 € de plus que les hôtels 4 étoiles.</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #55635F">Prix moyen par nuit · octobre</div>
+<div class="row"><div class="lbl"><strong>La Maison VH</strong></div><div class="track"><div style="width: 91.7%; height: 100%; background: #1B4B40"></div></div><div class="val">165 €</div></div>
+<div class="row"><div class="lbl">Hôtels 4 étoiles, Troyes</div><div class="track"><div style="width: 82.8%; height: 100%; background: #74827D"></div></div><div class="val">149 €</div></div>
+<div class="row"><div class="lbl">Appartements comparables, Troyes</div><div class="track"><div style="width: 76.7%; height: 100%; background: #74827D"></div></div><div class="val">138 €</div></div>
+</div>
+<div style="font-size: 13px; color: #55635F">Source : [OUTIL DE MARCHÉ À CHOISIR] · vos prix : eviivo</div>
+</div>
+
+<div style="align-self: flex-end; max-width: 78%; background: #1B4B40; color: #FFFFFF; padding: 14px 18px; border-radius: 18px 18px 4px 18px; font-size: 16px; line-height: 1.4">Et mon taux d'occupation ?</div>
+
+<div style="align-self: flex-start; width: 100%; max-width: 760px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 18px 18px 18px 4px; padding: 22px; display: flex; flex-direction: column; gap: 18px">
+<div style="font-size: 16px; line-height: 1.5">Vous remplissez mieux que vos concurrents malgré des prix plus élevés : <strong>7 points d'avance</strong> ce mois-ci.</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #55635F">Taux d'occupation · octobre</div>
+<div class="row"><div class="lbl"><strong>La Maison VH</strong></div><div class="track"><div style="width: 78%; height: 100%; background: #1B4B40"></div></div><div class="val">78 %</div></div>
+<div class="row"><div class="lbl">Concurrents suivis</div><div class="track"><div style="width: 71%; height: 100%; background: #74827D"></div></div><div class="val">71 %</div></div>
+</div>
+<div style="font-size: 13px; color: #55635F">Source : [OUTIL DE MARCHÉ À CHOISIR] · votre occupation : eviivo</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" class="sug">Quel appartement se loue le mieux ?</button>
+<button type="button" class="sug">Mes prix du week-end prochain</button>
+<button type="button" class="sug">Comparer à l'an dernier</button>
+</div>
+
+<form style="display: flex; gap: 10px; align-items: center; background: #FFFFFF; border: 1px solid #74827D; border-radius: 14px; padding: 8px 8px 8px 16px">
+<label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Votre question</label>
+<input id="q" type="text" placeholder="Posez votre question…" style="flex: 1 1 auto; min-width: 0; height: 44px; border: 0; outline: 0; background: transparent; font: 400 16px 'Instrument Sans', sans-serif; color: #12211D">
+<button type="button" aria-label="Envoyer" style="width: 48px; height: 48px; border: 0; border-radius: 10px; background: #1B4B40; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+</button>
+</form>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1140}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

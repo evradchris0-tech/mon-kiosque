@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.horloge import Horloge
 from app.db.modeles import Job, Message, Pme
-from app.domaine import finances
+from app.domaine import finances, preferences
 from app.integrations.whatsapp.interface import CanalMessages, MessageSortant
 from app.moki import reponses
 
@@ -18,6 +18,8 @@ def executer(fabrique: sessionmaker[Session], canal: CanalMessages, horloge: Hor
     envoyes = 0
     with fabrique() as s:
         for pme in s.scalars(select(Pme).where(Pme.statut == "actif")).all():
+            if not preferences.actif(s, pme, "rappels_fiscaux"):
+                continue
             for e in finances.echeances(horloge, pme.fuseau):
                 if e["jours"] not in JOURS_RAPPEL:
                     continue

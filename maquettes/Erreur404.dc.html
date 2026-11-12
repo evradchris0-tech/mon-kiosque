@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Page introuvable</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="none" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column">
+<div class="oc-top" style="width: 100%">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a></div>
+<div class="oc-links"><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 0 64px">
+<div style="max-width: 520px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px">
+<img alt="" src="/_blob/3106868d7057e0cb863528210632d52a" style="width: 72px; height: 72px">
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #55635F">Page introuvable</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1">Cette page n'existe pas, ou plus</h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; color: #3A4743">L'adresse est peut-être incomplète, ou la réservation a été retirée d'eviivo. Vos envois, eux, continuent normalement.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px">
+<a class="btn" href="Accueil.dc.html" style="background: #1B4B40; color: #FFFFFF">Revenir à l'accueil</a>
+<a class="btn" href="Main.dc.html" style="background: #FFFFFF; color: #1B4B40">Ouvrir le suivi des envois</a>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

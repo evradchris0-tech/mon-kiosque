@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Charte graphique, logo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.pn{border-radius:14px;border:1px solid #D9DFDC;display:flex;align-items:center;justify-content:center;padding:32px;min-height:180px;box-sizing:border-box}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px}
+.h{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F}
+ul{margin:12px 0 0;padding-left:20px;font-size:15px;line-height:1.45}
+li{margin-bottom:6px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 48px 32px 64px">
+<div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH · Charte graphique</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.1">Logo</h1>
+<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.5; color: #3A4743; max-width: 760px">Un toit, le O d'OCTAVE dessous, et une serrure au centre : la maison dont OCTAVE envoie la clé. Dans le nom, le A sans barre reprend la pente du toit.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
+<div class="pn" style="background: #FFFFFF"><img alt="Logo OCTAVE, version verte" src="/_blob/9c156ae7dea0509bfa208245a3ba1e29" style="width: 100%; max-width: 380px"></div>
+<div class="pn" style="background: #1B4B40; border-color: #1B4B40"><img alt="Logo OCTAVE, version blanche" src="/_blob/3862d9025d69aa20eca5437631f35b85" style="width: 100%; max-width: 380px"></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div class="pn" style="background: #FFFFFF; flex-direction: column; gap: 14px"><img alt="Icône d'application" src="/_blob/764c8eba748f67c630b4911d6488740d" style="width: 112px; height: 112px"><span style="font-size: 14px; color: #55635F">Icône d'application</span></div>
+<div class="pn" style="background: #FFFFFF; flex-direction: column; gap: 14px"><span style="display: flex; align-items: flex-end; gap: 20px"><img alt="" src="/_blob/3106868d7057e0cb863528210632d52a" style="width: 96px; height: 96px"><img alt="" src="/_blob/3106868d7057e0cb863528210632d52a" style="width: 48px; height: 48px"><img alt="" src="/_blob/eb6f0c659af0029e5c11b4f277ed1969" style="width: 24px; height: 24px"><img alt="" src="/_blob/eb6f0c659af0029e5c11b4f277ed1969" style="width: 16px; height: 16px"></span><span style="font-size: 14px; color: #55635F">96 et 48 px avec serrure · 24 et 16 px en version simplifiée</span></div>
+<div class="pn" style="background: #1B4B40; border-color: #1B4B40; flex-direction: column; gap: 14px"><img alt="" src="/_blob/bb0dcc0f7521dd2690599fb88eb0e059" style="width: 96px; height: 96px"><span style="font-size: 14px; color: #E2EFEA">Symbole blanc, sur le vert</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<div class="box"><div class="h">Fichiers</div><ul><li><code>octave-logo-vert.png</code> et <code>octave-logo-blanc.png</code> : symbole et nom</li><li><code>octave-symbole-vert.png</code> et <code>octave-symbole-blanc.png</code> : 512 px, fond transparent</li><li><code>octave-icone-app.png</code> : 512 px, coins arrondis</li></ul></div>
+<div class="box"><div class="h">Règles d'usage</div><ul><li>Deux couleurs seulement : vert profond <code>#1B4B40</code> ou blanc</li><li>Marge libre autour du logo : la moitié de la hauteur du symbole</li><li>Sous 32 px : symbole simplifié sans serrure (<code>octave-symbole-simple</code>) ; taille minimale 16 px</li><li>Nom en Bricolage Grotesque 700, capitales, avec le A sans barre : toujours utiliser le fichier, ne pas le retaper</li></ul></div>
+<div class="box"><div class="h">À éviter</div><ul><li>Déformer, incliner ou recolorer le symbole</li><li>Poser la version verte sur un fond sombre</li><li>Ajouter une ombre, un contour ou un dégradé</li><li>Séparer le nom « La Maison VH » du logo complet</li></ul></div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1160,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

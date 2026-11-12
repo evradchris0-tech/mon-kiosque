@@ -284,5 +284,17 @@ class Inscription(Base):
     cree_a: Mapped[datetime] = mapped_column(DateTime)
 
 
+class Preference(Base):
+    """Préférences d'une PME (clé → valeur JSON) : résumé du soir, rappels fiscaux, alertes lues."""
+
+    __tablename__ = "preferences"
+    __table_args__ = (UniqueConstraint("pme_id", "cle", name="uq_preference_pme_cle"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pme_id: Mapped[int] = mapped_column(ForeignKey("pme.id"), index=True)
+    cle: Mapped[str] = mapped_column(String(60))
+    valeur: Mapped[Any] = mapped_column(JSON)
+
+
 Index("ix_journal_pme_cree", Journal.pme_id, Journal.cree_a)
 Index("ix_ventes_pme_heure", Vente.pme_id, Vente.heure_envoi)

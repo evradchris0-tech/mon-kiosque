@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Le message vu par le client</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+.ph{width:390px;height:700px;box-sizing:border-box;border:1px solid #B9C6C1;border-radius:28px;overflow:hidden;background:#E9EEEC;display:flex;flex-direction:column}
+.ph .bar{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#FFFFFF;border-bottom:1px solid #D9DFDC}
+.ph .av{width:40px;height:40px;border-radius:50%;background:#1B4B40;display:flex;align-items:center;justify-content:center}
+.ph .av img{width:26px;height:26px}
+.bub{align-self:flex-start;max-width:86%;background:#FFFFFF;border-radius:4px 16px 16px 16px;padding:14px 16px;font-size:16px;line-height:1.5;color:#12211D}
+.v{background:#E2EFEA;color:#1B4B40;font-weight:600;border-radius:4px;padding:0 4px}
+.t{align-self:flex-start;font-size:12px;color:#55635F;margin-left:6px}
+.day{align-self:center;font-size:12px;font-weight:600;color:#55635F;background:#FFFFFF;border-radius:999px;padding:4px 12px}
+</style>
+</helmet>
+<div style="width: 920px; height: 900px; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 32px 40px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · Clé numérique</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 600; line-height: 1.15">Ce que le client voit sur son téléphone</h1>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Texte d'exemple, à remplacer par celui de Joëlle</span>
+</div>
+
+<div style="display: flex; gap: 40px; justify-content: center">
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Français · indicatif +33</div>
+<div class="ph">
+<div class="bar"><div class="av"><img alt="" src="/_blob/5bd93b1e6655a5d05fa23bc599ce9639"></div><div><div style="font-weight: 600">La Maison VH</div><div style="font-size: 13px; color: #55635F">Compte professionnel</div></div></div>
+<div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<span class="day">Samedi 10 octobre</span>
+<div class="bub">Bonjour <span class="v">Mme Moreau</span>,<br><br>Voici votre clé numérique pour l'appartement <span class="v">Le 1904</span>.<br><br>Code de porte : <span class="v">[CODE]</span><br>Lien d'accès : <span class="v">[LIEN D'ACCÈS]</span><br><br>À très bientôt,<br>Joëlle</div>
+<span class="t">8 h 00</span>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 600">Anglais · indicatif +44</div>
+<div class="ph" lang="en">
+<div class="bar"><div class="av"><img alt="" src="/_blob/5bd93b1e6655a5d05fa23bc599ce9639"></div><div><div style="font-weight: 600">La Maison VH</div><div style="font-size: 13px; color: #55635F">Business account</div></div></div>
+<div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<span class="day">Saturday 10 October</span>
+<div class="bub">Hello <span class="v">Mrs Clarke</span>,<br><br>Here is your digital key for the apartment <span class="v">Sous les Étoiles</span>.<br><br>Door code: <span class="v">[CODE]</span><br>Access link: <span class="v">[ACCESS LINK]</span><br><br>See you soon,<br>Joëlle</div>
+<span class="t">8:00</span>
+</div>
+</div>
+</div>
+
+</div>
+
+<div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; color: #55635F"><span class="v" style="font-size: 13px">En vert</span>les informations qu'OCTAVE insère automatiquement depuis la réservation.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":920,"height":920}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

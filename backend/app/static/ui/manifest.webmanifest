@@ -1,0 +1,18 @@
+{
+  "id": "/ui/",
+  "name": "Mon Kiosque",
+  "short_name": "Mon Kiosque",
+  "description": "Ton assistant Moki pour les ventes, les factures et les relances de ton commerce.",
+  "lang": "fr",
+  "start_url": "/ui/",
+  "scope": "/ui/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3F5F4",
+  "theme_color": "#FF7900",
+  "icons": [
+    { "src": "/ui/icons/app-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/ui/icons/app-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/ui/icons/app-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,29 @@
+/* Écran Connexions : classes préfixées cnx-. */
+.cnx-page { display: flex; flex-direction: column; gap: 20px; max-width: 1100px; margin: 0 auto; }
+.cnx-page .entete-ecran { margin-bottom: 0; }
+.cnx-corps { display: flex; flex-direction: column; gap: 20px; }
+
+.cnx-grille { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cnx-carte { display: flex; min-width: 0; }
+.cnx-carte > article {
+  display: flex; flex: 1; flex-direction: column; gap: 12px; min-width: 0; padding: 16px;
+  border: 1px solid var(--line); border-radius: var(--r-carte); background: var(--surface); box-shadow: var(--ombre);
+}
+.cnx-a-venir > article { border-style: dashed; background: transparent; box-shadow: none; }
+.cnx-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cnx-tete h2 { min-width: 0; font-size: var(--t-20); overflow-wrap: anywhere; }
+.cnx-detail { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.cnx-sens { display: flex; flex-direction: column; gap: 2px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-soft); font-size: var(--t-14); line-height: 1.45; }
+.cnx-sens span { color: var(--muted); }
+.cnx-sens strong { font-weight: 600; }
+
+.cnx-aide { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; padding: 16px; border: 1px solid var(--line); border-radius: var(--r-carte); background: var(--surface); }
+.cnx-aide p { font-weight: 500; }
+
+@media (min-width: 600px) {
+  .cnx-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .cnx-carte > article { padding: 20px; }
+}
+@media (min-width: 1000px) {
+  .cnx-grille { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

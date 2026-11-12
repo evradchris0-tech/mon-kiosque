@@ -1,0 +1,71 @@
+/* Mon Kiosque : écran Paramètres (préfixe .par-). */
+
+.par-form { display: flex; flex-direction: column; gap: 16px; }
+.par-grille { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.par-carte { display: block; }
+.par-champs { display: flex; flex-direction: column; gap: 16px; }
+.par-intro { margin: -4px 0 14px; color: var(--ink-2); font-size: var(--t-14); line-height: 1.45; }
+.par-oblig { color: var(--muted); font-weight: 400; font-size: var(--t-13); }
+.par-lecture { background: var(--fill) !important; color: var(--muted) !important; cursor: default; font-variant-numeric: tabular-nums; }
+.par-global { margin: 0; }
+
+/* Champ avec unité */
+.par-suffixe { position: relative; }
+.par-suffixe input { padding-right: 40px; font-variant-numeric: tabular-nums; }
+.par-unite { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 600; pointer-events: none; }
+.champ.erreur .par-suffixe input { padding-right: 39px; }
+
+/* Cartes radio */
+.par-radios { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.par-radio { position: relative; display: block; cursor: pointer; }
+.par-radio input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.par-radio-corps {
+  display: flex; align-items: flex-start; gap: 14px; min-height: 64px; padding: 14px 16px; border: 1px solid var(--line-champ); border-radius: var(--r-carte);
+  background: var(--surface); transition: border-color var(--duree), background var(--duree), box-shadow var(--duree);
+}
+.par-radio:hover .par-radio-corps { border-color: var(--green); }
+.par-radio input:checked + .par-radio-corps { border-color: var(--green); background: var(--green-tint); box-shadow: inset 0 0 0 1px var(--green); }
+.par-radio input:focus-visible + .par-radio-corps { outline: 2px solid var(--green); outline-offset: 2px; }
+.par-radio-point { flex: none; position: relative; width: 22px; height: 22px; margin-top: 1px; border: 2px solid var(--line-champ); border-radius: 50%; background: var(--surface); transition: border-color var(--duree); }
+.par-radio-point::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--green); transform: scale(0); transition: transform var(--duree); }
+.par-radio input:checked + .par-radio-corps .par-radio-point { border-color: var(--green); }
+.par-radio input:checked + .par-radio-corps .par-radio-point::after { transform: scale(1); }
+.par-radio-texte { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.par-radio-titre { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.par-radio-aide { color: var(--ink-2); font-size: var(--t-13); line-height: 1.45; }
+.par-radios + .champ-erreur { margin-top: 10px; }
+
+/* Interrupteurs */
+.par-ligne { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+.par-ligne:first-of-type { padding-top: 0; }
+.par-ligne:last-child { padding-bottom: 0; border-bottom: 0; }
+.par-ligne-texte { min-width: 0; }
+.par-ligne-texte label { display: block; font-size: 15px; font-weight: 600; line-height: 1.3; cursor: pointer; }
+.par-ligne-texte .champ-aide { margin-top: 2px; }
+.par-ligne .interrupteur { position: relative; }
+.par-ligne .interrupteur::before { content: ""; position: absolute; inset: -6px -4px; }
+
+/* Barre d'enregistrement (collante) */
+.par-barre {
+  position: sticky; bottom: calc(var(--h-onglets) + var(--safe-bas) + 8px); z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 10px 12px 10px 16px; border: 1px solid var(--line); border-radius: var(--r-carte); background: var(--surface); box-shadow: 0 6px 20px rgba(18, 33, 29, .12);
+}
+.par-statut { color: var(--muted); font-size: var(--t-14); font-weight: 500; }
+.par-statut.modifie { color: var(--warn); font-weight: 600; }
+.par-actions { display: flex; gap: 8px; margin-left: auto; }
+.par-sortie-texte { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+
+/* Mobile : la barre reste fine ; le statut n'apparaît (au-dessus des boutons) que s'il y a des changements. */
+@media (max-width: 599px) {
+  .par-barre { padding: 8px 12px; gap: 6px; }
+  .par-statut:not(.modifie) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+  .par-statut.modifie { width: 100%; font-size: var(--t-13); }
+  .par-actions { width: 100%; }
+  .par-actions .btn { flex: 1; min-height: 44px; }
+}
+
+@media (min-width: 900px) {
+  .par-grille { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .par-commerce { grid-row: 1 / span 3; }
+  .par-barre { bottom: 16px; }
+}

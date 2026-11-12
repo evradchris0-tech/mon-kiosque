@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Mise en service</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.st{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:6px 16px;align-items:center;background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:18px 20px}
+.st .n{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600}
+.st b{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+.st p{margin:2px 0 0;font-size:15px;line-height:1.45;color:#3A4743}
+.tag{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;background:#1B4B40;color:#FFFFFF;font-size:15px;font-weight:600;text-decoration:none}
+.btn:hover{background:#245B4E;color:#FFFFFF}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="accueil" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top" style="max-width: 900px">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Mise en service</b></span></div>
+<div class="oc-links"><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Avant le premier envoi automatique</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Prochaine étape pour vous : valider vos cinq textes</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Cinq étapes, dans l'ordre. Aucun message ne part chez un client avant la dernière.</div>
+</header>
+
+<div role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" aria-label="Étapes terminées : 0 sur 5" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px">
+<div style="height: 8px; border-radius: 999px; background: #8A5A00"></div>
+<div style="height: 8px; border-radius: 999px; background: #D9DFDC"></div>
+<div style="height: 8px; border-radius: 999px; background: #8A5A00"></div>
+<div style="height: 8px; border-radius: 999px; background: #D9DFDC"></div>
+<div style="height: 8px; border-radius: 999px; background: #D9DFDC"></div>
+</div>
+
+<div class="st">
+<div class="n" style="background: #FFF1D6; color: #7A4E00">1</div>
+<div><b>Relier eviivo</b><p>OCTAVE y lit les réservations. La demande d'accès est partie ; eviivo doit répondre par e-mail.</p></div>
+<span class="tag" style="background: #FFF1D6; color: #7A4E00">En attente d'eviivo</span>
+</div>
+<div class="st">
+<div class="n" style="background: #EEF1F0; color: #55635F">2</div>
+<div><b>Relier votre WhatsApp Business</b><p>Les messages partent de « La Maison VH ». Vous gardez l'application sur votre téléphone.</p></div>
+<span class="tag" style="background: #EEF1F0; color: #55635F">[ÉTAT À CONFIRMER]</span>
+</div>
+<div class="st" style="border-color: #1B4B40; border-width: 2px">
+<div class="n" style="background: #1B4B40; color: #FFFFFF">3</div>
+<div><b>Valider vos cinq textes</b><p>En français et en anglais. 0 sur 5 validés pour l'instant.</p></div>
+<a class="btn" href="Modeles.dc.html">Relire les textes</a>
+</div>
+<div class="st">
+<div class="n" style="background: #EEF1F0; color: #55635F">4</div>
+<div><b>Essai à blanc</b><p>OCTAVE prépare les messages sans les envoyer. Vous les contrôlez sur de vraies réservations.</p></div>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px"><span class="tag" style="background: #EEF1F0; color: #55635F">Après les étapes 1 à 3</span><a href="EssaiBlanc.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600">Voir à quoi il ressemble →</a></span>
+</div>
+<div class="st">
+<div class="n" style="background: #EEF1F0; color: #55635F">5</div>
+<div><b>Mise en service</b><p>Vous donnez le feu vert. Les messages partent alors tout seuls, selon votre calendrier.</p></div>
+<span class="tag" style="background: #EEF1F0; color: #55635F">Après l'essai</span>
+</div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":980}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

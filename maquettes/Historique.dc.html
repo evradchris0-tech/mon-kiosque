@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Historique des échanges</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+th{text-align:left;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#55635F;padding:12px 14px;border-bottom:1px solid #D9DFDC;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid #E6EAE8;vertical-align:middle;font-size:15px}
+tr:last-child td{border-bottom:0}
+td small{display:block;font-size:13px;color:#55635F;margin-top:2px}
+.hr{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;white-space:nowrap}
+.dir{font-size:13px;font-weight:600;color:#3A4743;white-space:nowrap}
+.flt{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer;transition:background .15s ease,color .15s ease}
+.see{display:inline-flex;align-items:center;min-height:44px;font-weight:600;white-space:nowrap}
+.fd{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#3A4743;flex:1 1 170px;min-width:0}
+.fd select,.fd input{height:48px;box-sizing:border-box;width:100%;padding:0 12px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 15px 'Instrument Sans',sans-serif;color:#12211D}
+.lnk{min-height:44px;padding:0 8px;border:0;background:transparent;color:#1B4B40;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:underline}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="historique" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Historique</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Main.dc.html">Suivi des envois</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Historique · samedi 10 octobre</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Un seul échange en échec aujourd'hui</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Tout ce qu'OCTAVE envoie ou reçoit : messages aux clients, lectures dans eviivo, alertes pour vous.</div>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</header>
+
+<section aria-label="Filtres" style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<div role="group" aria-label="Type d'échange" style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" class="flt" onClick="{{setAll}}" aria-pressed="{{f.all.on}}" style="background: {{f.all.bg}}; color: {{f.all.fg}}; border-color: {{f.all.bd}}">Tout</button>
+<button type="button" class="flt" onClick="{{setMsg}}" aria-pressed="{{f.msg.on}}" style="background: {{f.msg.bg}}; color: {{f.msg.fg}}; border-color: {{f.msg.bd}}">Messages aux clients</button>
+<button type="button" class="flt" onClick="{{setEvi}}" aria-pressed="{{f.evi.on}}" style="background: {{f.evi.bg}}; color: {{f.evi.fg}}; border-color: {{f.evi.bd}}">eviivo</button>
+<button type="button" class="flt" onClick="{{setAlert}}" aria-pressed="{{f.alert.on}}" style="background: {{f.alert.bg}}; color: {{f.alert.fg}}; border-color: {{f.alert.bd}}">Alertes pour vous</button>
+</div>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #1B4B40; background: #FFFFFF; color: #1B4B40; font: 600 14px 'Instrument Sans', sans-serif; cursor: pointer">Exporter la liste</button>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label class="fd" style="flex: 2 1 240px">Rechercher
+<input type="search" placeholder="Nom du client, message…" value="{{q}}" onChange="{{onQ}}">
+</label>
+<label class="fd">Période
+<select value="{{period}}" onChange="{{onPeriod}}">
+<option value="today">Aujourd'hui</option>
+<option value="7">7 derniers jours</option>
+<option value="30">30 derniers jours</option>
+<option value="custom">Choisir des dates…</option>
+</select>
+</label>
+<label class="fd">Canal
+<select value="{{canal}}" onChange="{{onCanal}}">
+<option value="all">Tous les canaux</option>
+<option value="whatsapp">WhatsApp</option>
+<option value="email">E-mail</option>
+<option value="eviivo">Connexion eviivo</option>
+</select>
+</label>
+<label class="fd">Résultat
+<select value="{{res}}" onChange="{{onRes}}">
+<option value="all">Tous les résultats</option>
+<option value="ok">Réussis</option>
+<option value="fail">En échec</option>
+</select>
+</label>
+<label class="fd">Appartement
+<select value="{{apt}}" onChange="{{onApt}}">
+<option value="all">Tous les appartements</option>
+<option value="etoiles">Sous les Étoiles</option>
+<option value="1904">Le 1904</option>
+<option value="voyageur">Le Voyageur</option>
+<option value="jeanne">Jeanne</option>
+<option value="victor">Victor</option>
+</select>
+</label>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px">
+<div role="status" style="font-size: 15px"><strong>{{count}}</strong> {{countLabel}}</div>
+<sc-if value="{{dirty}}" hint-placeholder-val="{{false}}">
+<button type="button" class="lnk" onClick="{{reset}}">Effacer les filtres</button>
+</sc-if>
+</div>
+</section>
+
+<sc-if value="{{some}}" hint-placeholder-val="{{true}}">
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; overflow-x: auto">
+<table style="width: 100%; min-width: 980px; border-collapse: collapse">
+<thead><tr><th>Heure</th><th>Sens</th><th>Avec qui</th><th>Quoi</th><th>Canal</th><th>Résultat</th><th></th></tr></thead>
+<tbody>
+<tr style="display: {{d.r1}}"><td class="hr">10 h 00</td><td><span class="dir">→ Envoyé</span></td><td><strong>Mrs Clarke</strong><small>Sous les Étoiles</small></td><td>Restaurants</td><td>WhatsApp</td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r2}}"><td class="hr">10 h 00</td><td><span class="dir">→ Envoyé</span></td><td><strong>M. Lefèvre</strong><small>Le Voyageur</small></td><td>Petit-déjeuner</td><td>E-mail<small>Pas de WhatsApp</small></td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r3}}"><td class="hr">10 h 00</td><td><span class="dir">→ Envoyé</span></td><td><strong>Mr Jansen</strong><small>Jeanne + Victor</small></td><td>Parking</td><td>WhatsApp</td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r4}}"><td class="hr">9 h 15</td><td><span class="dir">← Reçu</span></td><td><strong>eviivo</strong><small>Logiciel de réservation</small></td><td>Lecture des réservations</td><td>Connexion eviivo</td><td><span class="oc-chip oc-ok">Réussi</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r5}}"><td class="hr">9 h 12</td><td><span class="dir">→ Envoyé</span></td><td><strong>Mr Brown</strong><small>Victor</small></td><td>5 messages de rattrapage<small>Réservation de dernière minute</small></td><td>WhatsApp</td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r6}}"><td class="hr">9 h 10</td><td><span class="dir">← Reçu</span></td><td><strong>eviivo</strong><small>Logiciel de réservation</small></td><td>Nouvelle réservation : Mr Brown<small>Victor</small></td><td>Connexion eviivo</td><td><span class="oc-chip oc-ok">Réussi</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r7}}"><td class="hr">8 h 02</td><td><span class="dir">→ Envoyé</span></td><td><strong>Vous</strong><small>contact@la-maison-vh.fr</small></td><td>Alerte : clé de Mme Moreau bloquée<small>Le 1904</small></td><td>E-mail</td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="Alerte.dc.html">Voir l'alerte</a></td></tr>
+<tr style="display: {{d.r8}}; background: #FDE8E6"><td class="hr">8 h 00</td><td><span class="dir">→ Envoyé</span></td><td><strong>Mme Moreau</strong><small>Le 1904</small></td><td>Clé numérique</td><td>WhatsApp</td><td><span class="oc-chip oc-block" style="background: #FFFFFF"><span class="oc-dot"></span>Échec · lien absent</span></td><td><a class="see" href="HistoriqueDetail.dc.html" style="color: #9B1C1C">Comprendre</a></td></tr>
+<tr style="display: {{d.r9}}"><td class="hr">8 h 00</td><td><span class="dir">→ Envoyé</span></td><td><strong>Mme Moreau</strong><small>Le 1904</small></td><td>Enregistrement en ligne</td><td>WhatsApp</td><td><span class="oc-chip oc-ok">Remis</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+<tr style="display: {{d.r10}}"><td class="hr">8 h 00</td><td><span class="dir">← Reçu</span></td><td><strong>eviivo</strong><small>Logiciel de réservation</small></td><td>Lecture des réservations du jour</td><td>Connexion eviivo</td><td><span class="oc-chip oc-ok">Réussi</span></td><td><a class="see" href="HistoriqueDetail.dc.html">Détail</a></td></tr>
+</tbody>
+</table>
+</div>
+</sc-if>
+
+<sc-if value="{{none}}" hint-placeholder-val="{{false}}">
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 40px 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+<img alt="" src="/_blob/d90ac00ad65aae5e0b9f8fcc6584f20d" style="width: 44px; height: 44px">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600">Aucun échange ne correspond à ces filtres</div>
+<div style="font-size: 15px; color: #3A4743">Élargissez la période ou retirez un filtre.</div>
+<button type="button" onClick="{{reset}}" style="height: 48px; padding: 0 18px; border-radius: 10px; border: 1px solid #1B4B40; background: #FFFFFF; color: #1B4B40; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Effacer les filtres</button>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 13px; color: #55635F">
+<span>L'historique garde la trace de l'envoi, pas le contenu des conversations de vos clients.</span>
+<span>Durée de conservation : [À DÉFINIR]</span>
+</div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1320}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const type = st.type || 'all';
+const canal = st.canal || 'all';
+const res = st.res || 'all';
+const apt = st.apt || 'all';
+const period = st.period || 'today';
+const q = st.q || '';
+const rows = {
+r1: { t: 'msg', c: 'whatsapp', r: 'ok', a: ['etoiles'], s: 'mrs clarke sous les etoiles restaurants' },
+r2: { t: 'msg', c: 'email', r: 'ok', a: ['voyageur'], s: 'm. lefevre le voyageur petit-dejeuner' },
+r3: { t: 'msg', c: 'whatsapp', r: 'ok', a: ['jeanne', 'victor'], s: 'mr jansen jeanne victor parking' },
+r4: { t: 'evi', c: 'eviivo', r: 'ok', a: [], s: 'eviivo lecture des reservations' },
+r5: { t: 'msg', c: 'whatsapp', r: 'ok', a: ['victor'], s: 'mr brown victor rattrapage derniere minute' },
+r6: { t: 'evi', c: 'eviivo', r: 'ok', a: ['victor'], s: 'eviivo nouvelle reservation mr brown victor' },
+r7: { t: 'alert', c: 'email', r: 'ok', a: ['1904'], s: 'alerte cle mme moreau le 1904 bloquee' },
+r8: { t: 'msg', c: 'whatsapp', r: 'fail', a: ['1904'], s: 'mme moreau le 1904 cle numerique echec lien absent' },
+r9: { t: 'msg', c: 'whatsapp', r: 'ok', a: ['1904'], s: 'mme moreau le 1904 enregistrement en ligne' },
+r10: { t: 'evi', c: 'eviivo', r: 'ok', a: [], s: 'eviivo lecture des reservations du jour' }
+};
+const norm = (x) => x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+const nq = norm(q);
+const d = {};
+let count = 0;
+Object.keys(rows).forEach((k) => {
+const w = rows[k];
+const ok = (type === 'all' || w.t === type) && (canal === 'all' || w.c === canal) && (res === 'all' || w.r === res) && (apt === 'all' || w.a.indexOf(apt) !== -1) && (nq === '' || w.s.indexOf(nq) !== -1);
+d[k] = ok ? 'table-row' : 'none';
+if (ok) count += 1;
+});
+const f = {};
+['all', 'msg', 'evi', 'alert'].forEach((k) => {
+const on = k === type;
+f[k] = { on: on ? 'true' : 'false', bg: on ? '#1B4B40' : '#FFFFFF', fg: on ? '#FFFFFF' : '#12211D', bd: on ? '#1B4B40' : '#74827D' };
+});
+return {
+d, f, q, canal, res, apt, period, count,
+countLabel: count > 1 ? 'échanges affichés sur 10' : 'échange affiché sur 10',
+some: count > 0,
+none: count === 0,
+dirty: type !== 'all' || canal !== 'all' || res !== 'all' || apt !== 'all' || period !== 'today' || q !== '',
+setAll: () => this.setState({ type: 'all' }),
+setMsg: () => this.setState({ type: 'msg' }),
+setEvi: () => this.setState({ type: 'evi' }),
+setAlert: () => this.setState({ type: 'alert' }),
+onQ: (e) => this.setState({ q: e.target.value }),
+onCanal: (e) => this.setState({ canal: e.target.value }),
+onRes: (e) => this.setState({ res: e.target.value }),
+onApt: (e) => this.setState({ apt: e.target.value }),
+onPeriod: (e) => this.setState({ period: e.target.value }),
+reset: () => this.setState({ type: 'all', canal: 'all', res: 'all', apt: 'all', period: 'today', q: '' })
+};
+}
+}
+</script>
+</body>
+</html>

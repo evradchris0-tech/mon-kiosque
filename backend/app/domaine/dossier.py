@@ -16,6 +16,13 @@ from app.domaine.factures import _ascii
 MOIS_REQUIS = 6
 
 
+def etat(session: Session, pme: Pme, horloge: Horloge) -> dict:
+    """Où en est le dossier de crédit : mois d'historique disponibles et manquants (même calcul que `donnees`)."""
+    hist = finances.historique_mois(session, pme, horloge)
+    manque = max(0, MOIS_REQUIS - hist)
+    return {"historique_mois": hist, "requis": MOIS_REQUIS, "manque_mois": manque, "pret": manque == 0, "fictives": pme.donnees_fictives}
+
+
 def donnees(session: Session, pme: Pme, horloge: Horloge) -> dict:
     mensuel = finances.mensuel(session, pme, horloge, MOIS_REQUIS)
     hist = finances.historique_mois(session, pme, horloge)

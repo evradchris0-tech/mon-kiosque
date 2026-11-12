@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Paramètres</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:6px}
+.box h2{margin:0 0 6px;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600}
+.ln{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;min-height:52px;padding:6px 0;border-bottom:1px solid #E6EAE8;font-size:15px}
+.ln:last-child{border-bottom:0}
+.ln small{display:block;font-size:13px;color:#55635F}
+.v{font-weight:600}
+.sw{width:52px;height:32px;border-radius:999px;border:0;padding:3px;display:flex;cursor:pointer}
+.sw i{display:block;width:26px;height:26px;border-radius:50%;background:#FFFFFF}
+.tag{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}
+input{height:48px;box-sizing:border-box;padding:0 14px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 16px 'Instrument Sans',sans-serif;color:#12211D}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="parametres" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Paramètres</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Modeles.dc.html">Modifier les textes</a><a class="oc-lk" href="Parcours.dc.html">Voir le parcours</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Paramètres</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Les règles que vous avez décidées. Vous pouvez les changer à tout moment.</div>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; align-items: start">
+
+<section class="box">
+<h2>Calendrier des messages</h2>
+<div class="ln"><span>Enregistrement en ligne</span><span class="v">5 jours avant</span></div>
+<div class="ln"><span>Clé numérique<small>Envoyée même si l'enregistrement n'est pas fait</small></span><span class="v">5 jours avant</span></div>
+<div class="ln"><span>Parking</span><span class="v">3 jours avant</span></div>
+<div class="ln"><span>Petit-déjeuner</span><span class="v">2 jours avant</span></div>
+<div class="ln"><span>Restaurants</span><span class="v">La veille</span></div>
+</section>
+
+<section class="box">
+<h2>Horaires d'envoi</h2>
+<div class="ln"><span>Premier envoi possible</span><span class="v">8 h</span></div>
+<div class="ln"><span>Dernier envoi possible</span><span class="v">21 h</span></div>
+<div class="ln"><span>Réservation de dernière minute<small>Les messages en retard partent tout de suite</small></span><button type="button" role="switch" aria-checked="true" aria-label="Rattrapage immédiat activé" class="sw" style="background: #1B4B40; justify-content: flex-end"><i></i></button></div>
+<div class="ln"><span>Plusieurs appartements<small>Une seule clé regroupée par réservation</small></span><button type="button" role="switch" aria-checked="true" aria-label="Clé regroupée activée" class="sw" style="background: #1B4B40; justify-content: flex-end"><i></i></button></div>
+</section>
+
+<section class="box">
+<h2>Canaux</h2>
+<div class="ln"><span>WhatsApp Business « La Maison VH »<small>Canal principal</small></span><button type="button" role="switch" aria-checked="true" aria-label="WhatsApp activé" class="sw" style="background: #1B4B40; justify-content: flex-end"><i></i></button></div>
+<div class="ln"><span>E-mail<small>Utilisé quand le client n'a pas WhatsApp</small></span><button type="button" role="switch" aria-checked="true" aria-label="E-mail de repli activé" class="sw" style="background: #1B4B40; justify-content: flex-end"><i></i></button></div>
+<div class="ln"><span>SMS<small>Non prévu dans la première version</small></span><button type="button" role="switch" aria-checked="false" aria-label="SMS désactivé" disabled class="sw" style="background: #74827D; justify-content: flex-start; cursor: not-allowed"><i></i></button></div>
+</section>
+
+<section class="box">
+<h2>Langue des messages</h2>
+<div class="ln"><span>Langues disponibles</span><span class="v">Français, anglais</span></div>
+<div class="ln"><span>1 · Indicatif du téléphone<small>+33 : français · autres indicatifs : anglais</small></span><span class="tag" style="background: #E2EFEA; color: #1B4B40">Prioritaire</span></div>
+<div class="ln"><span>2 · Champ « Communiquer en » d'eviivo</span><span class="tag" style="background: #EEF1F0; color: #55635F">Ensuite</span></div>
+<div class="ln"><span>3 · Anglais</span><span class="tag" style="background: #EEF1F0; color: #55635F">À défaut</span></div>
+</section>
+
+<section class="box">
+<h2>Alertes et signature</h2>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; padding: 6px 0">Adresse qui reçoit les alertes<input type="text" value="contact@la-maison-vh.fr"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; padding: 6px 0">Signature de tous les messages<input type="text" value="Joëlle"></label>
+</section>
+
+<section class="box">
+<h2>Connexions</h2>
+<a href="Connexions.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; font-weight: 600">Voir l'état détaillé et tester →</a>
+<div class="ln"><span>eviivo<small>Source des réservations</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">En attente de l'accès</span></div>
+<div class="ln"><span>WhatsApp Business<small>Compte Meta au nom de Joëlle</small></span><span class="tag" style="background: #EEF1F0; color: #55635F">[ÉTAT À CONFIRMER]</span></div>
+<div class="ln"><span>Outil de marché<small>Pour les chiffres de la concurrence</small></span><span class="tag" style="background: #EEF1F0; color: #55635F">[À CHOISIR]</span></div>
+</section>
+
+</div>
+
+<div style="display: flex; justify-content: flex-end">
+<button type="button" style="height: 48px; padding: 0 22px; border-radius: 10px; border: 0; background: #1B4B40; color: #FFFFFF; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Enregistrer les changements</button>
+</div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

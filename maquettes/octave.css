@@ -1,0 +1,66 @@
+/* OCTAVE — styles partagés : menu, fil d'Ariane, liens entre pages, micro-animations */
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #1B4B40;outline-offset:2px}
+
+.oc-nav{border:0;cursor:pointer;font-family:inherit;transition:background .15s ease,color .15s ease}
+.oc-nav:not([aria-current="page"]):hover{background:#245B4E!important;color:#FFFFFF!important}
+.oc-nav:focus-visible{outline-color:#FFFFFF}
+
+.oc-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;max-width:1240px;margin:0 auto 22px}
+.oc-top-l{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.oc-back{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px 0 12px;border-radius:999px;border:1px solid #D9DFDC;background:#FFFFFF;color:#12211D;font-size:14px;font-weight:600;text-decoration:none;transition:border-color .15s ease}
+.oc-back:hover{border-color:#1B4B40;color:#12211D}
+.oc-back img{width:20px;height:20px;transition:transform .15s ease}
+.oc-back:hover img{transform:translateX(-3px)}
+.oc-crumb{font-size:14px;color:#55635F}
+.oc-crumb a{color:#55635F}
+.oc-crumb b{color:#12211D;font-weight:600}
+
+.oc-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.oc-lk{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:999px;background:#E2EFEA;color:#1B4B40;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s ease}
+.oc-lk::after{content:"\2192";transition:transform .15s ease}
+.oc-lk:hover{background:#D3E6DE;color:#12211D}
+.oc-lk:hover::after{transform:translateX(3px)}
+
+.oc-lift{transition:transform .15s ease,border-color .15s ease}
+.oc-lift:hover{transform:translateY(-2px);border-color:#1B4B40!important}
+
+tbody tr{transition:background .12s ease}
+tbody tr:hover{background:#F3F5F4}
+
+.oc-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#9B1C1C;margin-right:6px;animation:oc-pulse 1.6s ease-in-out infinite}
+@keyframes oc-pulse{50%{opacity:.35}}
+
+.oc-grow{transform-origin:left center;animation:oc-grow .7s ease-out both}
+@keyframes oc-grow{from{transform:scaleX(0)}}
+
+.oc-in{animation:oc-in .35s ease-out both}
+@keyframes oc-in{from{opacity:0;transform:translateY(6px)}}
+
+/* Écrans au format téléphone (390 × 844) */
+.m-root{width:390px;height:844px;box-sizing:border-box;background:#F3F5F4;color:#12211D;font-family:'Instrument Sans',sans-serif;display:flex;flex-direction:column}
+.m-head{display:flex;align-items:center;gap:10px;padding:16px 16px 12px}
+.m-head h1{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600;line-height:1.1}
+.m-head small{display:block;font-size:13px;color:#55635F}
+.m-ico{position:relative;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #D9DFDC;background:#FFFFFF;display:flex;align-items:center;justify-content:center}
+.m-ico img{width:22px;height:22px}
+.m-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;box-sizing:border-box;border-radius:999px;border:2px solid #F3F5F4;background:#9B1C1C;color:#FFFFFF;font-size:12px;font-weight:600;line-height:16px;text-align:center}
+.m-body{flex:1;min-height:0;overflow-y:auto;padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.m-card{display:block;background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:14px 16px;text-decoration:none;color:#12211D}
+.m-nav{display:flex;background:#FFFFFF;border-top:1px solid #D9DFDC;padding:4px 8px 10px}
+.m-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;font-size:12px;font-weight:500;color:#55635F;text-decoration:none}
+.m-tab img{width:24px;height:24px}
+.m-tab[aria-current="page"]{color:#12211D;font-weight:600;box-shadow:inset 0 3px 0 #1B4B40}
+.m-kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #E6EAE8;font-size:15px}
+.m-kv:last-child{border-bottom:0}
+.m-kv span{color:#55635F}
+.oc-chip{display:inline-block;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap}
+.oc-ok{background:#E2EFEA;color:#1B4B40}
+.oc-today{background:#FFF1D6;color:#7A4E00}
+.oc-plan{background:#EEF1F0;color:#55635F}
+.oc-block{background:#FDE8E6;color:#9B1C1C;font-weight:600}
+
+/* Squelette de chargement */
+.oc-sk{border-radius:6px;background:linear-gradient(90deg,#E6EAE8 25%,#F3F5F4 50%,#E6EAE8 75%);background-size:200% 100%;animation:oc-sk 1.4s linear infinite}
+@keyframes oc-sk{to{background-position:-200% 0}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

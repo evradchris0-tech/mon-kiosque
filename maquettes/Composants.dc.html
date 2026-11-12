@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Charte graphique, composants</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.rowx{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.spec{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;color:#3A4743;margin:0}
+.btn{height:48px;padding:0 18px;border-radius:10px;border:1px solid transparent;font:600 15px 'Instrument Sans',sans-serif;cursor:pointer}
+.chip{display:inline-block;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap}
+.tag{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.fld{display:flex;flex-direction:column;gap:6px;flex:1 1 220px;font-size:14px;font-weight:500}
+.fld input{height:48px;box-sizing:border-box;padding:0 14px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 16px 'Instrument Sans',sans-serif;color:#12211D}
+.sw{width:52px;height:32px;border-radius:999px;border:0;padding:3px;display:flex;cursor:pointer}
+.sw i{display:block;width:26px;height:26px;border-radius:50%;background:#FFFFFF}
+.cap{font-size:13px;color:#55635F}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 48px 32px 64px">
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH · Charte graphique</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.1">Composants</h1>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px">
+
+<section class="box">
+<h2>Boutons</h2>
+<div class="rowx">
+<button type="button" class="btn" style="background: #1B4B40; color: #FFFFFF">Valider le texte</button>
+<button type="button" class="btn" style="background: #FFFFFF; color: #1B4B40; border-color: #1B4B40">Modifier</button>
+<button type="button" class="btn" style="background: #9B1C1C; color: #FFFFFF">Voir la réservation</button>
+</div>
+<div class="rowx">
+<button type="button" class="btn" style="background: #245B4E; color: #FFFFFF">Survol</button>
+<button type="button" class="btn" style="background: #1B4B40; color: #FFFFFF; outline: 2px solid #1B4B40; outline-offset: 2px">Focus clavier</button>
+<button type="button" class="btn" disabled style="background: #EEF1F0; color: #55635F; cursor: not-allowed">Désactivé</button>
+</div>
+<p class="spec">hauteur 48 · rayon 10 · marge interne 0 18 · texte 600 15px<br>principal : brand / blanc · secondaire : surface + trait brand · alerte : danger / blanc<br>Un seul bouton principal par écran.</p>
+</section>
+
+<section class="box">
+<h2>Pastilles de statut</h2>
+<div class="rowx">
+<span class="chip" style="background: #E2EFEA; color: #1B4B40">Envoyé</span>
+<span class="chip" style="background: #FFF1D6; color: #7A4E00">Aujourd'hui</span>
+<span class="chip" style="background: #EEF1F0; color: #55635F">Prévu lun. 12</span>
+<span class="chip" style="background: #FDE8E6; color: #9B1C1C; font-weight: 600">Bloqué · lien absent</span>
+</div>
+<p class="spec">rayon pill · marge interne 5 10 · texte 500 13px (600 pour « bloqué »)<br>Quatre états seulement : envoyé, aujourd'hui, prévu, bloqué.</p>
+<h2 style="margin-top: 8px">Étiquettes</h2>
+<div class="rowx">
+<span class="tag" style="background: #E2EFEA; color: #1B4B40">5 messages</span>
+<span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span>
+<span class="tag" style="background: #FDE8E6; color: #9B1C1C">Envoi bloqué</span>
+<span class="tag" style="background: #EEF1F0; color: #55635F">Vue du mois</span>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</div>
+<p class="spec">capitales · 600 12px · +0,04em · marge interne 4 10<br>Trait pointillé : réservé aux données fictives des maquettes.</p>
+</section>
+
+<section class="box">
+<h2>Bandeaux d'alerte</h2>
+<div style="background: #FDE8E6; border: 1px solid #E9B8B3; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9B1C1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+<div><div style="font-weight: 600; color: #7A1414">À traiter : un envoi est bloqué</div><div style="font-size: 14px; color: #5E1C1C">Ce qui s'est passé, puis ce qu'il faut faire.</div></div>
+</div>
+<div style="background: #FFF1D6; border: 1px solid #E8CF94; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A4E00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+<div><div style="font-weight: 600; color: #4A3200">À surveiller : en attente</div><div style="font-size: 14px; color: #4A3200">Rien à faire pour l'instant.</div></div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+<div><div style="font-weight: 600">Pour information</div><div style="font-size: 14px; color: #55635F">Rien à faire de votre côté.</div></div>
+</div>
+<p class="spec">rayon 14 · marge interne 16 20 · icône 24 au trait de 2<br>titre 600 16px · détail 14px · trois niveaux : à traiter, à surveiller, information</p>
+</section>
+
+<section class="box">
+<h2>Champs de saisie</h2>
+<div class="rowx" style="align-items: flex-start">
+<label class="fld">Adresse d'alerte<input type="text" value="contact@la-maison-vh.fr"></label>
+<label class="fld">Focus<input type="text" value="Joëlle" style="outline: 2px solid #1B4B40; outline-offset: 2px"></label>
+<label class="fld">Erreur<input type="text" value="contact@" style="border-color: #9B1C1C; border-width: 2px" aria-invalid="true"><span style="font-size: 13px; font-weight: 500; color: #9B1C1C">Cette adresse est incomplète.</span></label>
+</div>
+<p class="spec">hauteur 48 · rayon 10 · trait 1px border-field · texte 16px<br>libellé toujours visible au-dessus · erreur : trait 2px danger + message</p>
+<h2 style="margin-top: 8px">Interrupteurs</h2>
+<div class="rowx">
+<button type="button" role="switch" aria-checked="true" aria-label="Activé" class="sw" style="background: #1B4B40; justify-content: flex-end"><i></i></button><span class="cap">Activé</span>
+<button type="button" role="switch" aria-checked="false" aria-label="Désactivé" class="sw" style="background: #74827D; justify-content: flex-start"><i></i></button><span class="cap">Désactivé</span>
+</div>
+<p class="spec">52 × 32 · bouton 26 · zone cliquable étendue à 44 avec le libellé</p>
+</section>
+
+<section class="box">
+<h2>Tuiles d'indicateur</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+<div style="background: #1B4B40; color: #FFFFFF; border-radius: 14px; padding: 20px 22px"><div style="font-size: 14px">Arrivées suivies</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1; margin-top: 6px">5</div><div style="font-size: 13px; margin-top: 4px">dans les 5 prochains jours</div></div>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 20px 22px"><div style="font-size: 14px; color: #55635F">Taux d'occupation</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1; margin-top: 6px">78 %</div><div style="font-size: 14px; font-weight: 600; color: #1B4B40; margin-top: 6px">+7 points</div></div>
+</div>
+<p class="spec">rayon 14 · marge interne 20 22 · libellé 14 · chiffre kpi 40 · écart 600 14<br>Une seule tuile pleine (brand) par écran, pour l'indicateur principal.</p>
+</section>
+
+<section class="box">
+<h2>Menu latéral</h2>
+<div style="background: #1B4B40; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 260px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 6px 10px"><img alt="" src="/_blob/bb0dcc0f7521dd2690599fb88eb0e059" style="width: 36px; height: 36px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; color: #FFFFFF">OCTAVE</span></div>
+<a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 10px; border-radius: 10px; background: #FFFFFF; color: #12211D; font-size: 15px; font-weight: 600; text-decoration: none"><img alt="" src="/_blob/a7410aa2ab3c1c9c0f9088012a016d0e" style="width: 24px; height: 24px">Accueil (page active)</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 10px; border-radius: 10px; color: #E2EFEA; font-size: 15px; font-weight: 500; text-decoration: none"><img alt="" src="/_blob/f0945561a10a59b78d64a43e328be214" style="width: 24px; height: 24px">Suivi des envois</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 10px; border-radius: 10px; background: #245B4E; color: #FFFFFF; font-size: 15px; font-weight: 500; text-decoration: none"><img alt="" src="/_blob/d59e946d552a9829416d1678b0ba5506" style="width: 24px; height: 24px">Paramètres (survol)</a>
+</div>
+<p class="spec">largeur 250, repliée 76 (icônes seules, nom en infobulle) · logo 36 en tête<br>élément : hauteur 44, rayon 10, icône 24, texte 500 15px<br>actif : surface + encre 600 + icône foncée · survol : brand-hover<br>cloche de notifications : bouton rond 44, pastille danger, panneau 340</p>
+</section>
+
+<section class="box">
+<h2>Barres de données</h2>
+<div style="display: grid; grid-template-columns: 150px minmax(0, 1fr) 60px; gap: 14px; align-items: center">
+<div style="font-size: 14px; font-weight: 600">La Maison VH</div>
+<div style="position: relative; height: 22px; background: #EEF1F0; border-radius: 6px"><div style="width: 82.5%; height: 100%; background: #1B4B40; border-radius: 6px"></div><div aria-hidden="true" style="position: absolute; top: -5px; bottom: -5px; left: 69%; width: 3px; background: #8A5A00; border-radius: 2px"></div></div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 17px; text-align: right">165 €</div>
+<div style="font-size: 14px">Marché</div>
+<div style="height: 22px; background: #EEF1F0; border-radius: 6px"><div style="width: 69%; height: 100%; background: #74827D; border-radius: 6px"></div></div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 17px; text-align: right">138 €</div>
+</div>
+<p class="spec">hauteur 22 à 26 · rayon 6 · rail fill · « vous » brand · « marché » border-field<br>repère du marché : 3px warn-mark · la valeur est toujours écrite à droite<br>source indiquée sous chaque graphique</p>
+</section>
+
+<section class="box">
+<h2>Cartes et tableaux</h2>
+<a href="#" style="display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 22px; text-decoration: none; color: #12211D">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 21px; font-weight: 600">Carte cliquable</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3A4743">Une phrase qui dit ce qu'on trouve derrière.</span>
+<span style="font-size: 14px; font-weight: 600; color: #1B4B40">Ouvrir →</span>
+</a>
+<p class="spec">carte : surface · trait border · rayon 14 · marge interne 22 · survol : trait brand<br>tableau : en-tête 600 12px capitales text-muted · ligne 14 de marge · filet divider<br>largeur minimale fixée, défilement horizontal dans le cadre sur petit écran</p>
+</section>
+
+<section class="box">
+<h2>Recherche et tri</h2>
+<div class="rowx">
+<label style="display: flex; align-items: center; gap: 8px; height: 48px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px solid #74827D; background: #FFFFFF; flex: 1 1 220px"><img alt="" src="/_blob/f4e7b8262f8e7aea6104eb4cebb3543e" style="width: 20px; height: 20px"><span style="font-size: 15px; color: #55635F">Rechercher un client…</span></label>
+<button type="button" class="btn" style="background: #FFFFFF; color: #12211D; border-color: #74827D; font-weight: 500">Trier : <strong>Arrivée la plus proche</strong> ▾</button>
+</div>
+<p class="spec">champ : hauteur 48, rayon 10, icône 20, filtre dès la saisie, accents ignorés<br>croix pour vider · compteur « 2 arrivées sur 5 » · état vide avec bouton de retour<br>tri : le bouton affiche le choix en cours, le menu coche l'option active<br>recherche générale (barre du haut) : forme pilule, hauteur 44, panneau 380</p>
+</section>
+
+<section class="box">
+<h2>Filtres</h2>
+<div class="rowx">
+<button type="button" class="btn" style="height: 44px; border-radius: 999px; background: #1B4B40; color: #FFFFFF; font-size: 14px">Toutes · 5</button>
+<button type="button" class="btn" style="height: 44px; border-radius: 999px; background: #FFFFFF; color: #12211D; border-color: #74827D; font-size: 14px">À traiter · 1</button>
+<select aria-label="Canal" style="height: 48px; padding: 0 12px; border-radius: 10px; border: 1px solid #74827D; background: #FFFFFF; font: 400 15px 'Instrument Sans', sans-serif; color: #12211D"><option>Tous les canaux</option></select>
+</div>
+<p class="spec">pastilles : hauteur 44, rayon pill, une seule active (brand / blanc), avec le nombre<br>listes : hauteur 48, rayon 10, libellé au-dessus · les filtres se combinent<br>« Effacer les filtres » n'apparaît que si un filtre est actif</p>
+</section>
+
+<section class="box">
+<h2>Barre du haut</h2>
+<div class="rowx">
+<span style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid #D9DFDC; background: #FFFFFF; font-size: 14px; font-weight: 600"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0" style="width: 20px; height: 20px">Accueil</span>
+<span style="font-size: 14px; color: #55635F">Accueil › <b style="color: #12211D">Suivi des envois</b></span>
+<span style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; background: #E2EFEA; color: #1B4B40; font-size: 14px; font-weight: 600">Parcours du séjour →</span>
+</div>
+<p class="spec">à gauche : bouton retour (pilule 44) + fil d'Ariane 14px<br>à droite : deux liens rapides au plus, recherche générale, cloche<br>le retour mène à la page parente, pas à la page précédente du navigateur</p>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2040}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

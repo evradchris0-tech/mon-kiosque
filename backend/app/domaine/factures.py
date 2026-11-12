@@ -197,3 +197,10 @@ def etat(session: Session, pme: Pme, horloge: Horloge, limite: int = 12) -> list
             libelle = f"en retard ({retard} j) ⚠️" if retard > SEUIL_RETARD_JOURS else "envoyée"
         lignes.append((f.numero, client.nom if client else "?", f.total, libelle))
     return lignes
+
+
+def statut_affiche(facture: Facture, horloge: Horloge) -> str:
+    """Statut présenté aux écrans : payee | annulee | en_retard (ouverte depuis plus de 7 jours) | envoyee."""
+    if facture.statut in ("payee", "annulee"):
+        return facture.statut
+    return "en_retard" if jours_de_retard(facture, horloge) > SEUIL_RETARD_JOURS else "envoyee"

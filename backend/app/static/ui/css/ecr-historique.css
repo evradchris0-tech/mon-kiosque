@@ -1,0 +1,49 @@
+/* Mon Kiosque : écran Historique et détail en feuille (préfixe .his-). */
+
+.his-filtres { display: flex; flex-direction: column; gap: 12px; margin: 0 0 8px; }
+.his-segment { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.his-segment::-webkit-scrollbar { display: none; }
+.his-segment > button { padding: 0 8px; }
+@media (min-width: 480px) { .his-segment > button { padding: 0 14px; } }
+@media (min-width: 720px) {
+  .his-filtres { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+  .segment.plein.his-segment { width: auto; flex: none; }
+  .his-filtres .champ-recherche { flex: 1 1 280px; max-width: 420px; }
+}
+
+.his-zone { margin-top: 8px; }
+.his-zone > .vide { margin-top: 8px; }
+.his-jour { margin: 0 0 8px; }
+.his-jour-titre { margin: 20px 0 8px; padding: 0 4px; color: var(--muted); font: 600 var(--t-13)/1.3 var(--font-corps); letter-spacing: .06em; text-transform: uppercase; }
+.his-jour:first-child .his-jour-titre { margin-top: 12px; }
+.his-ligne { min-height: 64px; cursor: pointer; }
+.his-ligne .ligne-titre { white-space: normal; }
+.his-montant { font: 600 16px/1.25 var(--font-titre); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.his-neutre { color: var(--ink-2); }
+.his-annule .ligne-titre, .his-annule .his-montant, .his-det-montant.his-annule { text-decoration: line-through; text-decoration-thickness: 1px; }
+.his-annule .ligne-titre, .his-annule .his-montant { color: var(--muted); }
+.his-plus { display: flex; justify-content: center; margin: 20px 0 8px; }
+.his-plus[hidden] { display: none; }
+
+/* Détail dans la feuille */
+.his-det-tete { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 4px 0 12px; }
+.his-det-montant { font: 600 30px/1.1 var(--font-titre); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.his-kv { margin: 0 0 4px; font-size: 15px; }
+.his-kv > div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line-soft); }
+.his-kv dt { color: var(--muted); font-size: var(--t-14); }
+.his-kv dd { margin: 0; font-weight: 600; text-align: right; }
+.his-det-texte { margin: 8px 0 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.his-det-titre { margin: 20px 0 8px; font: 600 var(--t-13)/1.3 var(--font-corps); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.his-lignes, .his-notes { margin: 0; padding: 0; list-style: none; }
+.his-lignes li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line-soft); }
+.his-lignes li:first-child { border-top: 0; padding-top: 0; }
+.his-l-lib { min-width: 0; font-size: 15px; font-weight: 500; }
+.his-l-sous { display: block; margin-top: 1px; color: var(--muted); font-size: var(--t-13); font-weight: 400; }
+.his-l-val { flex: none; font-weight: 600; font-size: 15px; }
+.his-lignes .his-l-total { margin-top: 2px; padding-top: 12px; border-top: 1px solid var(--line); }
+.his-lignes .his-l-total .his-l-lib { font-weight: 600; }
+.his-notes li { padding: 10px 14px; border-radius: var(--r-champ); background: var(--fill); color: var(--ink-2); font-size: var(--t-14); line-height: 1.45; }
+.his-notes li + li { margin-top: 8px; }
+.his-annuler { margin-top: 20px; padding: 14px 16px; border: 1px solid var(--warn-line); border-radius: var(--r-carte); background: var(--warn-bg); }
+.his-annuler p { margin: 0 0 12px; color: #4A3200; font-size: var(--t-14); line-height: 1.5; }
+.his-annuler p b { font-weight: 600; }

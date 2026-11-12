@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Aide</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+details{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:0 20px}
+summary{cursor:pointer;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:24px;font-weight:500;color:#1B4B40}
+details[open] summary::after{content:"\2212"}
+details p{margin:0;padding:0 0 18px;font-size:15px;line-height:1.5;color:#3A4743;max-width:720px}
+.sect{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="aide" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top" style="max-width: 900px">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Aide</b></span></div>
+<div class="oc-links"><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Aide</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Les réponses aux questions les plus courantes</h1>
+</header>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div class="sect">Les envois</div>
+<details open>
+<summary>Un client dit ne pas avoir reçu sa clé. Que faire ?</summary>
+<p>Ouvrez sa réservation depuis le suivi des envois : vous y voyez si la clé est partie, par quel canal et à quelle heure. Si elle est bloquée, la raison est indiquée. Vous pouvez la renvoyer avec « Envoyer un message ».</p>
+</details>
+<details>
+<summary>Pourquoi un message est-il « bloqué » ?</summary>
+<p>Le plus souvent, parce que le lien d'accès n'est pas encore disponible dans eviivo. OCTAVE réessaie tout seul et envoie la clé dès que le lien existe. Vous recevez une alerte entre-temps.</p>
+</details>
+<details>
+<summary>À quelle heure partent les messages ?</summary>
+<p>Entre 8 h et 21 h, jamais la nuit. Un message prévu en dehors de cette plage attend 8 h. Pour une réservation de dernière minute, les messages en retard partent tout de suite.</p>
+</details>
+<details>
+<summary>Comment tout arrêter d'un coup ?</summary>
+<p>Cliquez sur « Suspendre les envois » dans le menu. Plus rien ne part tant que vous n'avez pas repris. Les réservations continuent d'être lues et vos alertes d'arriver.</p>
+</details>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div class="sect">Les textes et la langue</div>
+<details>
+<summary>Comment changer le texte d'un message ?</summary>
+<p>Dans « Modèles de messages », choisissez le message puis « Modifier ». Un texte modifié doit être validé de nouveau avant d'être envoyé à un client.</p>
+</details>
+<details>
+<summary>Comment OCTAVE choisit-il la langue ?</summary>
+<p>D'abord par l'indicatif du téléphone : français pour +33, anglais pour les autres. Sans indicatif exploitable, il regarde le champ « Communiquer en » d'eviivo. À défaut, il écrit en anglais.</p>
+</details>
+</section>
+
+<section style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 22px; display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; justify-content: space-between">
+<div style="flex: 1 1 320px"><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600">Vous ne trouvez pas la réponse ?</div><div style="font-size: 15px; color: #3A4743; margin-top: 4px">Contactez le support : [COORDONNÉES DU SUPPORT]. En cas d'erreur, joignez la référence affichée à l'écran.</div></div>
+<a href="Historique.dc.html" style="display: inline-flex; align-items: center; height: 48px; padding: 0 18px; border-radius: 10px; border: 1px solid #1B4B40; color: #1B4B40; font-weight: 600; font-size: 15px; text-decoration: none">Ouvrir l'historique</a>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1000}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

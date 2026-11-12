@@ -1,0 +1,135 @@
+/* Mon Kiosque : fiche facture (préfixe .fac-). Contrat : docs/06-interface-pro.md. */
+
+.fac { display: flex; flex-direction: column; gap: 16px; }
+.fac-sq { margin-top: 8px; }
+
+/* ---------- en-tête ---------- */
+.fac-tete { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 20px 16px; }
+.fac-tete-g { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.fac-titre { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.fac-titre h1 { font-size: var(--t-26); }
+.fac-qui { display: flex; flex-wrap: wrap; gap: 4px 32px; margin-top: 4px; }
+.fac-qui > div { display: flex; flex-direction: column; min-width: 0; }
+.fac-qui-lib { color: var(--muted); font-size: var(--t-12); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.fac-client, .fac-tel-lien { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; font-size: var(--t-16); font-weight: 600; }
+.fac-client { text-decoration: underline; text-decoration-color: var(--orange); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.fac-tel-lien { color: var(--ink); text-decoration: none; font-variant-numeric: tabular-nums; }
+.fac-tel-lien:hover { text-decoration: underline; }
+.fac-tete-d { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+.fac-total-lib { color: var(--muted); font-size: var(--t-14); }
+.fac-total { font: 600 var(--t-34)/1.1 var(--font-titre); letter-spacing: -.02em; overflow-wrap: anywhere; }
+.fac-actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+.fac-actions .btn { width: 100%; }
+.fac-note { color: var(--muted); font-size: var(--t-14); }
+
+/* ---------- disposition : une colonne sur mobile (ordre fixé par .fac-oN), deux colonnes sur desktop ---------- */
+.fac-grille { display: flex; flex-direction: column; gap: 16px; }
+.fac-col { display: contents; }
+.fac-o1 { order: 1; }
+.fac-o2 { order: 2; }
+.fac-o3 { order: 3; }
+.fac-o4 { order: 4; }
+.fac-o5 { order: 5; }
+.fac-o6 { order: 6; }
+.fac-bloc { min-width: 0; }
+
+@media (min-width: 600px) {
+  .fac-tete { padding: 24px; }
+  .fac-titre h1 { font-size: var(--t-34); }
+}
+@media (min-width: 900px) {
+  .fac-tete { grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 20px 32px; }
+  .fac-tete-d { align-items: flex-end; padding-top: 0; border-top: 0; text-align: right; }
+  .fac-total { font-size: 44px; }
+  .fac-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; }
+  .fac-actions .btn { width: auto; }
+  .fac-grille { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+  .fac-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+}
+
+/* ---------- dates ---------- */
+.fac-kv { margin: 0; }
+.fac-kv > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px; }
+.fac-kv > div:first-child { padding-top: 0; }
+.fac-kv > div:last-child { padding-bottom: 0; border-bottom: 0; }
+.fac-kv dt { color: var(--muted); }
+.fac-kv dd { margin: 0; font-weight: 600; text-align: right; }
+.fac-rel { color: var(--muted); font-weight: 400; font-size: var(--t-13); white-space: nowrap; }
+.fac-retard { color: var(--danger); font-weight: 700; }
+
+/* ---------- frise d'état ---------- */
+.fac-frise { margin: 0; padding: 0; list-style: none; }
+.fac-pas { position: relative; display: flex; gap: 14px; padding-bottom: 20px; }
+.fac-pas:last-child { padding-bottom: 0; }
+.fac-pt { position: relative; z-index: 1; flex: none; width: 16px; height: 16px; margin-top: 3px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px var(--surface); }
+.fac-pas::before { content: ""; position: absolute; left: 7px; top: 19px; bottom: -3px; width: 2px; background: repeating-linear-gradient(to bottom, var(--line) 0 4px, transparent 4px 8px); }
+.fac-pas.relie::before { background: var(--green); }
+.fac-pas:last-child::before { display: none; }
+.fac-pas.retard .fac-pt { background: var(--danger); }
+.fac-pas.attente .fac-pt { background: var(--surface); border: 3px solid var(--orange); }
+.fac-pas-corps { min-width: 0; line-height: 1.35; }
+.fac-pas-corps b { display: block; font-size: 15px; font-weight: 600; }
+.fac-pas-corps small { display: block; margin-top: 1px; color: var(--muted); font-size: var(--t-13); }
+.fac-pas.retard .fac-pas-corps b, .fac-pas.retard .fac-pas-corps small { color: var(--danger); }
+.fac-pas.attente .fac-pas-corps b { color: var(--orange-ink); }
+
+/* ---------- tableau des lignes ---------- */
+.fac-table { width: 100%; border-collapse: collapse; font-size: var(--t-14); }
+.fac-table th { padding: 0 0 10px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: var(--t-12); font-weight: 600; letter-spacing: .04em; text-align: left; text-transform: uppercase; }
+.fac-table th.droite { text-align: right; }
+.fac-table td { padding: 14px 0; border-bottom: 1px solid var(--line-soft); vertical-align: baseline; line-height: 1.35; }
+.fac-table .fac-lib { font-weight: 600; font-size: 15px; }
+.fac-table .fac-qte, .fac-table .fac-pu, .fac-table .fac-mt { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fac-table .fac-mt { font-weight: 600; font-size: 15px; }
+.fac-table .fac-pu { color: var(--muted); }
+.fac-tag { display: inline-block; padding: 1px 8px; border-radius: var(--r-pill); background: var(--fill); color: var(--muted); font-size: var(--t-12); font-weight: 600; vertical-align: 1px; }
+.fac-table tfoot th { padding: 16px 0 0; border: 0; color: var(--ink); font: 600 var(--t-16)/1.3 var(--font-titre); letter-spacing: 0; text-transform: none; }
+.fac-table tfoot td { padding: 16px 0 0; border: 0; font: 600 var(--t-20)/1.2 var(--font-titre); }
+.fac-table tbody tr:last-child td { border-bottom: 0; }
+.fac-table tfoot tr { border-top: 2px solid var(--ink); }
+.fac-table tfoot tr th, .fac-table tfoot tr td { border-top: 2px solid var(--ink); }
+
+@media (max-width: 599px) {
+  .fac-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+  .fac-table, .fac-table tbody, .fac-table tfoot { display: block; }
+  .fac-table tr { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; column-gap: 6px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+  .fac-table tbody tr:last-child { border-bottom: 0; }
+  .fac-table td, .fac-table th { padding: 0; border: 0 !important; }
+  .fac-table .fac-lib { grid-column: 1 / 4; grid-row: 1; padding-right: 8px; }
+  .fac-table .fac-mt { grid-column: 4; grid-row: 1 / 3; align-self: start; }
+  .fac-table .fac-qte { grid-column: 1; grid-row: 2; font-size: var(--t-13); color: var(--muted); }
+  .fac-table .fac-qte::after { content: " ×"; }
+  .fac-table .fac-pu { grid-column: 2; grid-row: 2; font-size: var(--t-13); }
+  .fac-table .vide-cel { display: none; }
+  .fac-table tfoot tr { grid-template-columns: minmax(0, 1fr) auto; margin-top: 4px; padding: 16px 0 0; border-top: 2px solid var(--ink); border-bottom: 0; }
+  .fac-table tfoot th { grid-column: 1; }
+  .fac-table tfoot td { grid-column: 2; grid-row: 1; }
+  .fac-table tfoot tr th, .fac-table tfoot tr td { border-top: 0 !important; }
+}
+
+/* ---------- relances et paiements ---------- */
+.fac-relances { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.fac-rel-tete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 8px; font-size: var(--t-14); }
+.fac-citation { margin: 0; padding: 10px 14px; border-left: 3px solid var(--line); border-radius: 0 var(--r-champ) var(--r-champ) 0; background: var(--bg); color: var(--ink-2); font-size: var(--t-14); line-height: 1.5; overflow-wrap: anywhere; }
+.fac-vide-txt { color: var(--muted); font-size: var(--t-14); }
+.fac-liste { border: 0; border-radius: 0; box-shadow: none; }
+.fac-liste .ligne { padding-left: 0; padding-right: 0; }
+
+/* ---------- aperçu du message client ---------- */
+.fac-tel { overflow: hidden; border: 1px solid #B9C6C1; border-radius: 20px; background: #E9EEEC; }
+.fac-tel-barre { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fac-tel-barre b { display: block; font-size: 15px; font-weight: 600; line-height: 1.2; }
+.fac-tel-barre small { display: block; color: var(--muted); font-size: var(--t-12); }
+.fac-av { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--green); }
+.fac-tel-fil { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 12px 16px; }
+.fac-jour { align-self: center; padding: 3px 12px; border-radius: var(--r-pill); background: var(--surface); color: var(--muted); font-size: var(--t-12); font-weight: 600; }
+.fac-bulle { max-width: 92%; padding: 12px 14px; border-radius: 4px 16px 16px 16px; background: var(--surface); font-size: 15px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; box-shadow: 0 1px 1px rgba(18, 33, 29, .08); }
+.fac-v { padding: 0 4px; border-radius: 4px; background: var(--green-tint); color: var(--green); font-weight: 600; }
+.fac-heure { margin-left: 6px; color: var(--muted); font-size: var(--t-12); }
+
+.fac-lien { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; padding: 14px; border: 1px solid var(--warn-line); border-radius: var(--r-carte); background: var(--warn-bg); }
+.fac-lien-tete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; font-size: var(--t-14); color: #4A3200; }
+.fac-lien .pastille.attention { background: var(--warn); color: #fff; font-weight: 600; }
+.fac-lien-url { display: flex; align-items: center; gap: 10px; }
+.fac-lien-url code { flex: 1; min-width: 0; padding: 10px 12px; border: 1px solid var(--warn-line); border-radius: var(--r-champ); background: var(--surface); color: var(--ink); font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+.fac-lien-note { color: #4A3200; font-size: var(--t-13); line-height: 1.45; }

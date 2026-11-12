@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — État des connexions</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.cx{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.cx h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:600}
+.cx p{margin:0;font-size:15px;line-height:1.45;color:#3A4743}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-top:1px solid #E6EAE8;font-size:14.5px}
+.kv span{color:#55635F}
+.btn{align-self:flex-start;display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;background:#FFFFFF;color:#1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="connexions" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Parametres.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Paramètres</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="Parametres.dc.html">Paramètres</a> › <b>Connexions</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Historique.dc.html">Historique</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Connexions</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Tout ce dont les envois dépendent est relié</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Si l'une de ces connexions tombe, vous recevez une alerte et ce voyant passe au rouge dans le menu.</div>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px">
+
+<section class="cx">
+<div class="hd"><h2>eviivo</h2><span class="oc-chip oc-ok">Relié</span></div>
+<p>OCTAVE y lit vos réservations, la langue du client et le code de porte.</p>
+<div><div class="kv"><span>Dernière lecture réussie</span><strong>Aujourd'hui, 9 h 15</strong></div><div class="kv"><span>Prochaine lecture</span><strong>[FRÉQUENCE À DÉFINIR]</strong></div></div>
+<button type="button" class="btn">Tester la connexion</button>
+</section>
+
+<section class="cx">
+<div class="hd"><h2>WhatsApp Business</h2><span class="oc-chip oc-ok">Relié</span></div>
+<p>Les messages partent du compte « La Maison VH ». Vous gardez l'application sur votre téléphone.</p>
+<div><div class="kv"><span>Dernier message envoyé</span><strong>Aujourd'hui, 10 h 00</strong></div><div class="kv"><span>Compte</span><strong>Au nom de Joëlle</strong></div></div>
+<button type="button" class="btn">Tester la connexion</button>
+</section>
+
+<section class="cx">
+<div class="hd"><h2>E-mail</h2><span class="oc-chip oc-ok">Relié</span></div>
+<p>Canal de repli pour les clients sans WhatsApp, et canal de vos alertes.</p>
+<div><div class="kv"><span>Dernier e-mail envoyé</span><strong>Aujourd'hui, 10 h 00</strong></div><div class="kv"><span>Adresse d'alerte</span><strong>contact@la-maison-vh.fr</strong></div></div>
+<a class="btn" href="Parametres.dc.html">Changer l'adresse</a>
+</section>
+
+<section class="cx" style="border-style: dashed">
+<div class="hd"><h2>Outil de marché</h2><span class="oc-chip oc-plan">Non relié</span></div>
+<p>Source des chiffres de la concurrence. Sans lui, le tableau de bord et l'assistant restent vides ; les envois ne sont pas concernés.</p>
+<div><div class="kv"><span>Outil</span><strong>[À CHOISIR]</strong></div></div>
+<a class="btn" href="Concurrence.dc.html">Voir le tableau de bord</a>
+</section>
+
+</div>
+
+<section class="cx" style="background: #FDE8E6; border-color: #E9B8B3">
+<div class="hd"><h2 style="color: #7A1414">Exemple : à quoi ressemble une connexion tombée</h2><span class="oc-chip oc-block">Déconnecté</span></div>
+<p style="color: #5E1C1C">WhatsApp Business est déconnecté depuis [HEURE]. Les messages ne partent plus sur WhatsApp. Reconnectez le compte depuis votre téléphone, puis testez la connexion.</p>
+<button type="button" class="btn" style="background: #9B1C1C; border-color: #9B1C1C; color: #FFFFFF">Reconnecter WhatsApp Business</button>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1120}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

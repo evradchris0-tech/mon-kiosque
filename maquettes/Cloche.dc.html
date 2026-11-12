@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Cloche de notifications</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="display: flex; justify-content: flex-end; font-family: 'Instrument Sans', sans-serif; color: #12211D">
+<div style="position: relative">
+<button type="button" onClick="{{toggle}}" aria-label="{{label}}" aria-expanded="{{expanded}}" title="Notifications" style="position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #D9DFDC; background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<img alt="" src="/_blob/aa1adc5f19f52c5438c59e92ec87c5ac" style="width: 22px; height: 22px">
+<span aria-hidden="true" style="position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; border: 2px solid #F3F5F4; background: #9B1C1C; color: #FFFFFF; font-size: 12px; font-weight: 600; line-height: 16px; text-align: center; display: {{badge}}">2</span>
+</button>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{false}}">
+<div role="dialog" aria-label="Notifications" style="position: absolute; right: 0; top: 52px; z-index: 20; width: 340px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #74827D; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; text-align: left">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px 6px">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 600">Notifications</span>
+<span style="font-size: 13px; color: #55635F">{{summary}}</span>
+</div>
+<a href="Reservation.dc.html" class="oc-lift" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 10px; border-radius: 10px; border: 1px solid transparent; text-decoration: none; color: #12211D">
+<span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #9B1C1C; visibility: {{dot}}"></span>
+<span><span style="display: block; font-size: 15px; font-weight: 600">Clé numérique bloquée — Mme Moreau</span><span style="display: block; font-size: 13px; color: #55635F; margin-top: 2px">Le 1904 · aujourd'hui à 8 h 02 · à traiter</span></span>
+</a>
+<a href="Modeles.dc.html" class="oc-lift" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 10px; border-radius: 10px; border: 1px solid transparent; text-decoration: none; color: #12211D">
+<span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: #8A5A00; visibility: {{dot}}"></span>
+<span><span style="display: block; font-size: 15px; font-weight: 600">5 textes à valider</span><span style="display: block; font-size: 13px; color: #55635F; margin-top: 2px">Rien ne part tant qu'ils ne sont pas validés</span></span>
+</a>
+<a href="Main.dc.html" class="oc-lift" style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 10px; border-radius: 10px; border: 1px solid transparent; text-decoration: none; color: #12211D">
+<span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: transparent"></span>
+<span><span style="display: block; font-size: 15px">M. Lefèvre reçoit ses messages par e-mail</span><span style="display: block; font-size: 13px; color: #55635F; margin-top: 2px">Pour information · déjà lu</span></span>
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #E6EAE8; margin-top: 4px; padding: 8px 6px 2px">
+<button type="button" onClick="{{markRead}}" style="min-height: 44px; padding: 0 8px; border: 0; background: transparent; color: #1B4B40; font: 600 14px 'Instrument Sans', sans-serif; cursor: pointer">Tout marquer comme lu</button>
+<a href="Alertes.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; font-size: 14px; font-weight: 600">Voir les alertes →</a>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":400,"height":440}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const open = !!st.open;
+const read = !!st.read;
+return {
+open,
+expanded: open ? 'true' : 'false',
+badge: read ? 'none' : 'block',
+dot: read ? 'hidden' : 'visible',
+summary: read ? 'Tout est lu' : '2 non lues',
+label: read ? 'Notifications, tout est lu' : 'Notifications, 2 non lues',
+toggle: () => this.setState({ open: !open }),
+markRead: () => this.setState({ read: true })
+};
+}
+}
+</script>
+</body>
+</html>

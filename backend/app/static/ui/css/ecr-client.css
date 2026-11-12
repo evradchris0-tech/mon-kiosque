@@ -1,0 +1,62 @@
+/* Mon Kiosque : fiche client (préfixe .cli-). Contrat : docs/06-interface-pro.md. */
+
+.cli { display: flex; flex-direction: column; gap: 16px; }
+.cli-sq { margin-top: 8px; }
+
+/* ---------- en-tête ---------- */
+.cli-tete { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 20px 16px; }
+.cli-tete-g { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.cli-nom { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.cli-nom h1 { min-width: 0; overflow-wrap: anywhere; font-size: var(--t-26); }
+.cli-infos { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; color: var(--muted); font-size: 15px; }
+.cli-tel { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; text-decoration: none; }
+.cli-tel:hover { text-decoration: underline; }
+.cli-point { width: 4px; height: 4px; border-radius: 50%; background: var(--soft); }
+.cli-actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+.cli-actions .btn { width: 100%; }
+
+@media (min-width: 600px) {
+  .cli-tete { padding: 24px; }
+  .cli-nom h1 { font-size: var(--t-34); }
+}
+@media (min-width: 900px) {
+  .cli-tete { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px 32px; }
+  .cli-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 0; border-top: 0; }
+  .cli-actions .btn { width: auto; }
+}
+
+/* ---------- trois chiffres ---------- */
+.cli-chiffres { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.cli-dette { grid-column: 1 / -1; }
+.cli-dette.du { border-color: var(--danger-line); background: var(--danger-bg); }
+.cli-dette.du .kpi-libelle, .cli-dette.du .kpi-note { color: var(--danger-ink); }
+.cli-dette.du .kpi-valeur { color: var(--danger); }
+.cli-dernier { margin-top: -4px; color: var(--muted); font-size: var(--t-14); }
+@media (min-width: 600px) {
+  .cli-chiffres { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .cli-dette { grid-column: auto; }
+}
+
+/* ---------- listes ---------- */
+.cli-grille { display: flex; flex-direction: column; gap: 24px; margin-top: 8px; }
+.cli-section { min-width: 0; }
+.cli-s1 { order: 1; }
+.cli-s2 { order: 2; }
+.cli-s3 { order: 3; }
+.cli-titre { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: var(--t-20); }
+.cli-nb { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 8px; border-radius: var(--r-pill); background: var(--fill); color: var(--muted); font: 600 var(--t-13) var(--font-corps); font-variant-numeric: tabular-nums; }
+.cli-vide { padding: 20px 16px; border: 1px dashed var(--line-champ); border-radius: var(--r-carte); background: transparent; color: var(--muted); font-size: var(--t-14); }
+
+.cli-date { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px; background: var(--green-tint); color: var(--green); line-height: 1.05; }
+.cli-date b { font: 600 var(--t-16) var(--font-titre); font-variant-numeric: tabular-nums; }
+.cli-date span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; }
+.cli-annule .ligne-titre { color: var(--muted); text-decoration: line-through; }
+.cli-annule .montant { color: var(--muted); text-decoration: line-through; }
+.cli-liste .ligne-fin { max-width: 50%; }
+
+@media (min-width: 900px) {
+  .cli-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px 32px; align-items: start; }
+  .cli-s1 { grid-column: 2; grid-row: 1; }
+  .cli-s3 { grid-column: 2; grid-row: 2; }
+  .cli-s2 { grid-column: 1; grid-row: 1 / span 2; }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Essai à blanc</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+th{text-align:left;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#55635F;padding:12px 14px;border-bottom:1px solid #D9DFDC;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid #E6EAE8;vertical-align:middle;font-size:15px}
+tr:last-child td{border-bottom:0}
+.see{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="suivi" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="MiseEnRoute.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Mise en service</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="MiseEnRoute.dc.html">Mise en service</a> › <b>Essai à blanc</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Modeles.dc.html">Corriger un texte</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Étape 4 sur 5 · Essai à blanc</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">6 messages préparés aujourd'hui, aucun envoyé</h1>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</header>
+
+<div style="background: #FFF1D6; border: 1px solid #E8CF94; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A4E00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+<div><div style="font-weight: 600; color: #4A3200">Mode essai : rien ne part chez vos clients</div><div style="font-size: 14px; color: #4A3200">OCTAVE prépare les messages comme s'il allait les envoyer. Vous vérifiez le bon client, le bon texte et la bonne langue.</div></div>
+</div>
+
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; overflow-x: auto">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse">
+<thead><tr><th>Client</th><th>Message</th><th>Langue</th><th>Canal</th><th>Serait parti</th><th>Votre avis</th><th></th></tr></thead>
+<tbody>
+<tr><td><strong>Mme Moreau</strong></td><td>Enregistrement en ligne</td><td>Français</td><td>WhatsApp</td><td>8 h 00</td><td><span class="oc-chip oc-ok">Conforme</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+<tr><td><strong>Mr Brown</strong></td><td>Enregistrement en ligne</td><td>Anglais</td><td>WhatsApp</td><td>9 h 12</td><td><span class="oc-chip oc-ok">Conforme</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+<tr><td><strong>Mr Brown</strong></td><td>Clé numérique</td><td>Anglais</td><td>WhatsApp</td><td>9 h 12</td><td><span class="oc-chip oc-ok">Conforme</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+<tr><td><strong>Mrs Clarke</strong></td><td>Restaurants</td><td>Anglais</td><td>WhatsApp</td><td>10 h 00</td><td><span class="oc-chip oc-plan">À vérifier</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+<tr><td><strong>M. Lefèvre</strong></td><td>Petit-déjeuner</td><td>Français</td><td>E-mail</td><td>10 h 00</td><td><span class="oc-chip oc-plan">À vérifier</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+<tr><td><strong>Mr Jansen</strong></td><td>Parking</td><td>Anglais</td><td>WhatsApp</td><td>10 h 00</td><td><span class="oc-chip oc-block">À corriger</span></td><td><a class="see" href="Apercu.dc.html">Voir le message</a></td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="font-size: 15px; color: #3A4743"><strong>3 conformes</strong> · 2 à vérifier · 1 à corriger. La mise en service reste fermée tant qu'un message est à corriger.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a class="btn" href="Modeles.dc.html" style="background: #FFFFFF; color: #1B4B40">Corriger le texte du parking</a>
+<button type="button" class="btn" disabled style="background: #EEF1F0; border-color: #EEF1F0; color: #55635F; cursor: not-allowed">Tout est conforme, passer à la mise en service</button>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":960}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

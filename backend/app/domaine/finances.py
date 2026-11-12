@@ -83,16 +83,28 @@ def serie_7j(session: Session, pme: Pme, horloge: Horloge) -> list[dict]:
 
 
 def top_produits(session: Session, pme: Pme, horloge: Horloge, jours: int = 30, n: int = 5) -> list[dict]:
-    debut, fin = horloge.maintenant() - timedelta(days=jours), horloge.maintenant() + timedelta(days=1)
+    return top_produits_entre(session, pme, horloge.maintenant() - timedelta(days=jours), horloge.maintenant() + timedelta(days=1), n)
+
+
+def top_produits_entre(session: Session, pme: Pme, debut: datetime, fin: datetime, n: int = 5) -> list[dict]:
     totaux: dict[str, list] = {}
-    lignes = [ligne for v in _ventes(session, pme, debut, fin) for ligne in v.lignes] + [ligne for f in _factures(session, pme, debut, fin) for ligne in f.lignes]
-    for ligne in lignes:
+    for ligne in lignes_vendues(session, pme, debut, fin):
         nom = ligne.get("produit") or "Autre"
-        cle = " ".join(singulier(m) for m in normaliser(nom).split())
+        cle = cle_produit(nom)
         entree = totaux.setdefault(cle, [nom, 0])
         entree[1] += int(ligne["quantite"]) * int(ligne["prix_unitaire"])
     classement = sorted(totaux.values(), key=lambda x: -x[1])[:n]
     return [{"nom": nom, "total": total} for nom, total in classement]
+
+
+def lignes_vendues(session: Session, pme: Pme, debut: datetime, fin: datetime) -> list[dict]:
+    """Lignes (produit, quantité, prix) des ventes actives et des factures non annulées de la période."""
+    return [ligne for v in _ventes(session, pme, debut, fin) for ligne in v.lignes] + [ligne for f in _factures(session, pme, debut, fin) for ligne in f.lignes]
+
+
+def cle_produit(nom: str) -> str:
+    """Clé de rapprochement d'un nom de produit (sans accents, casse, pluriel)."""
+    return " ".join(singulier(m) for m in normaliser(nom).split())
 
 
 def premiere_date(session: Session, pme: Pme) -> datetime | None:
@@ -160,6 +172,91 @@ def echeances(horloge: Horloge, fuseau: str) -> list[dict]:
 
 def prochaine_echeance(horloge: Horloge, fuseau: str) -> dict:
     return echeances(horloge, fuseau)[0]
+
+
+MOIS = ["jan.", "fév.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."]
+PERIODES_ECRAN = ("jour", "semaine", "mois", "annee")
+
+
+def bornes_ecran(periode: str, horloge: Horloge, fuseau: str) -> tuple[datetime, datetime, str]:
+    """(début UTC, fin UTC, libellé) des périodes de l'écran Chiffres ; mêmes bornes que le tableau pour jour/semaine/mois."""
+    if periode == "annee":
+        tz = ZoneInfo(fuseau)
+        aujourd_hui = en_local(horloge.maintenant(), fuseau).date()
+        debut = en_utc(datetime(aujourd_hui.year, 1, 1, tzinfo=tz))
+        fin = en_utc(datetime(aujourd_hui.year, aujourd_hui.month, aujourd_hui.day, tzinfo=tz) + timedelta(days=1))
+        return debut, fin, "Cette année"
+    genre = {"jour": TypePeriode.AUJOURD_HUI, "semaine": TypePeriode.SEMAINE, "mois": TypePeriode.MOIS}[periode]
+    return dom_resumes.bornes(Periode(type=genre), horloge, fuseau)
+
+
+def _tranches(periode: str, debut_local: datetime, fin_local: datetime) -> list[tuple[str, datetime, datetime]]:
+    """Découpe la période en tranches contiguës (heure locale) : (libellé, début, fin)."""
+    tranches: list[tuple[str, datetime, datetime]] = []
+    if periode == "jour":
+        for h in range(0, 24, 3):
+            tranches.append((f"{h} h", debut_local + timedelta(hours=h), debut_local + timedelta(hours=h + 3)))
+    elif periode == "semaine":
+        for i in range(7):
+            jour = debut_local + timedelta(days=i)
+            tranches.append((JOURS[jour.weekday()], jour, jour + timedelta(days=1)))
+    elif periode == "mois":
+        jour = debut_local
+        while jour < fin_local:
+            tranches.append((str(jour.day), jour, jour + timedelta(days=1)))
+            jour += timedelta(days=1)
+    else:
+        for m in range(1, (fin_local - timedelta(seconds=1)).month + 1):
+            debut = debut_local.replace(month=m)
+            fin = debut_local.replace(year=debut.year + 1, month=1) if m == 12 else debut_local.replace(month=m + 1)
+            tranches.append((MOIS[m - 1].capitalize(), debut, fin))
+    return tranches
+
+
+def serie_periode(session: Session, pme: Pme, horloge: Horloge, periode: str) -> list[dict]:
+    """Ventes et charges par tranche de la période (jour : 3 h ; semaine/mois : jour ; année : mois). Une seule lecture en base."""
+    debut, fin, _ = bornes_ecran(periode, horloge, pme.fuseau)
+    debut_local = en_local(debut, pme.fuseau)
+    tranches = _tranches(periode, debut_local, en_local(fin, pme.fuseau))
+    ventes = [(en_local(v.heure_envoi, pme.fuseau), v.total) for v in _ventes(session, pme, debut, fin)]
+    ventes += [(en_local(f.creee_a, pme.fuseau), f.total) for f in _factures(session, pme, debut, fin)]
+    charges = [(en_local(d.heure_envoi, pme.fuseau), d.montant) for d in _depenses(session, pme, debut, fin) if d.type == "charge"]
+    sortie = []
+    for libelle, a, b in tranches:
+        sortie.append({"libelle": libelle, "ventes": sum(m for t, m in ventes if a <= t < b), "charges": sum(m for t, m in charges if a <= t < b)})
+    return sortie
+
+
+def depenses_par_poste(session: Session, pme: Pme, debut: datetime, fin: datetime, n: int = 10) -> list[dict]:
+    """Dépenses actives de la période regroupées par libellé (sans accents ni casse), les plus fortes d'abord."""
+    totaux: dict[str, list] = {}
+    for d in _depenses(session, pme, debut, fin):
+        entree = totaux.setdefault(normaliser(d.libelle) or "autre", [d.libelle.strip().capitalize() or "Autre", 0])
+        entree[1] += d.montant
+    classement = sorted(totaux.values(), key=lambda x: (-x[1], x[0]))[:n]
+    return [{"libelle": libelle, "total": total} for libelle, total in classement]
+
+
+def chiffres_ecran(session: Session, pme: Pme, horloge: Horloge, periode: str) -> dict:
+    """Écran Chiffres : mêmes fonctions que le tableau et le chat (chiffres, trésorerie), seule la période change."""
+    debut, fin, libelle = bornes_ecran(periode, horloge, pme.fuseau)
+    c = chiffres(session, pme, debut, fin)
+    return {
+        "periode": periode,
+        "libelle": libelle,
+        "ventes": c["ventes"],
+        "charges": c["charges"],
+        "benefice": c["benefice"],
+        "stock": c["stock"],
+        "retraits_perso": c["retraits"],
+        "tresorerie": tresorerie(session, pme),
+        "par_mode": c["par_mode"],
+        "nb_ventes": c["nb"],
+        "panier_moyen": c["ventes"] // c["nb"] if c["nb"] else 0,
+        "serie": serie_periode(session, pme, horloge, periode),
+        "top_produits": top_produits_entre(session, pme, debut, fin),
+        "depenses_par_poste": depenses_par_poste(session, pme, debut, fin),
+    }
 
 
 def impayes(session: Session, pme: Pme) -> int:

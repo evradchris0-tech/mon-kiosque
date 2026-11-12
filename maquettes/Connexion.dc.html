@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Connexion</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.fd{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+.fd input{height:48px;box-sizing:border-box;width:100%;padding:0 14px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 16px 'Instrument Sans',sans-serif;color:#12211D}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;height:48px;border-radius:10px;border:1px solid #1B4B40;background:#1B4B40;color:#FFFFFF;font:600 16px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.btn:hover{background:#245B4E;color:#FFFFFF}
+.lnk{align-self:flex-start;min-height:44px;padding:0;border:0;background:transparent;color:#1B4B40;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:underline}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+
+<div style="flex: 1 1 360px; box-sizing: border-box; background: #1B4B40; color: #FFFFFF; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 40px">
+<img alt="OCTAVE, La Maison VH" src="/_blob/3862d9025d69aa20eca5437631f35b85" style="width: 300px; max-width: 100%">
+<div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Vos messages aux clients partent tout seuls. Vous gardez la main.</div>
+<div style="font-size: 16px; line-height: 1.5; color: #CFE1DA; margin-top: 14px">Suivi des envois, alertes et réglages de La Maison VH.</div>
+</div>
+</div>
+
+<main class="oc-in" style="flex: 1 1 420px; box-sizing: border-box; padding: 48px 32px; display: flex; align-items: center; justify-content: center">
+<div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 18px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Connexion</h1>
+
+<sc-if value="{{err}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="padding: 12px 16px; border-radius: 10px; background: #FDE8E6; border: 1px solid #E9B8B3; color: #7A1414; font-size: 14.5px; font-weight: 600">Saisissez votre mot de passe pour continuer.</div>
+</sc-if>
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 12px 16px; border-radius: 10px; background: #E2EFEA; color: #1B4B40; font-size: 14.5px; font-weight: 600">Si cette adresse est connue, un lien pour choisir un nouveau mot de passe vient de lui être envoyé.</div>
+</sc-if>
+
+<label class="fd">Adresse e-mail
+<input type="email" autocomplete="username" value="{{email}}" onChange="{{onEmail}}">
+</label>
+<label class="fd">Mot de passe
+<span style="display: flex; gap: 8px">
+<input type="{{pwdType}}" autocomplete="current-password" value="{{pwd}}" onChange="{{onPwd}}" aria-invalid="{{invalid}}" style="border-color: {{pwdBorder}}; border-width: {{pwdWidth}}">
+<button type="button" onClick="{{toggleShow}}" aria-pressed="{{shown}}" style="flex: none; height: 48px; padding: 0 14px; border-radius: 10px; border: 1px solid #74827D; background: #FFFFFF; color: #12211D; font: 600 14px 'Instrument Sans', sans-serif; cursor: pointer">{{showLabel}}</button>
+</span>
+</label>
+
+<button type="button" class="btn" onClick="{{submit}}">Se connecter</button>
+<button type="button" class="lnk" onClick="{{forgot}}">Mot de passe oublié ?</button>
+
+<sc-if value="{{ok}}" hint-placeholder-val="{{false}}">
+<a class="btn" href="Accueil.dc.html" style="background: #FFFFFF; color: #1B4B40">Connexion réussie, ouvrir l'accueil →</a>
+</sc-if>
+
+<div style="font-size: 13px; color: #55635F; line-height: 1.5; border-top: 1px solid #D9DFDC; padding-top: 14px">Par sécurité, la session se ferme après une période d'inactivité. Après plusieurs essais manqués, la connexion est bloquée quelques minutes.</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const email = st.email === undefined ? 'contact@la-maison-vh.fr' : st.email;
+const pwd = st.pwd || '';
+const err = !!st.err;
+return {
+email, pwd, err,
+ok: !!st.ok,
+sent: !!st.sent,
+invalid: err ? 'true' : 'false',
+pwdBorder: err ? '#9B1C1C' : '#74827D',
+pwdWidth: err ? '2px' : '1px',
+pwdType: st.show ? 'text' : 'password',
+shown: st.show ? 'true' : 'false',
+showLabel: st.show ? 'Masquer' : 'Afficher',
+onEmail: (e) => this.setState({ email: e.target.value }),
+onPwd: (e) => this.setState({ pwd: e.target.value, err: false }),
+toggleShow: () => this.setState({ show: !st.show }),
+submit: () => this.setState(pwd === '' ? { err: true, ok: false, sent: false } : { err: false, ok: true, sent: false }),
+forgot: () => this.setState({ sent: true, err: false })
+};
+}
+}
+</script>
+</body>
+</html>

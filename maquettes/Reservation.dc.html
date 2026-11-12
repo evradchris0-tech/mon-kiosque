@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Fiche d'une réservation</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.chip{display:inline-block;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E6EAE8;font-size:15px}
+.kv:last-child{border-bottom:0}
+.kv span{color:#55635F}
+.step{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:18px 0;border-bottom:1px solid #E6EAE8}
+.step:last-child{border-bottom:0}
+.step b{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600}
+.step small{grid-column:1 / -1;font-size:14px;color:#55635F}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="suivi" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Main.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Suivi des envois</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="Main.dc.html">Suivi des envois</a> › <b>Mme Moreau</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="EnvoiPonctuel.dc.html">Envoyer un message</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Réservation · Le 1904</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Mme Moreau — sa clé numérique est en attente</h1>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 8px 22px">
+<div class="kv"><span>Client</span><strong>Mme Moreau</strong></div>
+<div class="kv"><span>Téléphone</span><strong>+33 6 00 00 00 00</strong></div>
+<div class="kv"><span>Appartement</span><strong>Le 1904</strong></div>
+<div class="kv"><span>Arrivée</span><strong>Jeu. 15 oct.</strong></div>
+<div class="kv"><span>Départ</span><strong>Dim. 18 oct.</strong></div>
+<div class="kv"><span>Langue des messages</span><strong>Français</strong></div>
+<div class="kv"><span>Pourquoi cette langue</span><strong>Indicatif +33</strong></div>
+<div class="kv"><span>Canal</span><strong>WhatsApp</strong></div>
+<div class="kv"><span>Enregistrement en ligne</span><strong>Pas encore fait</strong></div>
+</section>
+
+<section style="flex: 2 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="background: #FDE8E6; border: 1px solid #E9B8B3; border-radius: 14px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
+<div style="flex: 1 1 300px">
+<div style="font-weight: 600; color: #7A1414">Le lien d'accès n'est pas encore disponible</div>
+<div style="font-size: 14px; color: #5E1C1C; margin-top: 2px">La clé partira toute seule dès qu'il le sera. Vous pouvez aussi relancer l'envoi après avoir vérifié la réservation dans eviivo.</div>
+</div>
+<sc-if value="{{idle}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{ask}}" style="height: 48px; padding: 0 18px; border-radius: 10px; border: 0; background: #9B1C1C; color: #FFFFFF; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Relancer l'envoi</button>
+</sc-if>
+<sc-if value="{{asking}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Confirmer la relance" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<span style="font-size: 14px; font-weight: 600; color: #7A1414">Relancer la clé de Mme Moreau ?</span>
+<button type="button" onClick="{{cancel}}" style="height: 48px; padding: 0 16px; border-radius: 10px; border: 1px solid #9B1C1C; background: #FFFFFF; color: #9B1C1C; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Annuler</button>
+<button type="button" onClick="{{confirm}}" style="height: 48px; padding: 0 16px; border-radius: 10px; border: 0; background: #9B1C1C; color: #FFFFFF; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Oui, relancer</button>
+</div>
+</sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{false}}">
+<div role="status" class="oc-in" style="padding: 12px 16px; border-radius: 10px; background: #E2EFEA; color: #1B4B40; font-size: 14px; font-weight: 600">Relance enregistrée. Vous serez prévenue si l'envoi échoue encore.</div>
+</sc-if>
+</div>
+
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 6px 22px">
+<div class="step"><b>1 · Enregistrement en ligne</b><span class="chip" style="background: #E2EFEA; color: #1B4B40">Envoyé</span><small>Sam. 10 oct. à 8 h 00 · WhatsApp · <a href="Modeles.dc.html">voir le texte</a></small></div>
+<div class="step"><b>2 · Clé numérique</b><span class="chip" style="background: #FDE8E6; color: #9B1C1C; font-weight: 600">Bloqué · lien absent</span><small>Prévu sam. 10 oct. · une alerte vous a été envoyée à 8 h 02</small></div>
+<div class="step"><b>3 · Parking</b><span class="chip" style="background: #EEF1F0; color: #55635F">Prévu lun. 12</span><small>3 jours avant l'arrivée</small></div>
+<div class="step"><b>4 · Petit-déjeuner</b><span class="chip" style="background: #EEF1F0; color: #55635F">Prévu mar. 13</span><small>2 jours avant l'arrivée</small></div>
+<div class="step"><b>5 · Restaurants</b><span class="chip" style="background: #EEF1F0; color: #55635F">Prévu mer. 14</span><small>La veille de l'arrivée</small></div>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1140}}'>
+class Component extends DCLogic {
+renderVals() {
+const step = (this.state && this.state.step) || 'idle';
+return {
+idle: step === 'idle',
+asking: step === 'asking',
+done: step === 'done',
+ask: () => this.setState({ step: 'asking' }),
+cancel: () => this.setState({ step: 'idle' }),
+confirm: () => this.setState({ step: 'done' })
+};
+}
+}
+</script>
+</body>
+</html>

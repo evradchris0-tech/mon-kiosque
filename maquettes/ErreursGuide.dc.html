@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Charte, traitement des erreurs</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:600}
+.sec{display:flex;flex-direction:column;gap:16px;padding-top:28px;border-top:1px solid #D9DFDC}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:20px}
+.box b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;margin-bottom:6px}
+.box p{margin:0;font-size:15px;line-height:1.45;color:#3A4743}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+th{text-align:left;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#55635F;padding:12px 14px;border-bottom:1px solid #D9DFDC}
+td{padding:12px 14px;border-bottom:1px solid #E6EAE8;vertical-align:top;font-size:14.5px;line-height:1.4}
+tr:last-child td{border-bottom:0}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 48px 32px 64px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH · Charte graphique</div>
+<h1 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; font-weight: 600; line-height: 1.1">Traitement des erreurs</h1>
+<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.5; color: #3A4743; max-width: 800px">Règle générale : OCTAVE règle seul ce qu'il peut, et ne dérange Joëlle que lorsqu'elle peut agir. Les comportements entre crochets restent à décider avant le développement.</p>
+</header>
+
+<section class="sec" style="border-top: 0; padding-top: 0">
+<h2>Quatre niveaux</h2>
+<div class="grid">
+<div class="box"><span class="oc-chip oc-plan">Information</span><b style="margin-top: 10px">Rien à faire</b><p>OCTAVE a contourné le problème. Visible dans le suivi et l'historique, sans alerte.</p></div>
+<div class="box"><span class="oc-chip oc-today">À surveiller</span><b style="margin-top: 10px">OCTAVE réessaie</b><p>Un bandeau ambre sur l'écran concerné. Pas d'e-mail tant que les essais continuent.</p></div>
+<div class="box"><span class="oc-chip oc-block">À traiter</span><b style="margin-top: 10px">Joëlle peut agir</b><p>Pastille « Bloqué », cloche, et e-mail d'alerte. Toujours avec un bouton d'action.</p></div>
+<div class="box" style="border-color: #9B1C1C"><span class="oc-chip" style="background: #9B1C1C; color: #FFFFFF; font-weight: 600">Bloquant</span><b style="margin-top: 10px">L'écran ne peut pas s'afficher</b><p>Page d'erreur pleine. Elle précise toujours si les envois continuent.</p></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Comment écrire un message d'erreur</h2>
+<div class="grid">
+<div class="box"><b>1 · Ce qui s'est passé</b><p>En une phrase, sans jargon. « Le lien d'accès n'est pas encore disponible », pas « erreur 404 ».</p></div>
+<div class="box"><b>2 · Ce qu'OCTAVE fait</b><p>« La clé partira toute seule dès qu'il le sera. » Joëlle sait si elle doit s'en occuper.</p></div>
+<div class="box"><b>3 · Ce qu'elle peut faire</b><p>Une seule action principale, nommée par son effet : « Relancer l'envoi », jamais « OK ».</p></div>
+<div class="box"><b>Toujours</b><p>Ne jamais accuser l'utilisatrice. Garder le détail technique replié, avec une référence à transmettre au support.</p></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Cas par cas</h2>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; overflow-x: auto">
+<table style="width: 100%; min-width: 1100px; border-collapse: collapse">
+<thead><tr><th style="width: 19%">Situation</th><th style="width: 11%">Niveau</th><th style="width: 27%">Ce qu'OCTAVE fait seul</th><th style="width: 25%">Ce que voit Joëlle</th><th>Action proposée</th></tr></thead>
+<tbody>
+<tr><td><strong>Client sans WhatsApp</strong></td><td><span class="oc-chip oc-plan">Information</span></td><td>Envoie le message par e-mail</td><td>« E-mail » dans le suivi et l'historique</td><td>Aucune</td></tr>
+<tr><td><strong>Envoi hors de la plage 8 h – 21 h</strong></td><td><span class="oc-chip oc-plan">Information</span></td><td>Reporte l'envoi à 8 h</td><td>Pastille « Prévu »</td><td>Aucune</td></tr>
+<tr><td><strong>Texte non validé</strong></td><td><span class="oc-chip oc-today">À surveiller</span></td><td>N'envoie pas ce message</td><td>Étiquette « À valider » sur le modèle, rappel dans la cloche</td><td>Valider le texte</td></tr>
+<tr><td><strong>eviivo ne répond pas</strong></td><td><span class="oc-chip oc-today">À surveiller</span></td><td>Réessaie automatiquement, garde la dernière liste connue</td><td>Bandeau sur le suivi, avec l'heure de la dernière lecture</td><td>Réessayer maintenant</td></tr>
+<tr><td><strong>Lien d'accès absent</strong></td><td><span class="oc-chip oc-block">À traiter</span></td><td>Vérifie régulièrement, envoie dès que le lien existe</td><td>Pastille « Bloqué », cloche, e-mail d'alerte</td><td>Relancer l'envoi</td></tr>
+<tr><td><strong>Envoi WhatsApp échoué</strong></td><td><span class="oc-chip oc-block">À traiter</span></td><td>Réessaie [NOMBRE D'ESSAIS À DÉFINIR], puis [REPLI E-MAIL À DÉCIDER]</td><td>Alerte seulement si tous les essais échouent</td><td>Relancer l'envoi</td></tr>
+<tr><td><strong>WhatsApp Business déconnecté</strong></td><td><span class="oc-chip oc-block">À traiter</span></td><td>[À DÉCIDER : attendre la reconnexion ou passer par e-mail]</td><td>Bandeau rouge sur tous les écrans, e-mail d'alerte</td><td>Reconnecter WhatsApp</td></tr>
+<tr><td><strong>Enregistrement d'un réglage échoué</strong></td><td><span class="oc-chip oc-block">À traiter</span></td><td>Ne modifie rien, garde la saisie à l'écran</td><td>Message rouge sous le bouton</td><td>Réessayer</td></tr>
+<tr><td><strong>Saisie incorrecte</strong></td><td><span class="oc-chip oc-block">À traiter</span></td><td>Bloque l'enregistrement</td><td>Champ entouré de rouge, message sous le champ</td><td>Corriger le champ</td></tr>
+<tr><td><strong>Erreur inattendue</strong></td><td><span class="oc-chip" style="background: #9B1C1C; color: #FFFFFF; font-weight: 600">Bloquant</span></td><td>Enregistre l'erreur avec une référence</td><td>Page d'erreur pleine</td><td>Recharger la page</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="sec">
+<h2>Où s'affiche une erreur</h2>
+<div class="grid">
+<div class="box"><b>Dans le champ</b><p>Erreurs de saisie. Trait rouge de 2 px et message sous le champ.</p></div>
+<div class="box"><b>En bandeau</b><p>Problème qui touche tout l'écran. Rouge pour « à traiter », ambre pour « à surveiller ».</p></div>
+<div class="box"><b>En message bref</b><p>Résultat d'une action : enregistré, ou non enregistré. Disparaît seul si c'est une réussite, reste si c'est un échec.</p></div>
+<div class="box"><b>Dans la cloche et par e-mail</b><p>Ce qui arrive quand Joëlle n'est pas devant l'écran. Réservé au niveau « à traiter ».</p></div>
+<div class="box"><b>En page pleine</b><p>Quand l'écran ne peut pas s'afficher du tout. Voir la planche « Pages d'erreur ».</p></div>
+<div class="box"><b>Dans l'historique</b><p>Toujours. Chaque échec y laisse une ligne, avec son déroulé et sa référence.</p></div>
+</div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

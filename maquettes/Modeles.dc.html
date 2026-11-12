@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Modèles de messages</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.tag{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.it{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:56px;padding:0 16px;border-radius:10px;font-size:15px;font-weight:500;color:#12211D;text-decoration:none}
+.it:hover{background:#EEF1F0;color:#12211D}
+.it small{display:block;font-size:13px;font-weight:400;color:#55635F}
+.txt{background:#F3F5F4;border-radius:10px;padding:16px;font-size:15px;line-height:1.5;min-height:200px;color:#3A4743}
+.var{display:inline-block;padding:4px 10px;border-radius:6px;background:#E2EFEA;color:#1B4B40;font-size:13px;font-weight:600}
+.btn{height:48px;padding:0 18px;border-radius:10px;border:1px solid transparent;font:600 15px 'Instrument Sans',sans-serif;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="modeles" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Modèles de messages</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Parcours.dc.html">Quand part chaque message</a><a class="oc-lk" href="Parametres.dc.html">Paramètres</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Vos cinq messages, en français et en anglais</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Rien ne part chez un client tant que vous n'avez pas validé le texte.</div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<nav aria-label="Liste des messages" style="flex: 1 1 300px; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 4px">
+<a class="it" href="#"><span>Enregistrement en ligne<small>5 jours avant</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span></a>
+<a class="it" href="#" aria-current="true" style="background: #1B4B40; color: #FFFFFF"><span>Clé numérique<small style="color: #E2EFEA">5 jours avant</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span></a>
+<a class="it" href="#"><span>Parking<small>3 jours avant</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span></a>
+<a class="it" href="#"><span>Petit-déjeuner<small>2 jours avant</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span></a>
+<a class="it" href="#"><span>Restaurants<small>La veille</small></span><span class="tag" style="background: #FFF1D6; color: #7A4E00">À valider</span></a>
+</nav>
+
+<section style="flex: 3 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 600">Clé numérique</h2>
+<span style="font-size: 14px; color: #55635F">Envoyée 5 jours avant l'arrivée · signée « Joëlle »</span>
+</div>
+
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #55635F; margin-bottom: 10px">Informations insérées automatiquement</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="var">Nom du client</span><span class="var">Nom de l'appartement</span><span class="var">Code de porte</span><span class="var">Lien d'accès</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-weight: 600">Français</div>
+<div class="txt">[TEXTE FRANÇAIS À FOURNIR PAR JOËLLE]</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="font-weight: 600">Anglais</div>
+<div class="txt">[TEXTE ANGLAIS À FOURNIR PAR JOËLLE]</div>
+<div style="font-size: 13px; color: #55635F">Si vous n'écrivez qu'une langue, l'autre est traduite une fois à l'enregistrement, puis vous la relisez.</div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end">
+<a class="btn" href="Apercu.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; text-decoration: none; background: #FFFFFF; color: #1B4B40; border-color: #1B4B40">Voir côté client</a>
+<button type="button" class="btn" style="background: #FFFFFF; color: #1B4B40; border-color: #1B4B40">M'envoyer un essai</button>
+<a class="btn" href="ModeleEdition.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; text-decoration: none; background: #FFFFFF; color: #1B4B40; border-color: #1B4B40">Modifier</a>
+<button type="button" class="btn" style="background: #1B4B40; color: #FFFFFF">Valider ce message</button>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

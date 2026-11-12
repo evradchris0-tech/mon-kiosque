@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Fiche réservation sur téléphone</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+.stp{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #E6EAE8;font-size:15px;font-weight:500}
+.stp:last-child{border-bottom:0}
+</style>
+</helmet>
+<div class="m-root">
+<header class="m-head">
+<a class="m-ico" href="Mobile.dc.html" aria-label="Retour au suivi"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0"></a>
+<div style="flex: 1"><h1>Mme Moreau</h1><small>Le 1904 · arrivée jeu. 15 oct.</small></div>
+<button type="button" class="m-ico" aria-label="Rechercher"><img alt="" src="/_blob/f4e7b8262f8e7aea6104eb4cebb3543e"></button>
+<button type="button" class="m-ico" aria-label="Notifications, 2 non lues"><img alt="" src="/_blob/aa1adc5f19f52c5438c59e92ec87c5ac"><span class="m-badge" aria-hidden="true">2</span></button>
+</header>
+
+<div class="m-body">
+<div style="background: #FDE8E6; border: 1px solid #E9B8B3; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<div><div style="font-weight: 600; color: #7A1414">Le lien d'accès n'est pas encore disponible</div><div style="font-size: 14px; color: #5E1C1C; margin-top: 2px">La clé partira toute seule dès qu'il le sera.</div></div>
+<button type="button" style="height: 48px; border-radius: 10px; border: 0; background: #9B1C1C; color: #FFFFFF; font: 600 15px 'Instrument Sans', sans-serif">Relancer l'envoi</button>
+</div>
+
+<div class="m-card" style="padding: 4px 16px">
+<div class="stp"><span>1 · Enregistrement</span><span class="oc-chip oc-ok">Envoyé</span></div>
+<div class="stp"><span>2 · Clé numérique</span><span class="oc-chip oc-block">Bloqué</span></div>
+<div class="stp"><span>3 · Parking</span><span class="oc-chip oc-plan">Lun. 12</span></div>
+<div class="stp"><span>4 · Petit-déjeuner</span><span class="oc-chip oc-plan">Mar. 13</span></div>
+<div class="stp"><span>5 · Restaurants</span><span class="oc-chip oc-plan">Mer. 14</span></div>
+</div>
+
+<div class="m-card" style="padding: 4px 16px">
+<div class="m-kv"><span>Téléphone</span><strong>+33 6 00 00 00 00</strong></div>
+<div class="m-kv"><span>Départ</span><strong>Dim. 18 oct.</strong></div>
+<div class="m-kv"><span>Langue</span><strong>Français (indicatif +33)</strong></div>
+<div class="m-kv"><span>Canal</span><strong>WhatsApp</strong></div>
+<div class="m-kv"><span>Enregistrement en ligne</span><strong>Pas encore fait</strong></div>
+</div>
+</div>
+
+<nav class="m-nav" aria-label="Navigation">
+<a class="m-tab" href="MobileAccueil.dc.html"><img alt="" src="/_blob/a7410aa2ab3c1c9c0f9088012a016d0e">Accueil</a>
+<a class="m-tab" href="Mobile.dc.html" aria-current="page"><img alt="" src="/_blob/83b6d4e715b3839464668436447226a9">Suivi</a>
+<a class="m-tab" href="MobileConcurrence.dc.html"><img alt="" src="/_blob/2ba55dc7bc0ab8d83e7b8bb3bc4b675d">Marché</a>
+<a class="m-tab" href="MobileParametres.dc.html"><img alt="" src="/_blob/477b497f6a97f0d8584106e520ca5f75">Réglages</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

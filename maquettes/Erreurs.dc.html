@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Pages d'erreur</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.lab{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F;margin-bottom:10px}
+.pg{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;min-height:340px;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:12px}
+.pg .k{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#55635F}
+.pg h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:600;line-height:1.15}
+.pg p{margin:0;font-size:15px;line-height:1.5;color:#3A4743}
+.pg .ref{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#55635F}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;background:#1B4B40;color:#FFFFFF;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.btn.s{background:#FFFFFF;color:#1B4B40}
+.ic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif; padding: 40px 32px 56px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<header>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · Pages d'erreur</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Six pages pour les cas où l'application ne peut pas s'afficher</h1>
+<div style="font-size: 16px; color: #55635F; margin-top: 8px">Chacune dit ce qui se passe, rassure sur les envois en cours, et propose une seule action principale.</div>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px">
+
+<div><div class="lab">1 · Page introuvable</div>
+<div class="pg">
+<div class="ic" style="background: #EEF1F0"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12211D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+<div class="k">Page introuvable</div>
+<h2>Cette page n'existe pas, ou plus</h2>
+<p>L'adresse est peut-être incomplète. Vos envois continuent normalement.</p>
+<a class="btn" href="Erreur404.dc.html">Revenir à l'accueil</a>
+</div></div>
+
+<div><div class="lab">2 · Session expirée</div>
+<div class="pg">
+<div class="ic" style="background: #FFF1D6"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7A4E00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+<div class="k">Session expirée</div>
+<h2>Reconnectez-vous pour continuer</h2>
+<p>Par sécurité, OCTAVE vous déconnecte après une période d'inactivité. Rien n'a été perdu.</p>
+<a class="btn" href="Connexion.dc.html">Se reconnecter</a>
+</div></div>
+
+<div><div class="lab">3 · Accès refusé</div>
+<div class="pg">
+<div class="ic" style="background: #EEF1F0"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12211D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+<div class="k">Accès refusé</div>
+<h2>Votre compte n'a pas accès à cette page</h2>
+<p>Elle est réservée à l'administration d'OCTAVE. Si vous pensez qu'il s'agit d'une erreur, contactez le support.</p>
+<a class="btn" href="Accueil.dc.html">Revenir à l'accueil</a>
+</div></div>
+
+<div><div class="lab">4 · Erreur inattendue</div>
+<div class="pg" style="background: #FDE8E6; border-color: #E9B8B3">
+<div class="ic" style="background: #FFFFFF"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9B1C1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg></div>
+<div class="k" style="color: #7A1414">Erreur inattendue</div>
+<h2 style="color: #7A1414">Un problème est survenu de notre côté</h2>
+<p style="color: #5E1C1C">Ce n'est pas de votre fait. L'erreur a été enregistrée. Rechargez la page ; si elle revient, transmettez la référence au support.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 10px"><button type="button" class="btn" style="background: #9B1C1C; border-color: #9B1C1C">Recharger la page</button><button type="button" class="btn s" style="border-color: #9B1C1C; color: #9B1C1C">Copier la référence</button></div>
+<div class="ref">Référence : [RÉFÉRENCE]</div>
+</div></div>
+
+<div><div class="lab">5 · Hors connexion</div>
+<div class="pg">
+<div class="ic" style="background: #FFF1D6"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7A4E00" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a14 14 0 0 1 18 0"/><path d="M6.5 12.5a9 9 0 0 1 11 0"/><path d="M10 16a3.5 3.5 0 0 1 4 0"/><path d="M4 4l16 16"/></svg></div>
+<div class="k">Hors connexion</div>
+<h2>Votre appareil n'est plus connecté à Internet</h2>
+<p>OCTAVE continue d'envoyer vos messages : il ne dépend pas de votre téléphone. La page se rechargera au retour de la connexion.</p>
+<button type="button" class="btn">Réessayer</button>
+</div></div>
+
+<div><div class="lab">6 · Maintenance</div>
+<div class="pg">
+<div class="ic" style="background: #E2EFEA"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5a4 4 0 0 0 5 5L11 20a2.1 2.1 0 0 1-3-3l8.5-8.5"/><path d="M14.5 6.5 17 4"/></svg></div>
+<div class="k">Maintenance</div>
+<h2>OCTAVE est en cours de mise à jour</h2>
+<p>L'écran revient à [HEURE DE RETOUR]. Les messages prévus pendant ce temps partiront à la reprise.</p>
+<button type="button" class="btn s">Actualiser</button>
+</div></div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

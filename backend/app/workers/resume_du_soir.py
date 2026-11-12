@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.horloge import Horloge, en_local
 from app.db.modeles import Job, Message, Pme
+from app.domaine import preferences
 from app.domaine import resumes as dom_resumes
 from app.integrations.whatsapp.interface import CanalMessages, MessageSortant
 from app.moki import reponses
@@ -18,7 +19,7 @@ def executer(fabrique: sessionmaker[Session], canal: CanalMessages, horloge: Hor
     with fabrique() as s:
         for pme in s.scalars(select(Pme).where(Pme.statut == "actif")).all():
             local = en_local(horloge.maintenant(), pme.fuseau)
-            if local.hour < heure:
+            if local.hour < heure or not preferences.actif(s, pme, "resume_du_soir"):
                 continue
             cle = f"resume:{pme.id}:{local.date().isoformat()}"
             if s.scalar(select(Job.id).where(Job.cle_idempotence == cle)) is not None:

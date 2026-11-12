@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Alertes</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.sect{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#55635F}
+.al{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;border-radius:14px;padding:18px 20px;border:1px solid #D9DFDC;background:#FFFFFF}
+.al b{display:block;font-size:17px}
+.al p{margin:3px 0 0;font-size:14.5px;line-height:1.45;color:#3A4743}
+.al small{display:block;font-size:13px;color:#55635F;margin-top:6px}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="alertes" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Alertes</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Historique.dc.html">Historique</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Alertes · samedi 10 octobre</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Une alerte demande votre attention</h1>
+</div>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</header>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div class="sect">À traiter · 1</div>
+<div class="al" style="background: #FDE8E6; border-color: #E9B8B3">
+<div style="flex: 1 1 360px"><b style="color: #7A1414"><span class="oc-dot"></span>Clé numérique non envoyée — Mme Moreau, Le 1904</b><p style="color: #5E1C1C">Le lien d'accès n'est pas encore disponible. La clé partira toute seule dès qu'il le sera.</p><small style="color: #5E1C1C">Depuis aujourd'hui, 8 h 00 · arrivée jeu. 15 oct. · <a href="Alerte.dc.html" style="color: #7A1414">voir l'e-mail reçu</a></small></div>
+<a class="btn" href="Reservation.dc.html" style="background: #9B1C1C; border-color: #9B1C1C; color: #FFFFFF">Voir la réservation</a>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div class="sect">Pour information · 1</div>
+<div class="al">
+<div style="flex: 1 1 360px"><b>M. Lefèvre reçoit ses messages par e-mail</b><p>Son numéro n'a pas WhatsApp. OCTAVE a basculé tout seul sur l'e-mail ; rien à faire de votre côté.</p><small>Depuis l'enregistrement de sa réservation · Le Voyageur</small></div>
+<a class="btn" href="Historique.dc.html" style="background: #FFFFFF; color: #1B4B40">Voir dans l'historique</a>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div class="sect">Réglées ces 7 derniers jours</div>
+<div class="al" style="background: transparent; border-style: dashed">
+<div><b style="font-size: 15px; font-weight: 500; color: #3A4743">Aucune alerte réglée sur la période</b><small>Les alertes passent ici dès que l'envoi a pu partir.</small></div>
+</div>
+</section>
+
+<div style="font-size: 14px; color: #55635F">Les alertes à traiter sont aussi envoyées à contact@la-maison-vh.fr. <a href="Parametres.dc.html">Changer cette adresse</a></div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

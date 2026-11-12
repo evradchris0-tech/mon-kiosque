@@ -2,11 +2,22 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.horloge import Horloge
-from app.db.modeles import NumeroAutorise, Pme
+from app.db.modeles import Inscription, NumeroAutorise, Pme
+
+
+class ErreurValidation(ValueError):
+    """Valeur refusée : le message est affiché tel quel à la gérante (français)."""
+
+
+class DejaInscrit(Exception):
+    """Le numéro a déjà un compte (un numéro = un compte)."""
+
 
 
 def creer_pme(
@@ -60,3 +71,34 @@ def ajouter_numero(session: Session, pme: Pme, numero: str, role: str = "employe
     session.add(n)
     session.flush()
     return n
+
+
+CHAMPS_INSCRIPTION = {"nom_commerce": ("Le nom du commerce", 120), "ville": ("La ville", 60), "secteur": ("Le secteur", 40)}
+
+
+def valider_inscription(corps: Any) -> dict[str, str]:
+    """Les trois champs de l'inscription, obligatoires, texte non vide dans la limite de la colonne."""
+    if not isinstance(corps, dict):
+        raise ErreurValidation("Il faut le nom du commerce, la ville et le secteur.")
+    valeurs: dict[str, str] = {}
+    for cle, (libelle, maximum) in CHAMPS_INSCRIPTION.items():
+        brut = corps.get(cle)
+        texte = brut.strip() if isinstance(brut, str) else ""
+        if not texte:
+            raise ErreurValidation(f"{libelle} est obligatoire.")
+        if len(texte) > maximum:
+            raise ErreurValidation(f"{libelle} est trop long ({maximum} caractères au maximum).")
+        valeurs[cle] = texte
+    return valeurs
+
+
+def inscrire(session: Session, horloge: Horloge, numero: str, valeurs: dict[str, str]) -> Pme:
+    """Crée la PME du numéro (celui du jeton). DejaInscrit si le numéro a déjà un compte."""
+    if session.scalar(select(Pme.id).where(Pme.numero_whatsapp == numero)) or session.scalar(select(NumeroAutorise.id).where(NumeroAutorise.numero == numero)):
+        raise DejaInscrit(numero)
+    pme = creer_pme(session, horloge, nom_commerce=valeurs["nom_commerce"], numero_whatsapp=numero, ville=valeurs["ville"], secteur=valeurs["secteur"])
+    en_cours = session.scalar(select(Inscription).where(Inscription.numero == numero))
+    if en_cours is not None:  # inscription commencée sur WhatsApp : elle est remplacée
+        session.delete(en_cours)
+    session.flush()
+    return pme

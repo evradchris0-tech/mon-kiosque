@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Recherche</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="display: flex; justify-content: flex-end; font-family: 'Instrument Sans', sans-serif; color: #12211D">
+<div role="search" style="position: relative; width: 260px; max-width: 46vw">
+<label style="display: flex; align-items: center; gap: 8px; height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; border: 1px solid #74827D; background: #FFFFFF">
+<img alt="" src="/_blob/f4e7b8262f8e7aea6104eb4cebb3543e" style="width: 20px; height: 20px; flex: none">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Rechercher dans OCTAVE</span>
+<input type="search" placeholder="Rechercher…" value="{{q}}" onChange="{{onQ}}" onFocus="{{openIt}}" aria-expanded="{{expanded}}" style="flex: 1; min-width: 0; height: 40px; border: 0; outline: 0; background: transparent; font: 400 15px 'Instrument Sans', sans-serif; color: #12211D">
+</label>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{false}}">
+<div role="dialog" aria-label="Résultats de recherche" style="position: absolute; right: 0; top: 52px; z-index: 30; width: 380px; max-width: 92vw; box-sizing: border-box; background: #FFFFFF; border: 1px solid #74827D; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; text-align: left">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 10px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #55635F">{{heading}}</span>
+<button type="button" onClick="{{closeIt}}" style="min-height: 44px; padding: 0 6px; border: 0; background: transparent; color: #1B4B40; font: 600 14px 'Instrument Sans', sans-serif; cursor: pointer">Fermer</button>
+</div>
+<sc-for list="{{results}}" as="item" hint-placeholder-count="4">
+<a href="{{item.href}}" class="oc-lift" style="display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 2px 10px; align-items: center; padding: 10px; border-radius: 10px; border: 1px solid transparent; text-decoration: none; color: #12211D">
+<span style="grid-row: span 2; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; background: #EEF1F0; color: #55635F; text-align: center">{{item.kind}}</span>
+<span style="font-size: 15px; font-weight: 600">{{item.label}}</span>
+<span style="font-size: 13px; color: #55635F">{{item.sub}}</span>
+</a>
+</sc-for>
+<sc-if value="{{none}}" hint-placeholder-val="{{false}}">
+<div style="padding: 14px 10px 16px">
+<div style="font-size: 15px; font-weight: 600">Aucun résultat</div>
+<div style="font-size: 14px; color: #55635F; margin-top: 2px">Essayez un nom de client, un appartement ou un message.</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":460,"height":520}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const q = st.q || '';
+const open = !!st.open;
+const idx = [
+{ kind: 'Client', label: 'Mme Moreau', sub: 'Le 1904 · arrivée jeu. 15 oct. · clé bloquée', href: 'Reservation.dc.html', top: true },
+{ kind: 'Client', label: 'Mrs Clarke', sub: 'Sous les Étoiles · arrivée dim. 11 oct.', href: 'Main.dc.html' },
+{ kind: 'Client', label: 'M. Lefèvre', sub: 'Le Voyageur · arrivée lun. 12 oct.', href: 'Main.dc.html' },
+{ kind: 'Client', label: 'Mr Jansen', sub: 'Jeanne + Victor · arrivée mar. 13 oct.', href: 'Main.dc.html' },
+{ kind: 'Client', label: 'Mr Brown', sub: 'Victor · arrivée ce soir', href: 'Main.dc.html' },
+{ kind: 'Historique', label: 'Échec : clé de Mme Moreau', sub: 'Samedi 10 octobre, 8 h 00 · lien absent', href: 'HistoriqueDetail.dc.html', top: true },
+{ kind: 'Message', label: 'Clé numérique', sub: 'Modèle · 5 jours avant · à valider', href: 'Modeles.dc.html', top: true },
+{ kind: 'Message', label: 'Enregistrement en ligne', sub: 'Modèle · 5 jours avant', href: 'Modeles.dc.html' },
+{ kind: 'Message', label: 'Parking', sub: 'Modèle · 3 jours avant', href: 'Modeles.dc.html' },
+{ kind: 'Message', label: 'Petit-déjeuner', sub: 'Modèle · 2 jours avant', href: 'Modeles.dc.html' },
+{ kind: 'Message', label: 'Restaurants', sub: 'Modèle · la veille', href: 'Modeles.dc.html' },
+{ kind: 'Page', label: 'Suivi des envois', sub: 'Arrivées et état des messages', href: 'Main.dc.html' },
+{ kind: 'Page', label: 'Historique', sub: 'Tous les échanges d\'OCTAVE', href: 'Historique.dc.html' },
+{ kind: 'Page', label: 'Paramètres', sub: 'Calendrier, horaires, canaux, langue', href: 'Parametres.dc.html', top: true },
+{ kind: 'Page', label: 'Concurrence', sub: 'Prix et occupation face au marché', href: 'Concurrence.dc.html' },
+{ kind: 'Page', label: 'Assistant concurrence', sub: 'Poser une question', href: 'Assistant.dc.html' },
+{ kind: 'Page', label: 'Parcours du séjour', sub: 'Les cinq messages, de J-5 à la veille', href: 'Parcours.dc.html' },
+{ kind: 'Page', label: 'Mise en service', sub: 'Les cinq étapes avant le premier envoi', href: 'MiseEnRoute.dc.html' },
+{ kind: 'Page', label: 'Essai à blanc', sub: 'Messages préparés, non envoyés', href: 'EssaiBlanc.dc.html' },
+{ kind: 'Page', label: 'Alertes', sub: 'Ce qui demande votre attention', href: 'Alertes.dc.html' },
+{ kind: 'Action', label: 'Envoyer un message', sub: 'Envoi ponctuel, hors calendrier', href: 'EnvoiPonctuel.dc.html' },
+{ kind: 'Action', label: 'Suspendre les envois', sub: 'Arrêt d\'urgence de tous les messages', href: 'Suspendre.dc.html' },
+{ kind: 'Page', label: 'Connexions', sub: 'eviivo, WhatsApp Business, e-mail', href: 'Connexions.dc.html' },
+{ kind: 'Page', label: 'Aide', sub: 'Questions courantes et contact', href: 'Aide.dc.html' }
+];
+const norm = (x) => x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+const nq = norm(q);
+const results = nq === '' ? idx.filter((x) => x.top) : idx.filter((x) => norm(x.label + ' ' + x.sub + ' ' + x.kind).indexOf(nq) !== -1).slice(0, 6);
+return {
+q, open, results,
+expanded: open ? 'true' : 'false',
+none: results.length === 0,
+heading: nq === '' ? 'Suggestions' : results.length + (results.length > 1 ? ' résultats' : ' résultat'),
+onQ: (e) => this.setState({ q: e.target.value, open: true }),
+openIt: () => this.setState({ open: true }),
+closeIt: () => this.setState({ open: false })
+};
+}
+}
+</script>
+</body>
+</html>

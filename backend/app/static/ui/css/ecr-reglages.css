@@ -1,0 +1,37 @@
+/* Mon Kiosque : écran Réglages (préfixe .reg-). */
+
+.reg-grille { display: flex; flex-direction: column; gap: 20px; }
+.reg-colonne { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+/* Carte profil */
+.reg-profil { display: flex; align-items: center; gap: 16px; padding: 20px; }
+.reg-avatar {
+  flex: none; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%;
+  background: var(--green); color: #fff; font: 600 24px/1 var(--font-titre); letter-spacing: .02em;
+}
+.reg-profil-texte { min-width: 0; flex: 1; }
+.reg-nom { font-size: 20px; line-height: 1.2; overflow-wrap: anywhere; }
+.reg-detail { margin-top: 4px; color: var(--muted); font-size: var(--t-14); line-height: 1.4; overflow-wrap: anywhere; }
+.reg-tel { font-variant-numeric: tabular-nums; }
+.reg-pastille { margin-top: 10px; }
+
+/* Groupes de liens */
+.reg-groupe { display: flex; flex-direction: column; gap: 8px; }
+.reg-groupe-titre { padding: 0 4px; color: var(--muted); font: 600 var(--t-12)/1.3 var(--font-corps); letter-spacing: .08em; text-transform: uppercase; }
+.reg-lien { min-height: 64px; }
+.reg-lien .ligne-sous { white-space: normal; }
+.reg-fleche { opacity: .55; transform: rotate(180deg); transition: transform var(--duree), opacity var(--duree); }
+.reg-lien:hover .reg-fleche { opacity: 1; transform: rotate(180deg) translateX(-3px); }
+
+/* Pied : déconnexion et version */
+.reg-pied { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.reg-sortie { border-color: var(--danger-line); color: var(--danger); }
+.reg-sortie:hover { background: var(--danger-bg); color: var(--danger-ink); }
+.reg-version { color: var(--soft); font-size: var(--t-13); text-align: center; }
+
+@media (min-width: 900px) {
+  .reg-grille { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .reg-profil { position: sticky; top: 24px; flex-direction: column; align-items: flex-start; gap: 16px; padding: 24px; }
+  .reg-avatar { width: 72px; height: 72px; font-size: 28px; }
+  .reg-pied { align-items: stretch; }
+}

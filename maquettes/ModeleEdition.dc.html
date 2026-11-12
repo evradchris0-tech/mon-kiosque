@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Modifier un modèle de message</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.box{background:#FFFFFF;border:1px solid #D9DFDC;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.box h2{margin:0;font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+textarea{width:100%;min-height:220px;box-sizing:border-box;padding:14px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;font:400 16px/1.5 'Instrument Sans',sans-serif;color:#12211D;resize:vertical}
+.var{min-height:44px;padding:0 12px;border-radius:8px;border:1px solid #1B4B40;background:#E2EFEA;color:#1B4B40;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer}
+.btn{display:inline-flex;align-items:center;height:48px;padding:0 18px;border-radius:10px;border:1px solid #1B4B40;font:600 15px 'Instrument Sans',sans-serif;text-decoration:none;cursor:pointer}
+.hint{font-size:13px;color:#55635F}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="modeles" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Modeles.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Modèles de messages</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <a href="Modeles.dc.html">Modèles de messages</a> › <b>Clé numérique</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Apercu.dc.html">Voir côté client</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">Modifier un modèle · envoyé 5 jours avant l'arrivée</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Clé numérique</h1>
+</div>
+<span class="oc-chip oc-today" style="font-weight: 600">Modifications non enregistrées</span>
+</header>
+
+<section class="box">
+<h2>Informations à insérer</h2>
+<div class="hint" style="font-size: 14px">Placez le curseur dans le texte, puis cliquez sur une information. OCTAVE la remplacera par la bonne valeur pour chaque client.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" class="var">Nom du client</button>
+<button type="button" class="var">Nom de l'appartement</button>
+<button type="button" class="var">Code de porte</button>
+<button type="button" class="var">Lien d'accès</button>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px">
+<section class="box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><h2>Français</h2><span class="hint">Vouvoiement · signé « Joëlle »</span></div>
+<label><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Texte français</span>
+<textarea placeholder="[TEXTE FRANÇAIS À FOURNIR PAR JOËLLE]"></textarea>
+</label>
+<div class="hint">Les quatre informations doivent figurer dans le texte. Il manque : Code de porte, Lien d'accès.</div>
+</section>
+<section class="box">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px"><h2>Anglais</h2><span class="hint">Pour tous les indicatifs autres que +33</span></div>
+<label><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Texte anglais</span>
+<textarea lang="en" placeholder="[TEXTE ANGLAIS À FOURNIR PAR JOËLLE]"></textarea>
+</label>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<span class="hint" style="flex: 1 1 200px">La traduction est faite une fois, à l'enregistrement. Relisez-la avant de valider.</span>
+<button type="button" class="btn" style="background: #FFFFFF; color: #1B4B40">Traduire depuis le français</button>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<div class="hint" style="flex: 1 1 320px; font-size: 14px">Enregistrer ne suffit pas à envoyer : un texte modifié repasse en « À valider » et ne part chez aucun client avant votre validation.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a class="btn" href="Modeles.dc.html" style="background: #FFFFFF; color: #1B4B40">Annuler</a>
+<button type="button" class="btn" style="background: #FFFFFF; color: #1B4B40">M'envoyer un essai</button>
+<button type="button" class="btn" style="background: #1B4B40; color: #FFFFFF">Enregistrer</button>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

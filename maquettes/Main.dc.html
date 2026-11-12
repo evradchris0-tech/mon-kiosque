@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCTAVE — Écran de suivi</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="octave.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body{margin:0}
+a{color:#1B4B40}a:hover{color:#12211D}
+.chip{display:inline-block;padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap}
+.sent{background:#E2EFEA;color:#1B4B40}
+.today{background:#FFF1D6;color:#7A4E00}
+.plan{background:#EEF1F0;color:#55635F}
+.block{background:#FDE8E6;color:#9B1C1C;font-weight:600}
+.block::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#9B1C1C;margin-right:6px;animation:oc-pulse 1.6s ease-in-out infinite}
+.flt{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer;transition:background .15s ease,color .15s ease}
+.sub{display:block;font-size:13px;color:#55635F;margin-top:2px}
+.grd{display:grid;grid-template-columns:minmax(130px,1.15fr) minmax(130px,1.1fr) minmax(110px,.9fr) repeat(5,minmax(104px,1fr));align-items:center}
+.hd{border-bottom:1px solid #D9DFDC}
+.hd>div{padding:6px 14px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#55635F;white-space:nowrap}
+.hb{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-left:-8px;padding:0 8px;border:0;border-radius:8px;background:transparent;color:#55635F;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer}
+.hb:hover{background:#EEF1F0;color:#12211D}
+.rw{border-bottom:1px solid #E6EAE8;transition:background .12s ease}
+.rw:last-child{border-bottom:0}
+.rw:hover{background:#F3F5F4}
+.rw>div{padding:14px;font-size:14px}
+.srch{display:flex;align-items:center;gap:8px;height:48px;box-sizing:border-box;padding:0 6px 0 12px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;flex:1 1 280px;max-width:420px}
+.srch:focus-within{outline:2px solid #1B4B40;outline-offset:2px}
+.srch input{flex:1;min-width:0;height:44px;border:0;outline:0;background:transparent;font:400 15px 'Instrument Sans',sans-serif;color:#12211D}
+.tool{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 14px;border-radius:10px;border:1px solid #74827D;background:#FFFFFF;color:#12211D;font:500 15px 'Instrument Sans',sans-serif;cursor:pointer;white-space:nowrap}
+.tool:hover{border-color:#1B4B40}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#12211D;font:400 15px 'Instrument Sans',sans-serif;text-align:left;cursor:pointer}
+.opt:hover{background:#EEF1F0}
+.lnk{min-height:44px;padding:0 8px;border:0;background:transparent;color:#1B4B40;font:600 14px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:underline}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; background: #F3F5F4; color: #12211D; font-family: 'Instrument Sans', sans-serif">
+<div style="flex: 0 0 auto; background: #1B4B40"><dc-import name="Menu" active="suivi" hint-size="250px,100vh"></dc-import></div>
+<div class="oc-in" style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 24px 24px 48px">
+<div class="oc-top">
+<div class="oc-top-l"><a class="oc-back" href="Accueil.dc.html"><img alt="" src="/_blob/efd2570226ac3d08f92890a513783fa0">Accueil</a><span class="oc-crumb"><a href="Accueil.dc.html">Accueil</a> › <b>Suivi des envois</b></span></div>
+<div class="oc-links"><a class="oc-lk" href="Parcours.dc.html">Parcours du séjour</a><a class="oc-lk" href="EnvoiPonctuel.dc.html">Envoyer un message</a><dc-import name="Recherche" hint-size="260px,44px"></dc-import><dc-import name="Cloche" hint-size="44px,44px"></dc-import></div>
+</div>
+<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between">
+<div>
+<div style="font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #1B4B40">OCTAVE · La Maison VH</div>
+<h1 style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 600; line-height: 1.15">Bonjour Joëlle, voici vos envois du jour</h1>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<span style="font-size: 14px; color: #55635F">Samedi 10 octobre</span>
+<span style="font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px dashed #55635F; color: #55635F">Données d'exemple</span>
+</div>
+</header>
+
+<section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<div style="background: #1B4B40; color: #FFFFFF; border-radius: 14px; padding: 20px 22px">
+<div style="font-size: 14px; opacity: .9">Arrivées suivies</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1; margin-top: 6px">5</div>
+<div style="font-size: 13px; margin-top: 4px">dans les 5 prochains jours</div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 20px 22px">
+<div style="font-size: 14px; color: #55635F">À traiter par vous</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 600; line-height: 1.1; margin-top: 6px; color: #9B1C1C">1</div>
+<div style="font-size: 13px; color: #55635F; margin-top: 4px">un envoi est bloqué</div>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 20px 22px">
+<div style="font-size: 14px; color: #55635F">Envoyé depuis</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.2; margin-top: 10px">WhatsApp Business « La Maison VH »</div>
+<div style="font-size: 13px; color: #55635F; margin-top: 6px">E-mail en repli · entre 8 h et 21 h</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600">Alertes</h2>
+<div style="background: #FDE8E6; border: 1px solid #E9B8B3; border-radius: 14px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9B1C1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+<div style="flex: 1 1 320px">
+<div style="font-weight: 600; color: #7A1414">Clé numérique non envoyée — Mme Moreau, Le 1904</div>
+<div style="font-size: 14px; color: #5E1C1C; margin-top: 2px">Le lien d'accès n'est pas encore disponible pour cette réservation. Le message partira dès qu'il le sera.</div>
+</div>
+<a href="Reservation.dc.html" style="display: inline-block; padding: 12px 18px; border-radius: 10px; background: #9B1C1C; color: #FFFFFF; font-weight: 600; font-size: 14px; text-decoration: none">Voir la réservation</a>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 16px 20px; display: flex; gap: 14px; align-items: center">
+<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+<div>
+<div style="font-weight: 600">Pour information — M. Lefèvre reçoit ses messages par e-mail</div>
+<div style="font-size: 14px; color: #55635F; margin-top: 2px">Son numéro n'a pas WhatsApp. Rien à faire de votre côté.</div>
+</div>
+</div>
+</section>
+
+<section id="suivi" style="display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600">Arrivées à venir</h2>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between">
+<label class="srch">
+<img alt="" src="/_blob/f4e7b8262f8e7aea6104eb4cebb3543e" style="width: 20px; height: 20px; flex: none">
+<span class="vh">Rechercher une arrivée</span>
+<input type="text" placeholder="Rechercher un client ou un appartement" value="{{q}}" onChange="{{onQ}}">
+<sc-if value="{{hasQ}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{clearQ}}" aria-label="Effacer la recherche" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #55635F; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+</sc-if>
+</label>
+
+<div style="position: relative">
+<button type="button" class="tool" onClick="{{toggleSort}}" aria-haspopup="true" aria-expanded="{{sortExpanded}}">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5v14"/><path d="m3.5 15.5 3.5 3.5 3.5-3.5"/><path d="M17 19V5"/><path d="m13.5 8.5 3.5-3.5 3.5 3.5"/></svg>
+<span>Trier :</span><strong style="font-weight: 600">{{sortLabel}}</strong><span aria-hidden="true">▾</span>
+</button>
+<sc-if value="{{sortOpen}}" hint-placeholder-val="{{false}}">
+<div role="menu" aria-label="Trier les arrivées" style="position: absolute; right: 0; top: 54px; z-index: 10; width: 320px; max-width: 86vw; box-sizing: border-box; background: #FFFFFF; border: 1px solid #74827D; border-radius: 14px; padding: 6px">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="6">
+<button type="button" class="opt" role="menuitemradio" aria-checked="{{o.checked}}" onClick="{{o.pick}}" style="font-weight: {{o.w}}"><span>{{o.label}}</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B4B40" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; visibility: {{o.mark}}"><path d="m5 12.5 4.5 4.5L19 7"/></svg></button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between">
+<div role="group" aria-label="Filtrer les arrivées" style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" class="flt" onClick="{{setAll}}" aria-pressed="{{f.all.on}}" style="background: {{f.all.bg}}; color: {{f.all.fg}}; border-color: {{f.all.bd}}">Toutes · 5</button>
+<button type="button" class="flt" onClick="{{setTodo}}" aria-pressed="{{f.todo.on}}" style="background: {{f.todo.bg}}; color: {{f.todo.fg}}; border-color: {{f.todo.bd}}">À traiter · 1</button>
+<button type="button" class="flt" onClick="{{setToday}}" aria-pressed="{{f.today.on}}" style="background: {{f.today.bg}}; color: {{f.today.fg}}; border-color: {{f.today.bd}}">Un message part aujourd'hui · 3</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px">
+<span role="status" aria-live="polite" style="font-size: 14px; color: #3A4743">{{countText}}</span>
+<sc-if value="{{dirty}}" hint-placeholder-val="{{false}}">
+<button type="button" class="lnk" onClick="{{reset}}">Tout réinitialiser</button>
+</sc-if>
+</div>
+</div>
+
+<sc-if value="{{some}}" hint-placeholder-val="{{true}}">
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; overflow-x: auto">
+<div role="table" aria-label="Arrivées à venir" style="min-width: 960px">
+<div class="grd hd" role="row">
+<div role="columnheader" aria-sort="{{hs.name}}"><button type="button" class="hb" onClick="{{sortName}}" title="Trier par nom du client">Client<span aria-hidden="true">{{ha.name}}</span></button></div>
+<div role="columnheader" aria-sort="{{hs.apt}}"><button type="button" class="hb" onClick="{{sortApt}}" title="Trier par appartement">Appartement<span aria-hidden="true">{{ha.apt}}</span></button></div>
+<div role="columnheader" aria-sort="{{hs.arr}}"><button type="button" class="hb" onClick="{{sortArr}}" title="Trier par date d'arrivée">Arrivée<span aria-hidden="true">{{ha.arr}}</span></button></div>
+<div role="columnheader">Enregistrement</div>
+<div role="columnheader">Clé numérique</div>
+<div role="columnheader">Parking</div>
+<div role="columnheader">Petit-déjeuner</div>
+<div role="columnheader">Restaurants</div>
+</div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<div class="grd rw" role="row">
+<div role="cell"><sc-if value="{{r.link}}" hint-placeholder-val="{{false}}"><a href="Reservation.dc.html" style="font-weight: 600">{{r.client}}</a></sc-if><sc-if value="{{r.plain}}" hint-placeholder-val="{{true}}"><strong>{{r.client}}</strong></sc-if><span class="sub">{{r.sub}}</span></div>
+<div role="cell">{{r.apt}}<span class="sub">{{r.aptSub}}</span></div>
+<div role="cell"><strong>{{r.arr}}</strong><span class="sub">{{r.arrSub}}</span></div>
+<div role="cell"><span class="chip {{r.c1.cls}}">{{r.c1.txt}}</span></div>
+<div role="cell"><span class="chip {{r.c2.cls}}">{{r.c2.txt}}</span></div>
+<div role="cell"><span class="chip {{r.c3.cls}}">{{r.c3.txt}}</span></div>
+<div role="cell"><span class="chip {{r.c4.cls}}">{{r.c4.txt}}</span></div>
+<div role="cell"><span class="chip {{r.c5.cls}}">{{r.c5.txt}}</span></div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{none}}" hint-placeholder-val="{{false}}">
+<div style="background: #FFFFFF; border: 1px solid #D9DFDC; border-radius: 14px; padding: 36px 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+<img alt="" src="/_blob/f4e7b8262f8e7aea6104eb4cebb3543e" style="width: 40px; height: 40px">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600">Aucune arrivée ne correspond</div>
+<div style="font-size: 15px; color: #3A4743">Vérifiez l'orthographe, ou retirez le filtre actif. La recherche porte sur le nom du client et l'appartement.</div>
+<button type="button" onClick="{{reset}}" style="height: 48px; padding: 0 18px; border-radius: 10px; border: 1px solid #1B4B40; background: #FFFFFF; color: #1B4B40; font: 600 15px 'Instrument Sans', sans-serif; cursor: pointer">Afficher toutes les arrivées</button>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13px; color: #55635F">
+<span>Légende :</span>
+<span class="chip sent">Envoyé</span>
+<span class="chip today">Part aujourd'hui</span>
+<span class="chip plan">Prévu plus tard</span>
+<span class="chip block">Bloqué, à regarder</span>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1360,"height":1400}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = this.state || {};
+const cur = st.filter || 'all';
+const sort = st.sort || 'soon';
+const q = st.q || '';
+const S = { cls: 'sent', txt: 'Envoyé' };
+const T = { cls: 'today', txt: "Aujourd'hui" };
+const P = (d) => ({ cls: 'plan', txt: 'Prévu ' + d });
+const data = [
+{ id: 'brown', client: 'Mr Brown', nm: 'brown', sub: 'Anglais · WhatsApp', apt: 'Victor', aptSub: '', arr: 'Ce soir', arrSub: 'Réservé ce matin', day: 0, next: 9, todo: false, today: false, c1: S, c2: S, c3: S, c4: S, c5: S },
+{ id: 'clarke', client: 'Mrs Clarke', nm: 'clarke', sub: 'Anglais · WhatsApp', apt: 'Sous les Étoiles', aptSub: '', arr: 'Dim. 11 oct.', arrSub: 'Demain', day: 1, next: 0, todo: false, today: true, c1: S, c2: S, c3: S, c4: S, c5: T },
+{ id: 'lefevre', client: 'M. Lefèvre', nm: 'lefevre', sub: 'Français · E-mail', apt: 'Le Voyageur', aptSub: '', arr: 'Lun. 12 oct.', arrSub: 'Dans 2 jours', day: 2, next: 0, todo: false, today: true, c1: S, c2: S, c3: S, c4: T, c5: P('dim. 11') },
+{ id: 'jansen', client: 'Mr Jansen', nm: 'jansen', sub: 'Anglais · WhatsApp', apt: 'Jeanne + Victor', aptSub: 'Une seule clé regroupée', arr: 'Mar. 13 oct.', arrSub: 'Dans 3 jours', day: 3, next: 0, todo: false, today: true, c1: S, c2: S, c3: T, c4: P('dim. 11'), c5: P('lun. 12') },
+{ id: 'moreau', client: 'Mme Moreau', nm: 'moreau', sub: 'Français · WhatsApp', apt: 'Le 1904', aptSub: '', arr: 'Jeu. 15 oct.', arrSub: 'Dans 5 jours', day: 5, next: 1, todo: true, today: false, link: true, c1: S, c2: { cls: 'block', txt: 'Bloqué' }, c3: P('lun. 12'), c4: P('mar. 13'), c5: P('mer. 14') }
+];
+const norm = (x) => x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+const nq = norm(q);
+const cmp = {
+soon: (a, b) => a.day - b.day,
+late: (a, b) => b.day - a.day,
+todo: (a, b) => (b.todo ? 1 : 0) - (a.todo ? 1 : 0) || a.day - b.day,
+next: (a, b) => a.next - b.next || a.day - b.day,
+name: (a, b) => a.nm.localeCompare(b.nm),
+apt: (a, b) => norm(a.apt).localeCompare(norm(b.apt))
+};
+const rows = data
+.filter((r) => (cur === 'all' || (cur === 'todo' && r.todo) || (cur === 'today' && r.today)) && (nq === '' || norm(r.client + ' ' + r.apt + ' ' + r.sub).indexOf(nq) !== -1))
+.sort(cmp[sort])
+.map((r) => Object.assign({}, r, { link: !!r.link, plain: !r.link }));
+const labels = { soon: 'Arrivée la plus proche', late: 'Arrivée la plus lointaine', todo: 'À traiter en premier', next: 'Prochain envoi', name: 'Nom du client, de A à Z', apt: 'Appartement, de A à Z' };
+const opts = Object.keys(labels).map((k) => ({ label: labels[k], checked: k === sort ? 'true' : 'false', mark: k === sort ? 'visible' : 'hidden', w: k === sort ? 600 : 400, pick: () => this.setState({ sort: k, sortOpen: false }) }));
+const f = {};
+['all', 'todo', 'today'].forEach((k) => {
+const on = k === cur;
+f[k] = { on: on ? 'true' : 'false', bg: on ? '#1B4B40' : '#FFFFFF', fg: on ? '#FFFFFF' : '#12211D', bd: on ? '#1B4B40' : '#74827D' };
+});
+const n = rows.length;
+return {
+rows, opts, f, q,
+hasQ: q !== '',
+some: n > 0,
+none: n === 0,
+dirty: cur !== 'all' || q !== '' || sort !== 'soon',
+countText: n === 5 ? '5 arrivées' : n + (n > 1 ? ' arrivées sur 5' : ' arrivée sur 5'),
+sortLabel: labels[sort],
+sortOpen: !!st.sortOpen,
+sortExpanded: st.sortOpen ? 'true' : 'false',
+hs: { name: sort === 'name' ? 'ascending' : 'none', apt: sort === 'apt' ? 'ascending' : 'none', arr: sort === 'soon' ? 'ascending' : sort === 'late' ? 'descending' : 'none' },
+ha: { name: sort === 'name' ? '↑' : '', apt: sort === 'apt' ? '↑' : '', arr: sort === 'soon' ? '↑' : sort === 'late' ? '↓' : '' },
+toggleSort: () => this.setState({ sortOpen: !st.sortOpen }),
+sortName: () => this.setState({ sort: 'name', sortOpen: false }),
+sortApt: () => this.setState({ sort: 'apt', sortOpen: false }),
+sortArr: () => this.setState({ sort: sort === 'soon' ? 'late' : 'soon', sortOpen: false }),
+onQ: (e) => this.setState({ q: e.target.value }),
+clearQ: () => this.setState({ q: '' }),
+setAll: () => this.setState({ filter: 'all' }),
+setTodo: () => this.setState({ filter: 'todo' }),
+setToday: () => this.setState({ filter: 'today' }),
+reset: () => this.setState({ filter: 'all', q: '', sort: 'soon', sortOpen: false })
+};
+}
+}
+</script>
+</body>
+</html>

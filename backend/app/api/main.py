@@ -14,8 +14,8 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app import services
-from app.api import ui
+from app import demo, services
+from app.api import appli, ui
 from app.core.config import Parametres, parametres
 from app.core.horloge import en_local
 from app.db.base import Base, creer_moteur, fabrique_sessions
@@ -38,6 +38,11 @@ def creer_app(p: Parametres | None = None, fabrique: sessionmaker[Session] | Non
         fabrique = fabrique_sessions(moteur)
     deps = deps or services.construire_dependances(p)
     app = FastAPI(title="Moki", version="0.1.0")
+    if p.demo_seed:
+        with fabrique() as s_demo:
+            if not demo.deja_peuple(s_demo):
+                demo.peupler(s_demo, deps.horloge)
+    app.include_router(appli.routeur(p, fabrique, deps))
     securite = HTTPBasic()
 
     def console(creds: HTTPBasicCredentials = Depends(securite)) -> str:

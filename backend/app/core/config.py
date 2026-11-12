@@ -1,12 +1,13 @@
 """Paramètres de l'application, lus dans l'environnement (préfixe MOKI_)."""
 
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Parametres(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="MOKI_", env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="MOKI_", env_file=str(Path(__file__).resolve().parents[3] / ".env"), extra="ignore")
 
     env: str = "dev"
     database_url: str = "sqlite+pysqlite:///./moki_dev.db"
@@ -34,6 +35,10 @@ class Parametres(BaseSettings):
     heure_resume: int = 19
     seuil_confirmation_renforcee: int = 50_000
     dossier_factures: str = "factures"
+    acces_demo: bool = False
+    url_publique: str = ""
+    port: int = 8000
+    demo_seed: bool = False
 
 
 @lru_cache

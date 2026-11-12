@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.horloge import Horloge
-from app.db.modeles import Action, Client, Facture, Paiement, Pme, Produit, Vente
+from app.db.modeles import Action, Client, Depense, Facture, Paiement, Pme, Produit, Vente
 from app.domaine import factures as dom_factures
 from app.domaine import paiements as dom_paiements
 from app.domaine import ventes as dom_ventes
@@ -47,6 +47,10 @@ def annuler(session: Session, pme: Pme, action: Action, horloge: Horloge) -> str
         produit = session.get(Produit, action.cible_id)
         if produit is not None and produit.pme_id == pme.id:
             produit.actif = False
+    elif action.type == "DEPENSE":
+        dep = session.get(Depense, action.cible_id)
+        if dep is not None and dep.pme_id == pme.id:
+            dep.statut = "annulee"
     elif action.type == "CLIENT":
         client = session.get(Client, action.cible_id)
         if client is not None and client.pme_id == pme.id:

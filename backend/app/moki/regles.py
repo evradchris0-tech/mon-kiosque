@@ -22,7 +22,7 @@ from app.moki import reponses
 from app.moki.schemas import Decision, Intention, Interpretation, ModePaiement
 
 SEUIL_CONFIANCE = 0.6
-FACTEUR_INHABITUEL = 3
+FACTEUR_INHABITUEL = 8
 MIN_VENTES_POUR_MOYENNE = 20
 MOTS_PIEGE = ("tous mes clients", "tout le monde", "ignore", "oublie tes", "contourne")
 
@@ -85,6 +85,14 @@ def evaluer(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge
     if i == Intention.RESUME:
         periode = interp.periode.model_dump(mode="json") if interp.periode else None
         return Verdict(Decision.EXECUTER, action={"type": "RESUME", "periode": periode})
+    if i == Intention.BILAN:
+        return Verdict(Decision.EXECUTER, action={"type": "BILAN"})
+    if i == Intention.DOSSIER_CREDIT:
+        return Verdict(Decision.EXECUTER, action={"type": "DOSSIER_CREDIT"})
+    if i == Intention.IMPOT:
+        return Verdict(Decision.EXECUTER, action={"type": "IMPOT"})
+    if i == Intention.ECHEANCES:
+        return Verdict(Decision.EXECUTER, action={"type": "ECHEANCES"})
     if i == Intention.AUTRE:
         raison = (interp.hors_perimetre.raison if interp.hors_perimetre else "") or ""
         if any(m in raison.lower() for m in MOTS_PIEGE) or "masse" in raison.lower():
@@ -96,6 +104,11 @@ def evaluer(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge
     if interp.confiance < SEUIL_CONFIANCE:
         return _precision(interp.question_a_poser or reponses.incompris(), interp, "confiance_basse")
 
+    if i == Intention.DEPENSE:
+        return _depense(interp)
+    if i == Intention.CHANGER_NATURE:
+        nature = interp.depense.nature.value if interp.depense else "perso"
+        return Verdict(Decision.EXECUTER, action={"type": "CHANGER_NATURE", "nature": nature})
     if i == Intention.PRODUIT:
         return _produit(interp)
     if i == Intention.CLIENT:
@@ -113,7 +126,27 @@ def evaluer(session: Session, pme: Pme, interp: Interpretation, horloge: Horloge
     return Verdict(Decision.REFUSER, message=reponses.incompris(), motif="intention_inconnue")
 
 
+def _depense(interp: Interpretation) -> Verdict:
+    d = interp.depense
+    if d is None or not d.montant or d.montant <= 0:
+        return _precision(interp.question_a_poser or reponses.precision_depense(), interp, "depense_sans_montant")
+    nature = d.nature.value
+    libelle = (d.libelle or "").strip()
+    if not libelle:
+        if nature == "perso":
+            libelle = "retrait personnel"
+        else:
+            return _precision("C'était pour quoi ? (loyer, électricité, salaire, stock…)", interp, "depense_sans_libelle")
+    type_depense = "retrait_perso" if nature == "perso" else d.type.value
+    return Verdict(Decision.EXECUTER, action={"type": "DEPENSE", "libelle": libelle, "montant": d.montant, "nature": nature, "type_depense": type_depense})
+
+
 def _produit(interp: Interpretation) -> Verdict:
+    if interp.action_produit == "supprimer":
+        nom = interp.lignes[0].produit if interp.lignes else None
+        if not nom:
+            return _precision("Quel produit veux-tu retirer du catalogue ?", interp, "produit_sans_nom")
+        return Verdict(Decision.EXECUTER, action={"type": "PRODUIT_SUPPR", "nom": nom.strip()})
     if not interp.lignes or not interp.lignes[0].produit or not interp.lignes[0].prix_unitaire:
         return _precision("Quel produit, et à quel prix ?", interp, "produit_incomplet")
     ligne = interp.lignes[0]

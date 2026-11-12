@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import date
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -27,6 +28,12 @@ class Intention(StrEnum):
     HUMAIN = "HUMAIN"
     CONFIRMATION = "CONFIRMATION"
     AUTRE = "AUTRE"
+    DEPENSE = "DEPENSE"
+    CHANGER_NATURE = "CHANGER_NATURE"
+    BILAN = "BILAN"
+    DOSSIER_CREDIT = "DOSSIER_CREDIT"
+    IMPOT = "IMPOT"
+    ECHEANCES = "ECHEANCES"
 
 
 class ModePaiement(StrEnum):
@@ -42,6 +49,16 @@ class TypePeriode(StrEnum):
     SEMAINE = "semaine"
     MOIS = "mois"
     PERSONNALISEE = "personnalisee"
+
+
+class TypeDepense(StrEnum):
+    CHARGE = "charge"
+    STOCK = "stock"
+
+
+class Nature(StrEnum):
+    PRO = "pro"
+    PERSO = "perso"
 
 
 class Decision(StrEnum):
@@ -105,6 +122,15 @@ class HorsPerimetre(BaseModel):
     raison: str | None = None
 
 
+class DepenseCitee(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    libelle: str | None = Field(default=None, description="Pour quoi (loyer, électricité, salaire, transport, stock...)")
+    montant: int | None = Field(default=None, description="Montant en FCFA")
+    type: TypeDepense = Field(default=TypeDepense.CHARGE, description="charge = frais du commerce ; stock = achat de marchandise à revendre")
+    nature: Nature = Field(default=Nature.PRO, description="pro par défaut ; perso si dépense personnelle ou retrait pour soi")
+
+
 class Interpretation(BaseModel):
     """Ce que le modèle a compris. Jamais de total : il est recalculé en code."""
 
@@ -121,6 +147,8 @@ class Interpretation(BaseModel):
     ambiguites: list[str] = Field(default_factory=list)
     question_a_poser: str | None = None
     hors_perimetre: HorsPerimetre | None = None
+    depense: DepenseCitee | None = None
+    action_produit: Literal["ajouter", "modifier", "supprimer"] = "ajouter"
     reponse_libre: str | None = Field(
         default=None,
         description="Texte libre, uniquement pour AIDE et AUTRE, jamais de montant",

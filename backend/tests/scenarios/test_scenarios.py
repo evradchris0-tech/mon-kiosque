@@ -202,12 +202,20 @@ def test_expiration_action_en_attente(banc):
         assert s.scalar(select(func.count(Vente.id))) == 0
 
 
-def test_numero_inconnu_refuse(banc):
-    r = banc.envoyer("j'ai vendu 3 paires à 5000 cash", numero="237699999999")
-    assert "pas encore inscrit" in r[0]
+def test_numero_inconnu_lance_l_inscription_puis_cree_le_compte(banc):
+    nouveau = "237699999999"
+    r = banc.envoyer("j'ai vendu 3 paires à 5000 cash", numero=nouveau)
+    assert "Bienvenue" in r[0] and "commerce" in r[0]
     with banc.session() as s:
-        assert s.scalar(select(func.count(Vente.id))) == 0
-        assert s.scalar(select(func.count(CasAVerifier.id))) == 1
+        assert s.scalar(select(func.count(Vente.id))) == 0  # rien n'est enregistré avant l'inscription
+    assert "ville" in banc.envoyer("Boutique Test", numero=nouveau)[0]
+    assert "secteur" in banc.envoyer("Douala", numero=nouveau)[0]
+    assert "ouvert" in banc.envoyer("boutique", numero=nouveau)[0]
+    r = banc.envoyer("j'ai vendu 3 paires à 5000 cash", numero=nouveau)
+    assert n(15000) in r[0]
+    with banc.session() as s:
+        from app.db.modeles import Pme
+        assert s.scalars(select(Pme).where(Pme.numero_whatsapp == nouveau)).one().nom_commerce == "Boutique Test"
 
 
 def test_panne_modele_aucune_donnee_et_message_honnete(banc):

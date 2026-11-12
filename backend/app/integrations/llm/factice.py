@@ -19,12 +19,15 @@ from app.integrations.llm.interface import (
 )
 from app.moki.schemas import (
     ClientCite,
+    DepenseCitee,
     Frais,
     Intention,
     Interpretation,
     Ligne,
     ModePaiement,
+    Nature,
     Periode,
+    TypeDepense,
     TypePeriode,
 )
 
@@ -121,6 +124,27 @@ class InterpreteRegles:
             return Interpretation(intention=Intention.HUMAIN, confiance=0.9)
         if re.search(r"\b(aide|tu peux faire quoi|tu sais faire quoi|comment ca marche)\b", t):
             return Interpretation(intention=Intention.AIDE, confiance=0.9)
+        if re.search(r"dossier (de |du )?credit|dossier bancaire|\bmon dossier\b", t):
+            return Interpretation(intention=Intention.DOSSIER_CREDIT, confiance=0.95)
+        if re.search(r"\b(echeances?|prochaine declaration|date limite)\b", t):
+            return Interpretation(intention=Intention.ECHEANCES, confiance=0.9)
+        if (re.search(r"\bigs\b", t) or re.search(r"\b(mon|mes|estimation|estime|combien)\b.{0,25}\bimpots?\b", t)) and not re.search(r"\b(comment|declarer|declaration|frauder|eviter|moins)\b", t):
+            return Interpretation(intention=Intention.IMPOT, confiance=0.9)
+        if re.search(r"\b(tresorerie|benefices?|argent disponible|en caisse|j ai gagne)\b", t):
+            return Interpretation(intention=Intention.BILAN, confiance=0.9)
+        m_nature = re.search(r"\bc est (perso|personnel|personnelle|pro|professionnel|professionnelle)\b", t)
+        if m_nature:
+            perso = m_nature.group(1).startswith("perso")
+            return Interpretation(intention=Intention.CHANGER_NATURE, confiance=0.9, depense=DepenseCitee(nature=Nature.PERSO if perso else Nature.PRO))
+        if re.search(r"\bj ?ai (paye|depense|verse|achete|retire)\b|\b(depense|retrait) (de|d)\b|\bj ai pris \d.*pour moi\b|\bje (retire|prends) \d", t):
+            return self._depense(texte, t)
+        m_sup = re.match(r"^\s*(?:supprime|supprimer|efface|enleve|enl\u00e8ve|retire)\s+(?:le produit\s+|la |le |les |l')?(.+?)(?:\s+du catalogue)?\s*$", texte, re.IGNORECASE)
+        if m_sup:
+            return Interpretation(intention=Intention.PRODUIT, confiance=0.9, action_produit="supprimer", lignes=[Ligne(produit=m_sup.group(1).strip(), quantite=None, prix_unitaire=None)])
+        if re.match(r"^\s*(change|modifie|mets|met)\b.*\bprix\b", texte, re.IGNORECASE):
+            m_mod = re.search(r"prix (?:de |des |du |d')?(.+?) (?:\u00e0|a|en) (\d[\d .\u202f]*k?)", texte, re.IGNORECASE)
+            if m_mod and lire_montant(m_mod.group(2)):
+                return Interpretation(intention=Intention.PRODUIT, confiance=0.9, action_produit="modifier", lignes=[Ligne(produit=m_mod.group(1).strip(), quantite=None, prix_unitaire=lire_montant(m_mod.group(2)))])
         if re.search(r"\b(impots?|fiscal|avocat|tribunal|medecin|maladie|sante)\b", t):
             return Interpretation(
                 intention=Intention.AUTRE, confiance=0.9, hors_perimetre={"raison": "conseil hors périmètre"}
@@ -151,6 +175,22 @@ class InterpreteRegles:
         return Interpretation(intention=Intention.AUTRE, confiance=0.3, question_a_poser=None)
 
     # ---- intentions ----
+
+    def _depense(self, texte: str, t: str) -> Interpretation:
+        m = re.search(r"(\d[\d .\u202f]*k?)", texte)
+        montant = lire_montant(m.group(1)) if m else None
+        perso = bool(re.search(r"\b(pour moi|perso|personnel|personnelle|maison|enfants?|ecole|famille|retire|retrait|prends)\b", t))
+        stock = bool(re.search(r"\b(stock|marchandises?|approvisionnement|fournisseur|achete)\b", t)) and not perso
+        reste = texte.replace(m.group(1), " ", 1) if m else texte
+        reste = re.sub(r"(?i)\b(?:j'ai|jai|d'|l')\s*", " ", reste)
+        reste = re.sub(r"(?i)\b(?:j|ai|je|paye|pay\u00e9|d\u00e9pens\u00e9|depense|d\u00e9pense|verse|vers\u00e9|achet\u00e9|achete|retir\u00e9|retire|retrait|prends|pris|de|du|des|pour|le|la|les|moi|francs?|fcfa|f|en|un|une)\b", " ", reste)
+        libelle = re.sub(r"\s+", " ", re.sub(r"[^\w\u00c0-\u00ff' -]", " ", reste)).strip() or None
+        return Interpretation(
+            intention=Intention.DEPENSE,
+            confiance=0.85 if montant else 0.5,
+            depense=DepenseCitee(libelle=libelle, montant=montant, type=TypeDepense.STOCK if stock else TypeDepense.CHARGE, nature=Nature.PERSO if perso else Nature.PRO),
+            question_a_poser=None if montant else "C'\u00e9tait pour quoi, et combien ?",
+        )
 
     def _lignes(self, texte: str) -> tuple[list[Ligne], list[str]]:
         lignes: list[Ligne] = []

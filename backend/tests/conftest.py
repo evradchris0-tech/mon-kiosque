@@ -17,6 +17,8 @@ from app.integrations.stt.interface import TranscripteurFactice
 from app.integrations.whatsapp.interface import CanalFactice
 from app.moki import pipeline
 
+Parametres.model_config["env_file"] = None  # les tests ne lisent jamais le .env local
+
 NUM_A = "237677000001"
 NUM_B = "237677000002"
 

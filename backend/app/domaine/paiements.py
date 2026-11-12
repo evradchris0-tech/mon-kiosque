@@ -94,24 +94,28 @@ def total_impayes(session: Session, pme: Pme) -> int:
     return sum(f.total for f in factures) + sum(v.credit_restant for v in ventes)
 
 
-def impayes_par_client(session: Session, pme: Pme) -> list[tuple[str, int, str]]:
-    """(nom, montant dû, détail) trié par montant décroissant."""
+def impayes_par_client(session: Session, pme: Pme, horloge: Horloge | None = None) -> list[tuple[str, int, str]]:
+    """(nom, montant dû, détail) trié par montant décroissant puis par retard."""
     cumul: dict[int | None, list] = {}
     for f in dom_factures.ouvertes(session, pme):
-        cumul.setdefault(f.client_id, [0, []])
-        cumul[f.client_id][0] += f.total
-        cumul[f.client_id][1].append(f"facture n° {f.numero:03d}")
+        retard = dom_factures.jours_de_retard(f, horloge) if horloge else 0
+        entree = cumul.setdefault(f.client_id, [0, [], 0])
+        entree[0] += f.total
+        entree[1].append(f"facture n° {f.numero:03d}" + (f", {retard} j de retard" if retard > 0 else ""))
+        entree[2] = max(entree[2], retard)
     for v in dom_ventes.ventes_a_credit(session, pme):
-        cle = v.client_id
-        cumul.setdefault(cle, [0, []])
-        cumul[cle][0] += v.credit_restant
-        cumul[cle][1].append("vente à crédit")
-    resultat: list[tuple[str, int, str]] = []
-    for client_id, (montant, details) in cumul.items():
+        retard = max(0, (horloge.maintenant() - v.heure_envoi).days) if horloge else 0
+        entree = cumul.setdefault(v.client_id, [0, [], 0])
+        entree[0] += v.credit_restant
+        entree[1].append("vente à crédit" + (f", depuis {retard} j" if retard > 0 else ""))
+        entree[2] = max(entree[2], retard)
+    resultat: list[tuple[str, int, str, int]] = []
+    for client_id, (montant, details, retard) in cumul.items():
         nom = "client non identifié"
         if client_id is not None:
             client = session.scalar(select(Client).where(Client.id == client_id, Client.pme_id == pme.id))
             if client is not None:
                 nom = client.nom
-        resultat.append((nom, montant, ", ".join(details)))
-    return sorted(resultat, key=lambda x: -x[1])
+        resultat.append((nom, montant, ", ".join(details), retard))
+    resultat.sort(key=lambda x: (-x[1], -x[3]))
+    return [(n, m, d) for n, m, d, _ in resultat]

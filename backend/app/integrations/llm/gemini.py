@@ -20,7 +20,7 @@ class InterpreteGemini:
         if not cle:
             raise ValueError("clé Gemini absente")
         self.cle, self.modele = cle, modele
-        self.client = client or httpx.Client(timeout=90.0)
+        self.client = client or httpx.Client(timeout=6.0)
         schema = json.dumps(Interpretation.model_json_schema(), ensure_ascii=False)
         self.systeme = charger_prompt_systeme() + "\n\n## Format de sortie\nRéponds par un unique objet JSON valide pour ce schéma JSON :\n" + schema
 
@@ -31,13 +31,13 @@ class InterpreteGemini:
             "generationConfig": {"responseMimeType": "application/json", "temperature": 0, "maxOutputTokens": 2048},
         }
         derniere = ""
-        for tentative in range(3):
+        for tentative in range(2):
             try:
                 r = self.client.post(URL.format(modele=self.modele), json=corps, headers={"x-goog-api-key": self.cle})
             except httpx.HTTPError as e:
                 raise ErreurInterprete(f"réseau : {e}") from e
-            if r.status_code in (429, 500, 503) and tentative < 2:
-                time.sleep(2 * (tentative + 1))
+            if r.status_code in (429, 500, 503) and tentative < 1:
+                time.sleep(1)
                 continue
             if r.status_code >= 400:
                 raise ErreurInterprete(f"erreur API {r.status_code} : {r.text[:200]}")

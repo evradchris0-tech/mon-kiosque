@@ -44,6 +44,7 @@ class Pme(Base):
     statut_abonnement: Mapped[str] = mapped_column(String(20), default="pilote")
     consentement_corpus: Mapped[bool] = mapped_column(Boolean, default=False)
     consentement_corpus_date: Mapped[datetime | None] = mapped_column(DateTime)
+    donnees_fictives: Mapped[bool] = mapped_column(Boolean, default=False)
     date_inscription: Mapped[datetime] = mapped_column(DateTime)
 
     numeros: Mapped[list[NumeroAutorise]] = relationship(back_populates="pme")
@@ -254,6 +255,33 @@ class Action(Base):
     creee_a: Mapped[datetime] = mapped_column(DateTime)
     annulable_jusqua: Mapped[datetime | None] = mapped_column(DateTime)
     annulee: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class Depense(Base):
+    __tablename__ = "depenses"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pme_id: Mapped[int] = mapped_column(ForeignKey("pme.id"), index=True)
+    libelle: Mapped[str] = mapped_column(String(120))
+    montant: Mapped[int] = mapped_column(Integer)
+    type: Mapped[str] = mapped_column(String(20), default="charge")  # charge | stock | retrait_perso
+    nature: Mapped[str] = mapped_column(String(10), default="pro")  # pro | perso
+    heure_envoi: Mapped[datetime] = mapped_column(DateTime, index=True)
+    heure_reception: Mapped[datetime] = mapped_column(DateTime)
+    statut: Mapped[str] = mapped_column(String(20), default="active")
+    message_id: Mapped[int | None] = mapped_column(ForeignKey("messages.id"))
+
+
+class Inscription(Base):
+    __tablename__ = "inscriptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    numero: Mapped[str] = mapped_column(String(20), unique=True)
+    etape: Mapped[str] = mapped_column(String(20), default="nom")
+    nom_commerce: Mapped[str | None] = mapped_column(String(120))
+    ville: Mapped[str | None] = mapped_column(String(60))
+    secteur: Mapped[str | None] = mapped_column(String(60))
+    cree_a: Mapped[datetime] = mapped_column(DateTime)
 
 
 Index("ix_journal_pme_cree", Journal.pme_id, Journal.cree_a)

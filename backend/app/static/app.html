@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#FF7900">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mon Kiosque">
+<title>Mon Kiosque · Moki</title>
+<style>
+:root{
+  --orange:#FF7900;--orange-fonce:#E65100;--orange-clair:#FFB066;--orange-pale:#FFF1E3;
+  --violet:#6A5ACD;--violet-clair:#9F90FF;--violet-pale:#F0EEFC;
+  --noir:#0A0A0A;--gris:#6B6B6B;--nuage:#EDEDED;--papier:#F7F7F7;--blanc:#fff;
+  --vert:#2E7D32;--vert-pale:#E3F4E5;--ambre:#F9A825;--ambre-pale:#FFF4D6;--rouge:#D32F2F;--rouge-pale:#FDE8E8;
+  --ombre:0 6px 20px rgba(10,10,10,.07);--ombre-forte:0 18px 50px rgba(10,10,10,.22);
+  --nav:64px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--noir);
+  background:radial-gradient(1200px 600px at 20% -10%,#ffd9b3 0,transparent 60%),radial-gradient(900px 500px at 100% 110%,#d9d3ff 0,transparent 55%),#f3efe9;
+  display:flex;justify-content:center;align-items:center}
+.hidden{display:none!important}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit}
+
+/* ---- cadre téléphone ---- */
+#app{position:relative;width:100%;max-width:430px;height:100dvh;background:var(--papier);overflow:hidden;display:flex;flex-direction:column}
+@media(min-width:480px){#app{height:min(900px,96dvh);border-radius:34px;box-shadow:var(--ombre-forte);border:8px solid #111}}
+
+/* ---- connexion ---- */
+#login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 28px calc(32px + env(safe-area-inset-bottom));
+  background:linear-gradient(160deg,#fff 0,#fff 45%,var(--orange-pale) 100%);position:relative;overflow:hidden}
+#login::before,#login::after{content:"";position:absolute;border-radius:50%;z-index:0}
+#login::before{width:300px;height:300px;right:-120px;top:-100px;background:radial-gradient(circle,rgba(255,121,0,.28),transparent 70%)}
+#login::after{width:280px;height:280px;left:-120px;bottom:-90px;background:radial-gradient(circle,rgba(106,90,205,.25),transparent 70%)}
+#login>*{position:relative;z-index:1}
+.logo{width:76px;height:76px;border-radius:24px;background:linear-gradient(135deg,var(--violet),var(--violet-clair));display:grid;place-items:center;
+  color:#fff;font-size:38px;box-shadow:0 12px 28px rgba(106,90,205,.4);animation:flotte 3.2s ease-in-out infinite}
+@keyframes flotte{50%{transform:translateY(-6px)}}
+#login h1{font-size:32px;margin:22px 0 6px;letter-spacing:-.02em}
+#login h1 span{color:var(--orange)}
+#login p.slogan{color:var(--gris);margin:0 0 30px;font-size:16px}
+#login p.slogan b{color:var(--violet)}
+.champ{display:block;font-size:13px;font-weight:700;color:var(--gris);margin-bottom:8px}
+.saisie-num{display:flex;align-items:center;background:#fff;border:2px solid var(--nuage);border-radius:16px;padding:0 14px;transition:border-color .2s,box-shadow .2s}
+.saisie-num:focus-within{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,121,0,.15)}
+.saisie-num svg{flex:none;color:var(--vert)}
+.saisie-num input{flex:1;border:0;outline:0;background:none;padding:15px 10px;font-size:18px;font-weight:600;letter-spacing:.02em;min-width:0}
+.btn{display:block;width:100%;padding:15px;border-radius:16px;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(135deg,var(--orange),var(--orange-fonce));
+  box-shadow:0 10px 22px rgba(255,121,0,.35);transition:transform .15s,box-shadow .15s,opacity .2s}
+.btn:active{transform:scale(.97);box-shadow:0 4px 10px rgba(255,121,0,.3)}
+.btn:disabled{opacity:.6;cursor:wait}
+#login .btn{margin-top:18px}
+.lien{display:block;margin:18px auto 0;color:var(--violet);font-weight:700;font-size:14px;padding:6px}
+.erreur-login{color:var(--rouge);font-size:13px;margin-top:10px;min-height:18px;text-align:center}
+.pied-login{margin-top:30px;text-align:center;color:var(--gris);font-size:12px}
+
+/* ---- coque ---- */
+#shell{flex:1;display:flex;flex-direction:column;min-height:0}
+.entete{flex:none;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:#fff;border-bottom:1px solid var(--nuage)}
+.entete .logo{width:36px;height:36px;border-radius:12px;font-size:19px;box-shadow:none;animation:none}
+.entete .qui{flex:1;min-width:0}
+.entete .qui b{display:block;font-size:16px;line-height:1.15}
+.entete .qui span{display:block;font-size:12px;color:var(--gris);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entete .qui span i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2fbf4a;margin-right:5px;vertical-align:1px}
+.deco{font-size:12px;font-weight:700;color:var(--gris);padding:7px 12px;border-radius:999px;background:var(--papier);border:1px solid var(--nuage)}
+.deco:active{background:var(--nuage)}
+#vues{flex:1;position:relative;min-height:0}
+.vue{position:absolute;inset:0;display:none;flex-direction:column;min-height:0}
+.vue.actif{display:flex;animation:entree .3s ease}
+@keyframes entree{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+nav{flex:none;display:flex;background:#fff;border-top:1px solid var(--nuage);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -6px 20px rgba(10,10,10,.05)}
+nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--gris);font-size:11.5px;font-weight:700;position:relative;transition:color .2s}
+nav button svg{width:24px;height:24px}
+nav button.actif{color:var(--orange)}
+nav button.actif::before{content:"";position:absolute;top:0;width:34px;height:3px;border-radius:0 0 4px 4px;background:var(--orange)}
+
+/* ---- chat ---- */
+#vue-chat{background:#EFE7DD;background-image:radial-gradient(rgba(106,90,205,.06) 1.5px,transparent 1.5px);background-size:22px 22px}
+#msgs{flex:1;overflow-y:auto;padding:14px 12px 6px;display:flex;flex-direction:column;gap:7px;scroll-behavior:smooth}
+.bulle{max-width:84%;padding:9px 13px 8px;border-radius:18px;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 1px 2px rgba(0,0,0,.1);animation:pop .28s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+.bulle.moi{align-self:flex-end;background:#FFE3C7;border-bottom-right-radius:5px}
+.bulle.moki{align-self:flex-start;background:#fff;border-bottom-left-radius:5px;position:relative}
+.bulle.moki.err{background:var(--rouge-pale);color:var(--rouge)}
+.bulle .qui-moki{display:block;font-size:11px;font-weight:800;color:var(--violet);margin-bottom:2px;letter-spacing:.02em}
+.bulle time{display:block;text-align:right;font-size:10.5px;color:var(--gris);margin-top:3px}
+.doc{align-self:flex-start;display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:10px 14px 10px 10px;box-shadow:0 1px 2px rgba(0,0,0,.1);text-decoration:none;color:inherit;animation:pop .28s cubic-bezier(.2,.9,.3,1.3);max-width:84%}
+.doc .ico{flex:none;width:42px;height:46px;border-radius:10px;background:var(--rouge-pale);display:grid;place-items:center;font-size:22px}
+.doc b{display:block;font-size:14px;word-break:break-word}
+.doc span{display:block;font-size:12px;color:var(--violet);font-weight:700}
+.tape{align-self:flex-start;background:#fff;border-radius:18px;border-bottom-left-radius:5px;padding:11px 15px;box-shadow:0 1px 2px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px;color:var(--gris);font-size:13px;font-style:italic}
+.points{display:flex;gap:4px}
+.points i{width:7px;height:7px;border-radius:50%;background:var(--violet-clair);animation:saut 1s infinite ease-in-out}
+.points i:nth-child(2){animation-delay:.15s}.points i:nth-child(3){animation-delay:.3s}
+@keyframes saut{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+#rapide{flex:none;display:flex;gap:10px;padding:8px 12px 0}
+#rapide button{flex:1;padding:12px;border-radius:14px;font-weight:800;font-size:15px;color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.12);animation:pop .25s ease}
+#rapide .oui{background:var(--vert)}#rapide .non{background:#8a8a8a;flex:.6}#rapide .mot{background:var(--violet)}
+#puces{flex:none;display:flex;gap:8px;padding:8px 12px;overflow-x:auto;scrollbar-width:none}
+#puces::-webkit-scrollbar{display:none}
+#puces button{flex:none;background:#fff;border:1px solid var(--nuage);color:var(--noir);font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.06);white-space:nowrap;transition:transform .12s}
+#puces button:active{transform:scale(.95);background:var(--violet-pale)}
+#form-chat{flex:none;display:flex;align-items:center;gap:8px;padding:6px 12px 12px;background:transparent}
+#texte{flex:1;min-width:0;border:0;outline:0;background:#fff;border-radius:999px;padding:13px 18px;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.rond{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 6px 14px rgba(255,121,0,.35);transition:transform .15s,background .2s}
+.rond:active{transform:scale(.92)}
+#envoyer{background:var(--orange)}
+#micro{background:var(--violet);box-shadow:0 6px 14px rgba(106,90,205,.35)}
+#micro.ecoute{background:var(--rouge);animation:pulse 1.1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(211,47,47,.5)}100%{box-shadow:0 0 0 16px rgba(211,47,47,0)}}
+
+/* ---- tableau / dossier ---- */
+.defile{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:20px;-webkit-overflow-scrolling:touch}
+.bandeau{background:linear-gradient(140deg,var(--orange) 0,var(--orange-fonce) 100%);color:#fff;padding:18px 18px 62px;position:relative;overflow:hidden}
+.bandeau::after{content:"";position:absolute;right:-50px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.12)}
+.bandeau small{display:block;opacity:.85;font-size:12.5px;font-weight:600}
+.bandeau h2{margin:2px 0 0;font-size:22px;letter-spacing:-.01em;position:relative;z-index:1}
+.pastille-demo{display:inline-block;margin-top:8px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.5);padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:800;position:relative;z-index:1}
+.contenu{padding:0 14px;margin-top:-46px;position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
+.carte{background:#fff;border-radius:22px;padding:16px;box-shadow:var(--ombre)}
+.carte h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.carte h3 em{font-style:normal;font-size:12px;font-weight:700;color:var(--gris)}
+.sous{color:var(--gris);font-size:12.5px;margin-top:4px}
+.heros .lib{font-size:13px;color:var(--gris);font-weight:700}
+.heros .gros{font-size:38px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin:4px 0 2px;color:var(--noir)}
+.heros .nb{display:inline-block;background:var(--vert-pale);color:var(--vert);font-weight:800;font-size:12.5px;padding:3px 11px;border-radius:999px}
+.seg{display:flex;background:var(--papier);border-radius:14px;padding:4px;margin:16px 0 14px}
+.seg button{flex:1;padding:8px;border-radius:11px;font-weight:800;font-size:13px;color:var(--gris);transition:all .2s}
+.seg button.actif{background:#fff;color:var(--orange);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trio div{background:var(--papier);border-radius:14px;padding:10px 8px;text-align:center}
+.trio span{display:block;font-size:11.5px;color:var(--gris);font-weight:700}
+.trio b{display:block;font-size:14.5px;margin-top:3px;white-space:nowrap}
+.trio .ben b{color:var(--vert)}.trio .neg b{color:var(--rouge)}.trio .cha b{color:var(--orange-fonce)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .carte{padding:14px}
+.kpi .ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:17px;margin-bottom:10px}
+.kpi .lib{font-size:12.5px;color:var(--gris);font-weight:700}
+.kpi .val{font-size:21px;font-weight:900;letter-spacing:-.02em;margin:2px 0 4px;white-space:nowrap}
+.kpi.tres .ic{background:var(--violet-pale)}.kpi.tres .val{color:var(--violet)}
+.kpi.ben .ic{background:var(--vert-pale)}.kpi.ben .val{color:var(--vert)}.kpi.ben .val.neg{color:var(--rouge)}
+.kpi .sous{margin:0;font-size:11.5px}
+.perso{display:flex;align-items:center;gap:14px;border:2px dashed #D9D4F6;background:var(--violet-pale);box-shadow:none}
+.perso .ic{flex:none;width:44px;height:44px;border-radius:14px;background:#fff;display:grid;place-items:center;font-size:21px}
+.perso .val{font-size:20px;font-weight:900;color:var(--violet);white-space:nowrap}
+.perso .lib{font-size:13px;font-weight:700}
+.perso .sous{margin:0}
+.barres{display:flex;align-items:flex-end;gap:9px;height:150px;padding-top:18px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.col .v{font-size:10.5px;font-weight:800;color:var(--gris);margin-bottom:4px;white-space:nowrap}
+.col .b{width:100%;max-width:34px;border-radius:9px 9px 4px 4px;background:linear-gradient(180deg,var(--orange-clair),#ffd5ad);height:0;transition:height .9s cubic-bezier(.2,.9,.2,1)}
+.col.dernier .b{background:linear-gradient(180deg,var(--orange),var(--orange-fonce))}
+.col.dernier .v{color:var(--orange-fonce)}
+.col .j{font-size:11.5px;color:var(--gris);font-weight:700;margin-top:7px}
+.liste{display:flex;flex-direction:column}
+.ligne{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--papier)}
+.ligne:last-child{border-bottom:0;padding-bottom:2px}
+.ligne:first-child{padding-top:2px}
+.ligne .av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--orange-pale);color:var(--orange-fonce);display:grid;place-items:center;font-weight:900}
+.ligne .mid{flex:1;min-width:0}
+.ligne .mid b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ligne .mid span{display:block;font-size:12px;color:var(--gris);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ligne .montant{font-weight:900;font-size:14.5px;white-space:nowrap;text-align:right}
+.ligne .montant small{display:block;margin-top:3px}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:800}
+.tag.envoyee{background:var(--ambre-pale);color:#8a6100}.tag.payee{background:var(--vert-pale);color:var(--vert)}
+.tag.en_retard{background:var(--rouge-pale);color:var(--rouge)}.tag.annulee{background:var(--nuage);color:var(--gris)}
+.vide{text-align:center;color:var(--gris);padding:10px 0 4px;font-size:13.5px}
+.top .ligne{display:block;padding:8px 0}
+.top .tete{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:6px;gap:8px}
+.top .tete span{white-space:nowrap}
+.top .rail{height:10px;border-radius:99px;background:var(--papier);overflow:hidden}
+.top .rail i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--violet),var(--violet-clair));transition:width .9s cubic-bezier(.2,.9,.2,1)}
+.impot{background:linear-gradient(135deg,#fff 0,var(--ambre-pale) 100%)}
+.impot .val{font-size:26px;font-weight:900;letter-spacing:-.02em}
+.impot .note{margin-top:8px;font-size:12px;font-weight:700;color:#8a6100;background:rgba(249,168,37,.16);padding:7px 11px;border-radius:12px}
+.impot .ech{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(138,97,0,.3);font-size:13.5px}
+.impot .ech .pj{flex:none;background:var(--ambre);color:#3b2a00;font-weight:900;border-radius:12px;padding:6px 11px;text-align:center;line-height:1.1}
+.impot .ech .pj small{display:block;font-size:10px;font-weight:800}
+.squelette{height:120px;border-radius:22px;background:linear-gradient(90deg,#fff 25%,#f1f1f1 50%,#fff 75%);background-size:200% 100%;animation:brille 1.2s infinite}
+@keyframes brille{to{background-position:-200% 0}}
+
+/* dossier */
+.dossier-haut{text-align:center}
+.dossier-haut .grand{width:70px;height:70px;border-radius:22px;margin:0 auto 12px;background:linear-gradient(135deg,var(--violet),var(--violet-clair));display:grid;place-items:center;font-size:34px;box-shadow:0 10px 24px rgba(106,90,205,.35)}
+.dossier-haut h3{justify-content:center;font-size:20px;margin-bottom:6px}
+.dossier-haut p{margin:0;color:var(--gris);font-size:14px}
+.liste-ok{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.liste-ok li{display:flex;gap:10px;align-items:flex-start}
+.liste-ok li::before{content:"✓";flex:none;width:20px;height:20px;border-radius:50%;background:var(--vert-pale);color:var(--vert);font-weight:900;font-size:12px;display:grid;place-items:center;margin-top:1px}
+.hist .rail{height:12px;border-radius:99px;background:var(--papier);overflow:hidden;margin:6px 0 8px}
+.hist .rail i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--orange),var(--orange-clair));transition:width .9s cubic-bezier(.2,.9,.2,1)}
+.hist .etat{font-size:13.5px;font-weight:700}
+.hist .etat.ok{color:var(--vert)}.hist .etat.manque{color:#8a6100}
+.avert{font-size:12px;color:var(--gris);text-align:center;margin-top:12px}
+.avert b{color:var(--violet)}
+.resultat{display:flex;align-items:center;gap:12px;background:var(--vert-pale);border-radius:16px;padding:12px 14px;margin-top:14px;text-decoration:none;color:var(--vert);font-weight:800;animation:pop .3s ease}
+.resultat .ico{font-size:26px}
+.resultat span{display:block;font-size:12px;font-weight:700;opacity:.85}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(var(--nav) + 14px);background:var(--noir);color:#fff;padding:12px 16px;border-radius:14px;font-size:13.5px;font-weight:600;z-index:20;animation:pop .25s ease;text-align:center}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Connexion -->
+  <section id="login" class="hidden">
+    <div class="logo">✦</div>
+    <h1>Mon <span>Kiosque</span></h1>
+    <p class="slogan">Le 3-en-1 de la PME camerounaise. <b>Propulsé par Moki.</b></p>
+    <form id="form-login" autocomplete="off">
+      <label class="champ" for="numero">Ton numéro WhatsApp</label>
+      <div class="saisie-num">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+        <input id="numero" type="tel" inputmode="tel" value="237677000001" placeholder="237 6XX XX XX XX" aria-label="Numéro WhatsApp">
+      </div>
+      <button class="btn" id="btn-entrer" type="submit">Entrer</button>
+      <div class="erreur-login" id="erreur-login" role="alert"></div>
+      <button class="lien" id="btn-demo" type="button">Utiliser le compte de démo</button>
+    </form>
+    <div class="pied-login">Un numéro = un compte. Aucune inscription compliquée.</div>
+  </section>
+
+  <!-- Application -->
+  <div id="shell" class="hidden">
+    <header class="entete">
+      <div class="logo">✦</div>
+      <div class="qui"><b id="nom-commerce">Mon Kiosque</b><span><i></i>Moki est en ligne</span></div>
+      <button class="deco" id="btn-deco" type="button">Déconnexion</button>
+    </header>
+
+    <main id="vues">
+      <section class="vue actif" id="vue-chat" aria-label="Moki">
+        <div id="msgs" aria-live="polite"></div>
+        <div id="rapide" class="hidden"></div>
+        <div id="puces"></div>
+        <form id="form-chat" autocomplete="off">
+          <input id="texte" type="text" placeholder="Dis quelque chose à Moki…" aria-label="Message pour Moki" enterkeyhint="send">
+          <button id="micro" class="rond hidden" type="button" aria-label="Dicter">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v5a4 4 0 0 0 4 4Zm6-4a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.9V22h2v-3.1A8 8 0 0 0 20 11h-2Z"/></svg>
+          </button>
+          <button id="envoyer" class="rond" type="submit" aria-label="Envoyer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg>
+          </button>
+        </form>
+      </section>
+
+      <section class="vue" id="vue-tableau" aria-label="Tableau"><div class="defile" id="tableau"></div></section>
+      <section class="vue" id="vue-dossier" aria-label="Dossier"><div class="defile" id="dossier"></div></section>
+    </main>
+
+    <nav>
+      <button type="button" data-tab="chat" class="actif">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12Z"/><path d="M12 7.5l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z" fill="currentColor" stroke="none"/></svg>Moki
+      </button>
+      <button type="button" data-tab="tableau">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>Tableau
+      </button>
+      <button type="button" data-tab="dossier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Dossier
+      </button>
+    </nav>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  var MOCK = params.get("mock") === "1";
+  var DEMO_NUM = "237677000001";
+  var SUGGESTIONS = [
+    "j'ai vendu 3 paires à 5000", "j'ai payé 20 000 de loyer", "j'ai fait combien aujourd'hui ?", "qui me doit ?",
+    "facture Lycée Technique, 30 repas à 2500", "prépare mon dossier de crédit", "mon impôt", "annuler"
+  ];
+
+  var state = { token: null, data: null, periode: "jour", busy: false, pme: null, tab: "chat" };
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- utilitaires ---------- */
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function fmtF(n) {
+    n = Math.round(Number(n) || 0);
+    var signe = n < 0 ? "-" : "";
+    return signe + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F";
+  }
+  function compact(n) {
+    n = Math.round(Number(n) || 0);
+    if (n >= 1000000) return (n / 1000000).toFixed(1).replace(".", ",") + "M";
+    if (n >= 1000) return Math.round(n / 1000) + "k";
+    return String(n);
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function store(cle, val) { try { if (val == null) localStorage.removeItem(cle); else localStorage.setItem(cle, val); } catch (e) { /* stockage indisponible */ } }
+  function lire(cle) { try { return localStorage.getItem(cle); } catch (e) { return null; } }
+  function num(v) { return Number(v) || 0; }
+  function heure() { var d = new Date(); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
+
+  function animerChiffre(el, cible) {
+    var debut = null, duree = 900;
+    function pas(t) {
+      if (debut === null) debut = t;
+      var p = Math.max(0, Math.min(1, (t - debut) / duree)), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmtF(cible * e);
+      if (p < 1) requestAnimationFrame(pas); else el.textContent = fmtF(cible);
+    }
+    requestAnimationFrame(pas);
+  }
+  function lancerAnimations(racine) {
+    racine.querySelectorAll("[data-count]").forEach(function (el) { animerChiffre(el, num(el.getAttribute("data-count"))); });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        racine.querySelectorAll("[data-h]").forEach(function (el) { el.style.height = el.getAttribute("data-h") + "%"; });
+        racine.querySelectorAll("[data-w]").forEach(function (el) { el.style.width = el.getAttribute("data-w") + "%"; });
+      });
+    });
+  }
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "toast"; t.textContent = msg;
+    $("app").appendChild(t);
+    setTimeout(function () { t.remove(); }, 2800);
+  }
+
+  /* ---------- API (réelle ou factice) ---------- */
+  function api(chemin, corps) {
+    if (MOCK) return mockApi(chemin, corps);
+    var opts = { method: corps ? "POST" : "GET", headers: {} };
+    if (state.token) opts.headers.Authorization = "Bearer " + state.token;
+    if (corps) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(corps); }
+    return fetch(chemin, opts).then(function (r) {
+      return r.text().then(function (txt) {
+        var json = null;
+        try { json = txt ? JSON.parse(txt) : null; } catch (e) { json = null; }
+        if (!r.ok) { var err = new Error((json && json.detail) || ("Erreur " + r.status)); err.status = r.status; throw err; }
+        return json || {};
+      });
+    });
+  }
+
+  /* ---------- connexion ---------- */
+  function afficherLogin(message) {
+    $("shell").classList.add("hidden");
+    $("login").classList.remove("hidden");
+    $("erreur-login").textContent = message || "";
+    $("btn-entrer").disabled = false;
+  }
+  function connecter(numero) {
+    var chiffres = String(numero).replace(/\D/g, "");
+    if (chiffres.length < 8) { $("erreur-login").textContent = "Entre ton numéro avec l'indicatif, par exemple 237677000001."; return; }
+    $("btn-entrer").disabled = true; $("erreur-login").textContent = "";
+    api("/api/connexion", { numero: chiffres }).then(function (r) {
+      state.token = r.token; store("moki_token", r.token);
+      state.pme = r.pme || null;
+      entrer(r);
+    }).catch(function (e) {
+      afficherLogin(e && e.message ? e.message : "Connexion impossible, réessaie.");
+    });
+  }
+  function entrer(r) {
+    $("login").classList.add("hidden");
+    $("shell").classList.remove("hidden");
+    majNom();
+    $("msgs").innerHTML = "";
+    if (r && r.pme === null) { envoyer("Bonjour"); }
+    else { accueil(); }
+    montrerSuggestions();
+    changerOnglet(params.get("tab") && MOCK ? params.get("tab") : "chat");
+    chargerTableau();
+  }
+  function majNom() { $("nom-commerce").textContent = (state.pme && state.pme.nom_commerce) || "Mon Kiosque"; }
+  function deconnecter() {
+    state.token = null; state.data = null; state.pme = null; state.sigTab = null; state.sigDos = null; store("moki_token", null);
+    $("msgs").innerHTML = ""; $("rapide").classList.add("hidden");
+    afficherLogin("");
+  }
+
+  /* ---------- onglets ---------- */
+  function changerOnglet(nom) {
+    state.tab = nom;
+    document.querySelectorAll("nav button").forEach(function (b) { b.classList.toggle("actif", b.getAttribute("data-tab") === nom); });
+    document.querySelectorAll(".vue").forEach(function (v) { v.classList.toggle("actif", v.id === "vue-" + nom); });
+    if (nom === "tableau") { renderTableau(); chargerTableau(); }
+    if (nom === "dossier") { renderDossier(); chargerTableau(); }
+    if (nom === "chat") { var m = $("msgs"); m.scrollTop = m.scrollHeight; }
+  }
+
+  /* ---------- chat ---------- */
+  function accueil() { ajouterBulle("Salut ! Je suis Moki 👋 Écris-moi comme sur WhatsApp.", "moki"); }
+  function ajouterBulle(texte, qui) {
+    var b = document.createElement("div");
+    b.className = "bulle " + qui;
+    var contenu = document.createElement("span");
+    contenu.textContent = texte;
+    if (qui.indexOf("moki") === 0 && qui.indexOf("err") < 0) {
+      var tete = document.createElement("span"); tete.className = "qui-moki"; tete.textContent = "✦ Moki"; b.appendChild(tete);
+    }
+    b.appendChild(contenu);
+    var t = document.createElement("time"); t.textContent = heure(); b.appendChild(t);
+    $("msgs").appendChild(b); defiler();
+    return b;
+  }
+  function ajouterDocument(doc) {
+    var a = document.createElement("a");
+    a.className = "doc"; a.href = doc.url; a.target = "_blank"; a.rel = "noopener";
+    a.innerHTML = '<div class="ico">📄</div><div><b>' + esc(doc.nom || "Document") + '</b><span>Ouvrir le PDF</span></div>';
+    $("msgs").appendChild(a); defiler();
+  }
+  function defiler() { var m = $("msgs"); m.scrollTop = m.scrollHeight; }
+  function afficherFrappe() {
+    var d = document.createElement("div");
+    d.className = "tape"; d.id = "frappe";
+    d.innerHTML = '<div class="points"><i></i><i></i><i></i></div>Moki réfléchit…';
+    $("msgs").appendChild(d); defiler();
+  }
+  function masquerFrappe() { var f = $("frappe"); if (f) f.remove(); }
+  function montrerSuggestions() {
+    $("puces").innerHTML = SUGGESTIONS.map(function (s) { return '<button type="button" data-s="' + esc(s) + '">' + esc(s) + "</button>"; }).join("");
+  }
+  function boutonsRapides(dernier) {
+    var zone = $("rapide"); zone.innerHTML = ""; zone.classList.add("hidden");
+    if (!dernier) return;
+    var mot = /tape exactement le mot\s*:\s*([A-Za-zÀ-ÿ]+)/i.exec(dernier);
+    if (mot) {
+      zone.innerHTML = '<button class="mot" type="button" data-r="' + esc(mot[1]) + '">' + esc(mot[1]) + "</button>" +
+        '<button class="non" type="button" data-r="non">NON</button>';
+    } else if (/OUI\s*\/\s*NON\s*$/.test(dernier.trim())) {
+      zone.innerHTML = '<button class="oui" type="button" data-r="oui">OUI</button><button class="non" type="button" data-r="non">NON</button>';
+    } else return;
+    zone.classList.remove("hidden");
+  }
+  async function envoyer(texte) {
+    texte = String(texte || "").trim();
+    if (!texte || state.busy) return;
+    state.busy = true;
+    if (texte !== "Bonjour" || $("msgs").children.length) ajouterBulle(texte, "moi");
+    $("texte").value = ""; boutonsRapides(null);
+    afficherFrappe();
+    try {
+      var r = await api("/api/chat", { texte: texte });
+      masquerFrappe();
+      if (r.pme) { state.pme = r.pme; majNom(); }
+      var reps = r.reponses || [];
+      for (var i = 0; i < reps.length; i++) { if (i) await sleep(350); ajouterBulle(reps[i], "moki"); }
+      (r.documents || []).forEach(ajouterDocument);
+      boutonsRapides(reps.length ? reps[reps.length - 1] : "");
+      chargerTableau();
+    } catch (e) {
+      masquerFrappe();
+      if (e && e.status === 401) { deconnecter(); }
+      else ajouterBulle("Connexion perdue, réessaie.", "moki err");
+    }
+    state.busy = false;
+  }
+
+  /* micro */
+  (function initMicro() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    var btn = $("micro"); btn.classList.remove("hidden");
+    var rec = new SR(); rec.lang = "fr-FR"; rec.interimResults = false; rec.maxAlternatives = 1;
+    var actif = false;
+    rec.onresult = function (ev) {
+      var t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
+      if (t) { $("texte").value = t; envoyer(t); }
+    };
+    rec.onend = function () { actif = false; btn.classList.remove("ecoute"); };
+    rec.onerror = function () { actif = false; btn.classList.remove("ecoute"); toast("Je n'ai pas pu t'entendre. Réessaie ou écris."); };
+    btn.addEventListener("click", function () {
+      if (actif) { rec.stop(); return; }
+      try { rec.start(); actif = true; btn.classList.add("ecoute"); } catch (e) { /* déjà démarré */ }
+    });
+  })();
+
+  /* ---------- tableau ---------- */
+  async function chargerTableau() {
+    if (!state.token) return;
+    try {
+      state.data = await api("/api/tableau");
+      if (state.data && state.data.commerce && !state.pme) { state.pme = { nom_commerce: state.data.commerce }; majNom(); }
+      if (state.tab === "tableau") renderTableau();
+      if (state.tab === "dossier") renderDossier();
+    } catch (e) {
+      if (e && e.status === 401) deconnecter();
+    }
+  }
+  function renderTableau() {
+    var box = $("tableau"), d = state.data;
+    if (!d) { state.sigTab = null; box.innerHTML = '<div class="bandeau"><small>Chargement…</small><h2>Ton tableau</h2></div><div class="contenu"><div class="squelette"></div><div class="squelette"></div></div>'; return; }
+    var sig = JSON.stringify([d, state.periode]);
+    if (sig === state.sigTab && box.children.length) return;
+    state.sigTab = sig;
+    var per = d[state.periode] || {};
+    var jour = d.jour || {};
+    var serie = (d.serie_7j || []);
+    var maxS = Math.max.apply(null, serie.map(function (s) { return num(s.ventes); }).concat([1]));
+    var topMax = Math.max.apply(null, (d.top_produits || []).map(function (p) { return num(p.total); }).concat([1]));
+    var benMois = num(d.benefice_mois);
+    var html = "";
+
+    html += '<div class="bandeau"><small>Ton commerce</small><h2>' + esc(d.commerce || (state.pme && state.pme.nom_commerce) || "Mon Kiosque") + "</h2>" +
+      (d.demo ? '<span class="pastille-demo">Données fictives</span>' : "") + "</div>";
+    html += '<div class="contenu">';
+
+    html += '<div class="carte heros"><div class="lib">Ventes du jour</div><div class="gros" data-count="' + num(jour.ventes) + '">' + fmtF(0) + "</div>" +
+      '<span class="nb">' + num(jour.nb) + " vente" + (num(jour.nb) > 1 ? "s" : "") + " aujourd'hui</span>" +
+      '<div class="seg" id="seg">' + [["jour", "Jour"], ["semaine", "Semaine"], ["mois", "Mois"]].map(function (p) {
+        return '<button type="button" data-p="' + p[0] + '" class="' + (state.periode === p[0] ? "actif" : "") + '">' + p[1] + "</button>";
+      }).join("") + "</div>" +
+      '<div class="trio"><div><span>Ventes</span><b>' + fmtF(per.ventes) + '</b></div><div class="cha"><span>Charges</span><b>' + fmtF(per.charges) +
+      '</b></div><div class="' + (num(per.benefice) < 0 ? "neg" : "ben") + '"><span>Bénéfice</span><b>' + fmtF(per.benefice) + "</b></div></div></div>";
+
+    html += '<div class="duo">' +
+      '<div class="carte kpi tres"><div class="ic">👛</div><div class="lib">Trésorerie</div><div class="val" data-count="' + num(d.tresorerie) + '">' + fmtF(0) + '</div><div class="sous">Ce que tu as en main</div></div>' +
+      '<div class="carte kpi ben"><div class="ic">📈</div><div class="lib">Bénéfice du mois</div><div class="val' + (benMois < 0 ? " neg" : "") + '" data-count="' + benMois + '">' + fmtF(0) + '</div><div class="sous">Ventes moins charges</div></div></div>';
+
+    html += '<div class="carte perso"><div class="ic">🙋</div><div><div class="lib">Retraits personnels du mois</div><div class="val" data-count="' + num(d.retraits_perso_mois) + '">' + fmtF(0) +
+      '</div><div class="sous">Pas compté dans les charges du commerce</div></div></div>';
+
+    html += '<div class="carte"><h3>Ventes des 7 derniers jours<em>' + fmtF(serie.reduce(function (a, s) { return a + num(s.ventes); }, 0)) + "</em></h3>";
+    if (serie.length) {
+      html += '<div class="barres">' + serie.map(function (s, i) {
+        var h = num(s.ventes) > 0 ? Math.max(6, Math.round(num(s.ventes) / maxS * 100)) : 2;
+        return '<div class="col' + (i === serie.length - 1 ? " dernier" : "") + '"><div class="v">' + (num(s.ventes) ? compact(s.ventes) : "") + '</div><div class="b" data-h="' + h + '"></div><div class="j">' + esc(s.jour) + "</div></div>";
+      }).join("") + "</div>";
+    } else html += '<div class="vide">Pas encore de ventes cette semaine.</div>';
+    html += "</div>";
+
+    var dus = d.impayes_liste || [];
+    html += '<div class="carte"><h3>Qui te doit<em>' + (num(d.impayes) ? fmtF(d.impayes) : "") + "</em></h3>";
+    if (dus.length) {
+      html += '<div class="liste">' + dus.map(function (x) {
+        return '<div class="ligne"><div class="av">' + esc(String(x.client || "?").replace(/^(Mme|M\.|Mr)\s+/i, "").charAt(0).toUpperCase()) + '</div><div class="mid"><b>' + esc(x.client) + "</b><span>" + esc(x.detail) + '</span></div><div class="montant">' + fmtF(x.montant) + "</div></div>";
+      }).join("") + "</div>";
+    } else html += '<div class="vide">Personne ne te doit d\'argent. 👍</div>';
+    html += "</div>";
+
+    var facs = d.factures || [], libelles = { envoyee: "Envoyée", payee: "Payée", en_retard: "En retard", annulee: "Annulée" };
+    html += '<div class="carte"><h3>Factures<em>' + facs.length + "</em></h3>";
+    if (facs.length) {
+      html += '<div class="liste">' + facs.map(function (f) {
+        var st = libelles[f.statut] ? f.statut : "envoyee";
+        return '<div class="ligne"><div class="av" style="background:var(--violet-pale);color:var(--violet)">#</div><div class="mid"><b>Facture n° ' + ("000" + num(f.numero)).slice(-3) + "</b><span>" + esc(f.client) +
+          '</span></div><div class="montant">' + fmtF(f.total) + '<small><span class="tag ' + st + '">' + libelles[st] + (st === "en_retard" && num(f.jours_retard) ? " · " + num(f.jours_retard) + " j" : "") + "</span></small></div></div>";
+      }).join("") + "</div>";
+    } else html += '<div class="vide">Aucune facture pour l\'instant.</div>';
+    html += "</div>";
+
+    var tops = d.top_produits || [];
+    html += '<div class="carte top"><h3>Ce qui rapporte le plus</h3>';
+    if (tops.length) {
+      html += tops.map(function (p) {
+        return '<div class="ligne"><div class="tete"><b>' + esc(p.nom) + "</b><span>" + fmtF(p.total) + '</span></div><div class="rail"><i data-w="' + Math.max(4, Math.round(num(p.total) / topMax * 100)) + '"></i></div></div>';
+      }).join("");
+    } else html += '<div class="vide">Les produits les plus vendus apparaîtront ici.</div>';
+    html += "</div>";
+
+    var imp = d.impot || {}, ech = d.echeance || null;
+    html += '<div class="carte impot"><h3>Impôt (IGS)<em>🧾</em></h3>' +
+      (imp.estimation != null ? '<div class="val">' + fmtF(imp.estimation) + "</div>" : '<div class="vide">Estimation bientôt disponible.</div>') +
+      '<div class="note">' + esc(imp.note || "Estimation à confirmer avec la DGI") + "</div>" +
+      (ech ? '<div class="ech"><div class="pj">' + num(ech.jours) + "<small>jours</small></div><div><b>" + esc(ech.libelle) + "</b><br><span class=\"sous\">Prochaine échéance, dans " + num(ech.jours) + " jour" + (num(ech.jours) > 1 ? "s" : "") + " (" + esc(ech.date) + ")</span></div></div>" : "") +
+      "</div>";
+
+    html += "</div>";
+    var haut = box.scrollTop;
+    box.innerHTML = html;
+    box.scrollTop = haut;
+    lancerAnimations(box);
+  }
+
+  /* ---------- dossier ---------- */
+  function renderDossier() {
+    var box = $("dossier"), d = state.data || {};
+    var sig = JSON.stringify([d.historique_mois, d.demo]);
+    if (sig === state.sigDos && box.children.length) return;
+    state.sigDos = sig;
+    var h = num(d.historique_mois), pct = Math.min(100, Math.round(h / 6 * 100)), manque = Math.max(0, 6 - h);
+    var resultat = box.querySelector(".resultat") ? box.querySelector(".resultat").outerHTML : "";
+    box.innerHTML =
+      '<div class="bandeau"><small>Pour décrocher un financement</small><h2>Dossier de crédit</h2>' + (d.demo ? '<span class="pastille-demo">Données fictives</span>' : "") + "</div>" +
+      '<div class="contenu">' +
+      '<div class="carte dossier-haut"><div class="grand">📄</div><h3>Ton dossier de crédit</h3><p>Un PDF prêt à montrer à une banque ou une microfinance, généré en une seconde.</p>' +
+      '<ul class="liste-ok" style="text-align:left"><li>Ventes mensuelles</li><li>Charges et bénéfice</li><li>Trésorerie</li><li>Impayés en cours</li></ul></div>' +
+      '<div class="carte hist"><h3>Ton historique<em>' + h + " / 6 mois</em></h3><div class=\"rail\"><i data-w=\"" + pct + "\"></i></div>" +
+      (manque > 0 ? '<div class="etat manque">Il manque ' + manque + " mois pour un dossier solide.</div>" : '<div class="etat ok">✓ Ton historique est assez long.</div>') + "</div>" +
+      '<div class="carte"><button class="btn" id="btn-dossier" type="button">Générer mon dossier de crédit (PDF)</button><div id="zone-dossier">' + resultat + "</div>" +
+      '<div class="avert"><b>Calculé uniquement à partir de tes saisies.</b>' + (d.demo ? "<br>Données fictives de démonstration." : "") + "</div></div>" +
+      "</div>";
+    lancerAnimations(box);
+  }
+  async function genererDossier() {
+    var btn = $("btn-dossier"); btn.disabled = true; btn.textContent = "Moki prépare ton dossier…";
+    try {
+      var r = await api("/api/dossier");
+      if (!r || !r.url) throw new Error("vide");
+      $("zone-dossier").innerHTML = '<a class="resultat" href="' + esc(r.url) + '" target="_blank" rel="noopener"><div class="ico">✅</div><div>' + esc(r.nom || "dossier-de-credit.pdf") + "<span>Dossier prêt · toucher pour ouvrir</span></div></a>";
+      var w = window.open(r.url, "_blank"); if (!w) toast("Dossier prêt : touche la carte verte pour l'ouvrir.");
+    } catch (e) {
+      if (e && e.status === 401) { deconnecter(); return; }
+      toast("Impossible de générer le dossier. Réessaie.");
+    }
+    btn = $("btn-dossier"); if (btn) { btn.disabled = false; btn.textContent = "Générer mon dossier de crédit (PDF)"; }
+  }
+
+  /* ---------- événements ---------- */
+  $("form-login").addEventListener("submit", function (e) { e.preventDefault(); connecter($("numero").value); });
+  $("btn-demo").addEventListener("click", function () { $("numero").value = DEMO_NUM; connecter(DEMO_NUM); });
+  $("btn-deco").addEventListener("click", deconnecter);
+  $("form-chat").addEventListener("submit", function (e) { e.preventDefault(); envoyer($("texte").value); });
+  $("puces").addEventListener("click", function (e) { var b = e.target.closest("button[data-s]"); if (b) { changerOnglet("chat"); envoyer(b.getAttribute("data-s")); } });
+  $("rapide").addEventListener("click", function (e) { var b = e.target.closest("button[data-r]"); if (b) envoyer(b.getAttribute("data-r")); });
+  document.querySelector("nav").addEventListener("click", function (e) { var b = e.target.closest("button[data-tab]"); if (b) changerOnglet(b.getAttribute("data-tab")); });
+  $("tableau").addEventListener("click", function (e) { var b = e.target.closest("button[data-p]"); if (b) { state.periode = b.getAttribute("data-p"); renderTableau(); } });
+  $("dossier").addEventListener("click", function (e) { if (e.target.closest("#btn-dossier")) genererDossier(); });
+
+  /* ---------- démarrage ---------- */
+  var tokenSauve = MOCK ? "mock" : lire("moki_token");
+  if (MOCK && params.get("login") === "1") { afficherLogin(""); }
+  else if (tokenSauve) {
+    state.token = tokenSauve;
+    api("/api/tableau").then(function (d) {
+      state.data = d;
+      state.pme = d && d.commerce ? { nom_commerce: d.commerce } : null;
+      entrer({ pme: state.pme || {} });
+    }).catch(function () { state.token = null; store("moki_token", null); afficherLogin(""); });
+  } else afficherLogin("");
+
+  /* ---------- mode démonstration sans serveur (?mock=1) ---------- */
+  function mockApi(chemin, corps) {
+    return new Promise(function (resolve) {
+      setTimeout(function () { resolve(mockReponse(chemin, corps)); }, 450);
+    });
+  }
+  function mockReponse(chemin, corps) {
+    var pme = { nom_commerce: "Chez Marie", ville: "Yaoundé" };
+    if (chemin === "/api/connexion") return { token: "mock", numero: corps.numero, pme: pme, demo: true };
+    if (chemin === "/api/dossier") return { url: "data:text/plain,Dossier%20de%20credit%20(demo)", nom: "dossier-de-credit-chez-marie.pdf" };
+    if (chemin === "/api/tableau") {
+      return {
+        commerce: "Chez Marie", demo: true,
+        jour: { ventes: 67500, nb: 12, charges: 15000, benefice: 52500 },
+        semaine: { ventes: 342000, nb: 61, charges: 98000, benefice: 244000 },
+        mois: { ventes: 1480000, nb: 266, charges: 520000, benefice: 960000 },
+        tresorerie: 845000, benefice_mois: 960000, retraits_perso_mois: 150000, impayes: 92000,
+        serie_7j: [{ jour: "Jeu", ventes: 41000 }, { jour: "Ven", ventes: 58000 }, { jour: "Sam", ventes: 83000 }, { jour: "Dim", ventes: 29000 }, { jour: "Lun", ventes: 47000 }, { jour: "Mar", ventes: 36500 }, { jour: "Mer", ventes: 67500 }],
+        top_produits: [{ nom: "Poulet DG", total: 540000 }, { nom: "Repas du jour", total: 410000 }, { nom: "Boissons", total: 220000 }, { nom: "Brochettes", total: 160000 }],
+        impayes_liste: [{ client: "Lycée Technique", montant: 80000, detail: "facture n° 047" }, { client: "Mme Biya", montant: 12000, detail: "vente à crédit" }],
+        factures: [{ numero: 47, client: "Lycée Technique", total: 80000, statut: "en_retard", jours_retard: 6 }, { numero: 46, client: "Bureau Essos", total: 45000, statut: "payee", jours_retard: 0 }, { numero: 48, client: "Cantine Mvog-Ada", total: 36000, statut: "envoyee", jours_retard: 0 }],
+        echeance: { libelle: "Acompte IGS", date: "15/03/2027", jours: 124 },
+        impot: { estimation: 355000, note: "Estimation indicative, à confirmer avec la DGI" },
+        historique_mois: 6
+      };
+    }
+    if (chemin === "/api/chat") {
+      var t = String(corps.texte || "").toLowerCase();
+      if (t === "bonjour") return { reponses: ["Bienvenue ! Comment s'appelle ton commerce ?"], documents: [], pme: null };
+      if (/facture/.test(t)) return { reponses: ["Voici la facture pour Lycée Technique :\n30 repas × 2 500 F = 75 000 F\nTotal : 75 000 F\nJe la prépare et je te l'envoie pour que tu la transfères ? OUI / NON"], documents: [], pme: pme };
+      if (/dossier/.test(t)) return { reponses: ["Ton dossier de crédit est prêt, calculé uniquement à partir de tes saisies (données fictives de démonstration)."], documents: [{ nom: "dossier-de-credit.pdf", url: "data:text/plain,demo" }], pme: pme };
+      if (/^oui$/.test(t)) return { reponses: ["Facture n° 049 pour Lycée Technique : 75 000 F. Elle est jointe ci-dessus."], documents: [{ nom: "facture-049.pdf", url: "data:text/plain,demo" }], pme: pme };
+      if (/vendu/.test(t)) return { reponses: ["C'est noté : 15 000 F en cash. Total d'aujourd'hui : 82 500 F. Dis « annuler » si tu t'es trompée."], documents: [], pme: pme };
+      return { reponses: ["Aujourd'hui : 12 ventes, 67 500 F (40 000 F en cash, 27 500 F par mobile money). Impayés en cours : 92 000 F."], documents: [], pme: pme };
+    }
+    return {};
+  }
+})();
+</script>
+</body>
+</html>

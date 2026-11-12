@@ -24,7 +24,7 @@ def executer(fabrique: sessionmaker[Session], canal: CanalMessages, horloge: Hor
             if s.scalar(select(Job.id).where(Job.cle_idempotence == cle)) is not None:
                 continue
             r = dom_resumes.calculer(s, pme, None, horloge)
-            texte = "Résumé du soir. " + reponses.resume(r["libelle"], r["nb"], r["total"], r["par_mode"], r["impayes"])
+            texte = "Résumé du soir. " + reponses.resume(r["libelle"], r["nb"], r["total"], r["par_mode"], r["impayes"], r["charges"], r["benefice"])
             s.add(Job(type="resume_du_soir", charge={"pme_id": pme.id}, cle_idempotence=cle, etat="fait", cree_a=horloge.maintenant(), execute_a=horloge.maintenant()))
             s.commit()  # la clé est posée avant l'envoi : pas de doublon en cas de relance du worker
             try:

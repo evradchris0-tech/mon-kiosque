@@ -17,7 +17,10 @@ from app.core.horloge import Horloge
 from app.db.modeles import Action, CasAVerifier, Client, Confirmation, Conversation, Facture, Journal, Message, Pme, Vente
 from app.domaine import annulation as dom_annulation
 from app.domaine import clients as dom_clients
+from app.domaine import depenses as dom_depenses
+from app.domaine import dossier as dom_dossier
 from app.domaine import factures as dom_factures
+from app.domaine import finances
 from app.domaine import paiements as dom_paiements
 from app.domaine import pme as dom_pme
 from app.domaine import produits as dom_produits
@@ -26,10 +29,10 @@ from app.domaine import resumes as dom_resumes
 from app.domaine import ventes as dom_ventes
 from app.integrations.llm.interface import ErreurInterprete, Interprete
 from app.integrations.stt.interface import ErreurTranscription, Transcripteur
-from app.integrations.whatsapp.interface import CanalMessages
+from app.integrations.whatsapp.interface import CanalMessages, MessageSortant
 from app.moki import confirmation as conf
 from app.moki import contexte as ctx
-from app.moki import etats, regles, reponses
+from app.moki import etats, inscription, regles, reponses
 from app.moki.schemas import Decision, Intention, Interpretation, Periode
 
 CONFIANCE_STT_MIN = 0.5
@@ -46,6 +49,13 @@ class Dependances:
 
 
 @dataclass
+class Envoi:
+    pme_id: int
+    message: MessageSortant
+    destinataire: str
+
+
+@dataclass
 class Resultat:
     textes: list[str] = field(default_factory=list)
     documents: list[str] = field(default_factory=list)
@@ -54,6 +64,7 @@ class Resultat:
     action: dict[str, Any] | None = None
     motif: str = ""
     erreur: str | None = None
+    envois: list[Envoi] = field(default_factory=list)
 
 
 class _Journal:
@@ -94,8 +105,9 @@ def traiter(session: Session, deps: Dependances, message: Message) -> Resultat:
     journal = _Journal(session, pme.id if pme else None, message.id, deps.horloge)
     journal.ecrire("1_normaliser", {"numero": message.numero, "type": message.type}, {"pme_id": pme.id if pme else None}, t0)
     if pme is None:
-        _cas(session, deps, None, message, "numero_inconnu")
-        return Resultat(textes=[reponses.numero_inconnu()], decision=Decision.REFUSER, motif="numero_inconnu")
+        textes_ins, motif_ins = inscription.traiter(session, deps, message)
+        journal.ecrire("5_decider", None, {"inscription": motif_ins}, t0)
+        return Resultat(textes=textes_ins, decision=Decision.EXECUTER, motif=motif_ins)
     message.pme_id = pme.id
 
     # 2. Transcrire
@@ -124,7 +136,7 @@ def traiter(session: Session, deps: Dependances, message: Message) -> Resultat:
         if resultat is not None:
             resultat.textes = prefixe + resultat.textes
             return resultat
-        prefixe.append(reponses.action_abandonnee())
+        prefixe.append("(J'ai laissé tomber l'action précédente.)")
 
     # 3. Interpréter
     t3 = time.perf_counter()
@@ -181,11 +193,20 @@ def _traiter_confirmation(session: Session, deps: Dependances, pme: Pme, conv: C
         etats.liberer(session, conv, deps.horloge)
         journal.ecrire("5_decider", {"texte": texte}, {"confirmation": "non"}, t0)
         return Resultat(textes=[reponses.action_abandonnee()], interpretation=interp_synth, decision=Decision.REFUSER, motif="refus_pme")
+    # Une vraie phrase (plus de 3 mots) est une nouvelle demande : on abandonne l'action en attente sans la bloquer.
+    if len(texte.split()) > 3:
+        if confirmation is not None:
+            confirmation.statut = "expiree"
+        etats.liberer(session, conv, deps.horloge)
+        journal.ecrire("5_decider", {"texte": texte}, {"confirmation": "nouvelle_demande"}, t0)
+        return None
     # Réponse incompréhensible : on rappelle la question une fois, puis on abandonne.
     if not action.get("rappel_fait"):
         conv.action_en_attente = {**action, "rappel_fait": True}
         session.flush()
         question = conv.question_en_attente or "Tu confirmes ?"
+        if conv.etat == etats.ATTEND_CONFIRMATION_RENFORCEE and conv.mot_confirmation:
+            question = reponses.confirmation_renforcee(conv.mot_confirmation)
         journal.ecrire("5_decider", {"texte": texte}, {"confirmation": "rappel"}, t0)
         return Resultat(textes=[reponses.rappel_question(question)], interpretation=interp_synth, decision=Decision.DEMANDER_CONFIRMATION, motif="rappel")
     if confirmation is not None:
@@ -276,7 +297,14 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
             client = dom_clients.ajouter(session, pme, action["client_nom"])
         facture = dom_factures.creer(session, pme, horloge, client=client, lignes=action["lignes"], frais=action.get("frais", []), confirmation_id=confirmation_id, dossier_pdf=deps.parametres.dossier_factures)
         documents = [facture.pdf_chemin] if facture.pdf_chemin else []
-        return Resultat(textes=[reponses.facture_prete(facture.numero, client.nom, facture.total)], documents=documents)
+        lien = f"https://pay.moki.cm/f/{pme.id}-{facture.numero}"
+        envois: list[Envoi] = []
+        if pme.mode_relance == "direct" and client.telephone:
+            envois.append(Envoi(pme.id, MessageSortant(numero=client.telephone, texte=reponses.facture_pour_client(pme.nom_commerce, client.nom, facture.numero, facture.total, lien), document=facture.pdf_chemin), client.nom))
+            texte = reponses.facture_prete_direct(facture.numero, client.nom, facture.total, lien)
+        else:
+            texte = reponses.facture_prete(facture.numero, client.nom, facture.total, lien)
+        return Resultat(textes=[texte], documents=documents, envois=envois)
 
     if genre == "RELANCE":
         if confirmation_id is None:
@@ -288,6 +316,8 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
         if facture.statut not in dom_factures.STATUTS_OUVERTS:
             return Resultat(textes=[reponses.rien_d_ouvert(client.nom)])
         dom_relances.enregistrer(session, pme, horloge, facture=facture, client=client, texte=action["texte"], confirmation_id=confirmation_id, mode=pme.mode_relance)
+        if pme.mode_relance == "direct" and client.telephone:
+            return Resultat(textes=[reponses.relance_envoi_direct(client.nom)], envois=[Envoi(pme.id, MessageSortant(numero=client.telephone, texte=action["texte"]), client.nom)])
         return Resultat(textes=[reponses.relance_prete(client.nom, action["texte"])])
 
     if genre == "PAIEMENT_RECU":
@@ -320,6 +350,41 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
         _tracer_action(session, pme, horloge, "CLIENT", client.id, f"client {client.nom}")
         return Resultat(textes=[reponses.client_ajoute(client.nom, client.telephone)])
 
+    if genre == "DEPENSE":
+        dep = dom_depenses.enregistrer(session, pme, horloge, libelle=action["libelle"], montant=action["montant"], type_=action["type_depense"], nature=action["nature"], heure_envoi=message.heure_envoi, message_id=message.id)
+        return Resultat(textes=[reponses.depense_notee(dep.libelle, dep.montant, dep.nature, dep.type)])
+
+    if genre == "CHANGER_NATURE":
+        dep = dom_depenses.derniere(session, pme, horloge)
+        if dep is None:
+            return Resultat(textes=[reponses.rien_a_changer()])
+        dom_depenses.changer_nature(session, dep, action["nature"])
+        return Resultat(textes=[reponses.nature_changee(dep.libelle, dep.montant, dep.nature)])
+
+    if genre == "BILAN":
+        mois = finances.chiffres_periode(session, pme, Periode(type="mois"), horloge)
+        return Resultat(textes=[reponses.bilan(finances.tresorerie(session, pme), mois["benefice"], mois["retraits"], mois["ventes"], mois["charges"])])
+
+    if genre == "DOSSIER_CREDIT":
+        chemin, d = dom_dossier.generer(session, pme, horloge, deps.parametres.dossier_factures)
+        return Resultat(textes=[reponses.dossier_pret(d["historique_mois"], d["manque_mois"], pme.donnees_fictives)], documents=[chemin])
+
+    if genre == "IMPOT":
+        est = finances.impot_estime(session, pme, horloge)
+        ech = finances.prochaine_echeance(horloge, pme.fuseau)
+        return Resultat(textes=[reponses.impot(est["estimation"], est["ca_annuel"], ech["libelle"], ech["jours"])])
+
+    if genre == "ECHEANCES":
+        return Resultat(textes=[reponses.echeances(finances.echeances(horloge, pme.fuseau))])
+
+    if genre == "PRODUIT_SUPPR":
+        produit = dom_produits.rechercher(session, pme, action["nom"])
+        if produit is None:
+            return Resultat(textes=[reponses.produit_introuvable(action["nom"])])
+        produit.actif = False
+        session.flush()
+        return Resultat(textes=[reponses.produit_supprime(produit.nom)])
+
     if genre == "ANNULER":
         derniere = dom_annulation.derniere_annulable(session, pme, horloge)
         if derniere is None:
@@ -330,10 +395,10 @@ def _executer_action(session: Session, deps: Dependances, pme: Pme, action: dict
     if genre == "RESUME":
         periode = Periode.model_validate(action["periode"]) if action.get("periode") else None
         r = dom_resumes.calculer(session, pme, periode, horloge)
-        return Resultat(textes=[reponses.resume(r["libelle"], r["nb"], r["total"], r["par_mode"], r["impayes"])])
+        return Resultat(textes=[reponses.resume(r["libelle"], r["nb"], r["total"], r["par_mode"], r["impayes"], r["charges"], r["benefice"])])
 
     if genre == "QUI_DOIT":
-        return Resultat(textes=[reponses.qui_doit(dom_paiements.impayes_par_client(session, pme))])
+        return Resultat(textes=[reponses.qui_doit(dom_paiements.impayes_par_client(session, pme, horloge))])
 
     if genre == "AIDE":
         return Resultat(textes=[reponses.aide()])

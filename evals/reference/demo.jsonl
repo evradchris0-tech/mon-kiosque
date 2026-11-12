@@ -1,0 +1,12 @@
+{"id": "T018", "message": "j'ai payé 20 000 de loyer", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}
+{"id": "T019", "message": "c'est perso", "attendu": {"intention": "CHANGER_NATURE"}, "grave_si": ""}
+{"id": "T020", "message": "j'ai acheté du stock pour 100 000", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}
+{"id": "T021", "message": "mon bénéfice", "attendu": {"intention": "BILAN"}, "grave_si": ""}
+{"id": "T022", "message": "j'ai combien en caisse ?", "attendu": {"intention": "BILAN"}, "grave_si": ""}
+{"id": "T023", "message": "prépare mon dossier de crédit", "attendu": {"intention": "DOSSIER_CREDIT"}, "grave_si": ""}
+{"id": "T024", "message": "combien d'impôt je dois payer ?", "attendu": {"intention": "IMPOT"}, "grave_si": ""}
+{"id": "T025", "message": "mes prochaines échéances", "attendu": {"intention": "ECHEANCES"}, "grave_si": ""}
+{"id": "T026", "message": "supprime sandales rouges", "attendu": {"intention": "PRODUIT"}, "grave_si": ""}
+{"id": "T027", "message": "comment je peux payer moins d'impôt ?", "attendu": {"intention": "AUTRE"}, "grave_si": ""}
+{"id": "T028", "message": "j'ai retiré 50000 pour la maison", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}
+{"id": "T029", "message": "j'ai payé la facture d'électricité 35k", "attendu": {"intention": "DEPENSE"}, "grave_si": ""}

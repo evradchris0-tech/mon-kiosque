@@ -11,6 +11,7 @@ from collections.abc import Sequence
 from app.core.argent import format_fcfa
 
 LIBELLES_MODE = {
+    "facture": "en factures",
     "cash": "en cash",
     "mobile_money": "par mobile money",
     "credit": "à crédit",
@@ -84,16 +85,20 @@ def montant_eleve(total: int) -> str:
     return f"{format_fcfa(total)} est un montant élevé. Je confirme ?"
 
 
-def resume(libelle: str, nb: int, total: int, par_mode: dict[str, int], impayes: int) -> str:
-    if nb == 0:
+def resume(libelle: str, nb: int, total: int, par_mode: dict[str, int], impayes: int, charges: int = 0, benefice: int | None = None) -> str:
+    if nb == 0 and charges == 0:
         return f"{libelle} : aucune vente enregistrée pour l'instant."
-    details = ", ".join(
-        f"{format_fcfa(m)} {LIBELLES_MODE[mode]}" for mode, m in par_mode.items() if m > 0
-    )
-    texte = f"{libelle} : {nb} vente{'s' if nb > 1 else ''}, {format_fcfa(total)}"
-    if details:
-        texte += f" ({details})"
+    details = ", ".join(f"{format_fcfa(m)} {LIBELLES_MODE[mode]}" for mode, m in par_mode.items() if m > 0 and mode in LIBELLES_MODE)
+    if nb == 0:
+        texte = f"{libelle} : aucune vente"
+    else:
+        texte = f"{libelle} : {nb} vente{'s' if nb > 1 else ''}, {format_fcfa(total)}"
+        if details:
+            texte += f" ({details})"
     texte += "."
+    texte += f" Charges : {format_fcfa(charges)}."
+    if benefice is not None:
+        texte += f" Bénéfice estimé : {format_fcfa(benefice)}."
     if impayes > 0:
         texte += f" Impayés en cours : {format_fcfa(impayes)}."
     return texte
@@ -116,12 +121,41 @@ def facture_recap(client: str, recap: str, total: int, client_nouveau: bool) -> 
     return texte
 
 
-def facture_prete(numero: int, client: str, total: int) -> str:
-    return (
+def facture_prete(numero: int, client: str, total: int, lien: str | None = None) -> str:
+    texte = (
         f"Facture n° {numero:03d} pour {client} : {format_fcfa(total)}. "
         "Elle est jointe ci-dessus : transfère-la à ton client. "
-        "Dis-moi « {client} a payé » quand c'est réglé."
-    ).replace("{client}", client)
+        f"Dis-moi « {client} a payé » quand c'est réglé."
+    )
+    if lien:
+        texte += f"\nLien de paiement : {lien} (Paiement simulé)"
+    return texte
+
+
+def facture_prete_direct(numero: int, client: str, total: int, lien: str | None = None) -> str:
+    texte = f"Facture n° {numero:03d} pour {client} : {format_fcfa(total)}. Je l'envoie à {client} sur WhatsApp. Dis-moi « {client} a payé » quand c'est réglé."
+    if lien:
+        texte += f"\nLien de paiement : {lien} (Paiement simulé)"
+    return texte
+
+
+def facture_pour_client(commerce: str, client: str, numero: int, total: int, lien: str | None = None) -> str:
+    texte = f"Bonjour {client}, voici votre facture n° {numero:03d} de {format_fcfa(total)} de la part de {commerce}. Merci !"
+    if lien:
+        texte += f"\nPaiement : {lien}"
+    return texte
+
+
+def relance_envoi_direct(client: str) -> str:
+    return f"D'accord, j'envoie la relance à {client} sur WhatsApp."
+
+
+def envoi_ok(client: str, simule: bool) -> str:
+    return f"✅ Envoyé à {client} sur WhatsApp." + (" (démo : envoi simulé)" if simule else "")
+
+
+def envoi_echec(client: str) -> str:
+    return f"⚠️ Je n'ai pas pu envoyer le message à {client}. Transfère-le toi-même, je ne l'ai pas envoyé."
 
 
 def confirmation_renforcee(mot: str) -> str:
@@ -226,6 +260,10 @@ def aide() -> str:
         "• noter un paiement : « Jean a payé »\n"
         "• faire le point : « j'ai fait combien aujourd'hui ? »\n"
         "• ajouter un produit ou un client : « ajoute sandales rouges 7500 »\n"
+        "• noter une dépense : « j'ai payé 20 000 de loyer » (dis « c'est perso » pour un retrait personnel)\n"
+        "• voir trésorerie et bénéfice : « mon bénéfice »\n"
+        "• ton dossier de crédit : « prépare mon dossier de crédit »\n"
+        "• ton impôt estimé : « mon impôt »\n"
         "Dis « annuler » pour annuler la dernière action, « humain » pour parler à quelqu'un."
     )
 
@@ -288,3 +326,96 @@ def precision_credit_client() -> str:
 
 def precision_choix_facture(choix: Sequence[str]) -> str:
     return "Laquelle ? " + " ou ".join(choix)
+
+
+def depense_notee(libelle: str, montant: int, nature: str, type_: str) -> str:
+    if nature == "perso":
+        return f"C'est noté : retrait personnel de {format_fcfa(montant)} ({libelle}). Il n'est pas compté dans les charges du commerce. Dis « annuler » si tu t'es trompée."
+    if type_ == "stock":
+        return (
+            f"C'est noté : achat de stock de {format_fcfa(montant)} ({libelle}). "
+            "Ça sort de ta trésorerie mais pas de ton bénéfice tant que ce n'est pas vendu. Dis « annuler » si tu t'es trompée."
+        )
+    return f"C'est noté : dépense de {format_fcfa(montant)} ({libelle}), classée en professionnelle. Dis « c'est perso » pour la changer, ou « annuler »."
+
+
+def nature_changee(libelle: str, montant: int, nature: str) -> str:
+    if nature == "perso":
+        return f"D'accord : {libelle} ({format_fcfa(montant)}) est maintenant un retrait personnel, hors des charges du commerce."
+    return f"D'accord : {libelle} ({format_fcfa(montant)}) est maintenant une dépense professionnelle."
+
+
+def precision_depense() -> str:
+    return "C'était pour quoi, et combien ?"
+
+
+def rien_a_changer() -> str:
+    return "Je n'ai pas de dépense récente à modifier."
+
+
+def bilan(tresorerie: int, benefice: int, retraits: int, ventes: int, charges: int) -> str:
+    return (
+        f"💰 Trésorerie (argent disponible) : {format_fcfa(tresorerie)}.\n"
+        f"📈 Bénéfice du mois : {format_fcfa(benefice)} (ventes {format_fcfa(ventes)} − charges {format_fcfa(charges)}).\n"
+        f"👤 Retraits personnels du mois : {format_fcfa(retraits)} (pas comptés dans les charges)."
+    )
+
+
+def dossier_pret(historique: int, manque: int, fictives: bool) -> str:
+    texte = "Ton dossier de crédit est prêt (PDF ci-joint). Il est calculé uniquement à partir de tes saisies."
+    if fictives:
+        texte += " ⚠️ Démo : ce sont des données fictives."
+    if manque > 0:
+        texte += f" Ton historique est de {historique} mois : il manque {manque} mois pour atteindre 6 mois de données."
+    else:
+        texte += f" Ton historique couvre {historique} mois : c'est suffisant pour un dossier."
+    return texte
+
+
+def impot(estimation: int, ca_annuel: int, echeance_libelle: str, jours: int) -> str:
+    return (
+        f"Estimation de ton impôt (IGS) : environ {format_fcfa(estimation)} par an, sur un chiffre d'affaires annuel estimé à {format_fcfa(ca_annuel)}.\n"
+        "⚠️ Estimation à confirmer avec la DGI : c'est indicatif, pas un conseil fiscal.\n"
+        f"Prochaine échéance : {echeance_libelle}, dans {jours} jour{'s' if jours > 1 else ''}."
+    )
+
+
+def echeances(liste: Sequence[dict]) -> str:
+    corps = "\n".join(f"• {e['libelle']} : le {e['date'][8:10]}/{e['date'][5:7]}, dans {e['jours']} jour{'s' if e['jours'] > 1 else ''}" for e in liste)
+    return f"Tes prochaines échéances (indicatives, à confirmer avec la DGI) :\n{corps}\nJe te préviens 15 jours puis 3 jours avant."
+
+
+def rappel_fiscal(libelle: str, jours: int, date_iso: str) -> str:
+    return f"⏰ Rappel : {libelle} le {date_iso[8:10]}/{date_iso[5:7]}, dans {jours} jours. Estimation à confirmer avec la DGI."
+
+
+def produit_supprime(nom: str) -> str:
+    return f"C'est fait : {nom} est retiré de ton catalogue."
+
+
+def produit_introuvable(nom: str) -> str:
+    return f"Je ne trouve pas « {nom} » dans ton catalogue."
+
+
+def compte_indisponible() -> str:
+    return "Ce numéro est déjà lié à un compte qui n'est pas actif. Contacte l'équipe Mon Kiosque."
+
+
+def bienvenue_nom() -> str:
+    return "Bienvenue sur Mon Kiosque ! 👋 Moi c'est Moki, ton assistant pour tenir ta caisse, tes factures et tes relances. Pour ouvrir ton compte, 3 petites questions. D'abord : comment s'appelle ton commerce ?"
+
+
+def inscription_ville(nom: str) -> str:
+    return f"Super, « {nom} » ! Dans quelle ville ?"
+
+
+def inscription_secteur() -> str:
+    return "Et ton secteur ? (boutique, restaurant/snack, services…)"
+
+
+def inscription_ecrire() -> str:
+    return "Écris-moi ta réponse par message, s'il te plaît."
+
+
+def inscription_ok(nom: str) -> str:
+    return f"C'est bon, ton compte « {nom} » est ouvert ! 🎉 Commence par m'ajouter un produit, par exemple « ajoute sandales rouges 7500 », ou dis-moi « j'ai vendu 3 paires à 5000 ». Dis « aide » pour voir tout ce que je sais faire."

@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 from app.core.horloge import Horloge, en_local, en_utc
 from app.db.modeles import Pme
 from app.domaine import paiements as dom_paiements
-from app.domaine import ventes as dom_ventes
 from app.moki.schemas import Periode, TypePeriode
 
 
@@ -41,18 +40,22 @@ def bornes(periode: Periode | None, horloge: Horloge, fuseau: str) -> tuple[date
 
 
 def calculer(session: Session, pme: Pme, periode: Periode | None, horloge: Horloge) -> dict:
-    debut, fin, libelle = bornes(periode, horloge, pme.fuseau)
-    nb, total, par_mode = dom_ventes.agregats(session, pme, debut, fin)
+    from app.domaine import finances
+
+    c = finances.chiffres_periode(session, pme, periode, horloge)
     return {
-        "libelle": libelle,
-        "nb": nb,
-        "total": total,
-        "par_mode": par_mode,
+        "libelle": c["libelle"],
+        "nb": c["nb"],
+        "total": c["ventes"],
+        "par_mode": c["par_mode"],
         "impayes": dom_paiements.total_impayes(session, pme),
+        "charges": c["charges"],
+        "benefice": c["benefice"],
     }
 
 
 def total_du_jour(session: Session, pme: Pme, horloge: Horloge) -> int:
     debut, fin, _ = bornes(None, horloge, pme.fuseau)
-    _, total, _ = dom_ventes.agregats(session, pme, debut, fin)
-    return total
+    from app.domaine import finances
+
+    return finances.chiffres(session, pme, debut, fin)["ventes"]

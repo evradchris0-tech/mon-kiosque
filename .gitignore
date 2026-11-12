@@ -18,3 +18,5 @@ evals/a_valider/
 # Rapports générés (on garde ceux qu'on commite volontairement)
 evals/rapports/*.tmp.md
 evals/rapports/rapport-*.md
+moki_demo.db
+serveur.log
